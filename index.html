@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GarimpoApp — Encontre Clientes</title>
+  <style>
+    :root {
+      --laranja: #f97316;
+      --laranja-dark: #ea6c0a;
+      --azul: #1e40af;
+      --verde: #16a34a;
+      --vermelho: #dc2626;
+      --cinza-bg: #f8fafc;
+      --cinza-borda: #e2e8f0;
+      --cinza-texto: #64748b;
+      --preto: #0f172a;
+      --branco: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--cinza-bg); color: var(--preto); }
+
+    /* ── Auth Screen ── */
+    #tela-auth {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #f97316 100%);
+    }
+
+    .auth-card {
+      background: var(--branco);
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .auth-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .auth-logo h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--laranja);
+    }
+
+    .auth-logo p {
+      color: var(--cinza-texto);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--cinza-borda);
+      margin-bottom: 24px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--cinza-texto);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+
+    .auth-tab.ativo {
+      color: var(--laranja);
+      border-color: var(--laranja);
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--preto); }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--cinza-borda);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus { border-color: var(--laranja); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary { background: var(--laranja); color: #fff; width: 100%; }
+    .btn-primary:hover { background: var(--laranja-dark); transform: translateY(-1px); }
+    .btn-secondary { background: var(--cinza-bg); color: var(--preto); border: 1.5px solid var(--cinza-borda); }
+    .btn-secondary:hover { background: var(--cinza-borda); }
+    .btn-verde { background: var(--verde); color: #fff; }
+    .btn-verde:hover { opacity: 0.9; }
+    .btn-sm { padding: 8px 14px; font-size: 0.85rem; }
+
+    .msg-erro { background: #fee2e2; color: var(--vermelho); border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-top: 12px; }
+    .msg-ok { background: #dcfce7; color: var(--verde); border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-top: 12px; }
+
+    /* ── App Principal ── */
+    #app { display: none; min-height: 100vh; }
+
+    /* Navbar */
+    nav {
+      background: var(--branco);
+      border-bottom: 1.5px solid var(--cinza-borda);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo { font-size: 1.3rem; font-weight: 800; color: var(--laranja); text-decoration: none; }
+    .nav-logo span { color: var(--preto); }
+
+    .nav-info { display: flex; align-items: center; gap: 16px; }
+
+    .plano-badge {
+      background: var(--laranja);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    .buscas-badge {
+      font-size: 0.82rem;
+      color: var(--cinza-texto);
+    }
+
+    /* Tabs principais */
+    .main-tabs {
+      background: var(--branco);
+      border-bottom: 1.5px solid var(--cinza-borda);
+      padding: 0 24px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .main-tab {
+      padding: 14px 18px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--cinza-texto);
+      border-bottom: 3px solid transparent;
+      font-size: 0.92rem;
+      transition: all 0.2s;
+    }
+
+    .main-tab.ativo { color: var(--laranja); border-color: var(--laranja); }
+
+    /* Container */
+    .container { max-width: 900px; margin: 32px auto; padding: 0 24px; }
+
+    /* Card */
+    .card {
+      background: var(--branco);
+      border-radius: 12px;
+      border: 1.5px solid var(--cinza-borda);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    /* Formulário de busca */
+    .busca-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--cinza-borda);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    select:focus { border-color: var(--laranja); }
+
+    /* Lista de resultados */
+    #lista-resultados { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+
+    .lead-card {
+      background: var(--branco);
+      border: 1.5px solid var(--cinza-borda);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .lead-card:hover { border-color: var(--laranja); }
+    .lead-card.salvo { opacity: 0.6; }
+
+    .lead-info h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+
+    .lead-info p {
+      font-size: 0.82rem;
+      color: var(--cinza-texto);
+      margin-bottom: 2px;
+    }
+
+    .lead-rating {
+      font-size: 0.8rem;
+      color: #b45309;
+      font-weight: 600;
+    }
+
+    .lead-acoes { display: flex; gap: 8px; flex-shrink: 0; }
+
+    /* Whatsapp btn */
+    .btn-wa {
+      background: #25d366;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Loader */
+    .loader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 40px;
+      color: var(--cinza-texto);
+    }
+
+    .spinner {
+      width: 20px; height: 20px;
+      border: 3px solid var(--cinza-borda);
+      border-top-color: var(--laranja);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--cinza-texto);
+    }
+
+    .empty-state .emoji { font-size: 3rem; display: block; margin-bottom: 12px; }
+
+    /* Leads salvos */
+    .leads-filtros { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+
+    .filtro-chip {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--cinza-borda);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #fff;
+      color: var(--cinza-texto);
+      transition: all 0.2s;
+    }
+
+    .filtro-chip.ativo { background: var(--laranja); color: #fff; border-color: var(--laranja); }
+
+    /* Exportar */
+    .acoes-topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+
+    /* Responsivo */
+    @media (max-width: 600px) {
+      .busca-grid { grid-template-columns: 1fr; }
+      .nav-info .buscas-badge { display: none; }
+      .lead-card { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     TELA DE LOGIN / CADASTRO
+════════════════════════════════════════ -->
+<div id="tela-auth">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <h1>⛏️ GarimpoApp</h1>
+      <p>Encontre clientes para seu negócio</p>
+    </div>
+
+    <div class="auth-tabs">
+      <div class="auth-tab ativo" onclick="mudarAba('login')">Entrar</div>
+      <div class="auth-tab" onclick="mudarAba('cadastro')">Criar conta</div>
+    </div>
+
+    <!-- Login -->
+    <div id="form-login">
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="login-email" placeholder="seu@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="login-senha" placeholder="••••••••" />
+      </div>
+      <button class="btn btn-primary" onclick="fazerLogin()">Entrar</button>
+      <div id="login-msg"></div>
+    </div>
+
+    <!-- Cadastro -->
+    <div id="form-cadastro" style="display:none">
+      <div class="form-group">
+        <label>Nome</label>
+        <input type="text" id="cad-nome" placeholder="Seu nome completo" />
+      </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="cad-email" placeholder="seu@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Senha (mín. 6 caracteres)</label>
+        <input type="password" id="cad-senha" placeholder="••••••••" />
+      </div>
+      <button class="btn btn-primary" onclick="fazerCadastro()">Criar conta grátis</button>
+      <div id="cad-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     APP PRINCIPAL
+════════════════════════════════════════ -->
+<div id="app">
+  <nav>
+    <a class="nav-logo" href="#">⛏️ Garimpo<span>App</span></a>
+    <div class="nav-info">
+      <span class="buscas-badge" id="nav-buscas">— buscas restantes</span>
+      <span class="plano-badge" id="nav-plano">free</span>
+      <button class="btn btn-secondary btn-sm" onclick="sair()">Sair</button>
+    </div>
+  </nav>
+
+  <div class="main-tabs">
+    <div class="main-tab ativo" onclick="mudarTab('buscar')">🔍 Garimpar</div>
+    <div class="main-tab" onclick="mudarTab('leads')">📋 Meus Leads</div>
+  </div>
+
+  <!-- Tab: Garimpar -->
+  <div id="tab-buscar" class="container">
+    <div class="card">
+      <h2>🔍 Buscar negócios</h2>
+      <div class="busca-grid">
+        <div class="form-group" style="margin:0">
+          <label>Nicho</label>
+          <select id="sel-nicho">
+            <option value="clinicas">Clínicas de Estética</option>
+            <option value="odonto">Odontológicas</option>
+            <option value="petshops">Pet Shops</option>
+            <option value="advocacia">Advocacia</option>
+            <option value="academias">Academias</option>
+            <option value="contabilidade">Contabilidades</option>
+            <option value="imobiliarias">Imobiliárias</option>
+            <option value="restaurantes">Restaurantes</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label>Cidade</label>
+          <input type="text" id="inp-cidade" placeholder="Ex: São Paulo, SP" />
+        </div>
+        <button class="btn btn-primary" onclick="fazerBusca()" id="btn-buscar">Buscar</button>
+      </div>
+    </div>
+
+    <div id="busca-status"></div>
+    <div id="lista-resultados"></div>
+  </div>
+
+  <!-- Tab: Leads -->
+  <div id="tab-leads" class="container" style="display:none">
+    <div class="card">
+      <div class="acoes-topo">
+        <h2>📋 Leads Salvos</h2>
+        <button class="btn btn-verde btn-sm" onclick="exportarCSV()">⬇ Exportar CSV</button>
+      </div>
+
+      <div class="leads-filtros" id="filtros-nicho">
+        <div class="filtro-chip ativo" onclick="filtrarLeads(null, this)">Todos</div>
+        <div class="filtro-chip" onclick="filtrarLeads('clinicas', this)">Estética</div>
+        <div class="filtro-chip" onclick="filtrarLeads('odonto', this)">Odonto</div>
+        <div class="filtro-chip" onclick="filtrarLeads('petshops', this)">Pet</div>
+        <div class="filtro-chip" onclick="filtrarLeads('advocacia', this)">Advocacia</div>
+        <div class="filtro-chip" onclick="filtrarLeads('academias', this)">Academia</div>
+        <div class="filtro-chip" onclick="filtrarLeads('contabilidade', this)">Contabilidade</div>
+        <div class="filtro-chip" onclick="filtrarLeads('imobiliarias', this)">Imob.</div>
+        <div class="filtro-chip" onclick="filtrarLeads('restaurantes', this)">Restaurante</div>
+      </div>
+    </div>
+
+    <div id="lista-leads"></div>
+  </div>
+</div>
+
+<script>
+  // ════════════════════════════════════════
+  // CONFIGURAÇÃO — troque pela URL do seu backend no Railway
+  // ════════════════════════════════════════
+  const API_URL = 'https://garimpoapp-backend-production.up.railway.app';
+
+  // Supabase (para auth no frontend)
+  const SUPABASE_URL = 'https://pupnynccxtdvqkoflhzc.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_2QU5GcePpzI2D30q_T7FyQ_Bp-Eee7F';
+
+  // ────────────────────────────────────────
+  // Auth via Supabase REST (sem biblioteca)
+  // ────────────────────────────────────────
+  let tokenJWT = localStorage.getItem('garimpo_token') || null;
+  let perfilUsuario = null;
+  let leadsCache = [];
+  let nichoFiltro = null;
+
+  async function supabaseAuth(endpoint, body) {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify(body),
+    });
+    return res.json();
+  }
+
+  async function fazerLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const senha = document.getElementById('login-senha').value;
+    const msgEl = document.getElementById('login-msg');
+    msgEl.innerHTML = '';
+
+    if (!email || !senha) {
+      msgEl.innerHTML = '<div class="msg-erro">Preencha e-mail e senha.</div>';
+      return;
+    }
+
+    msgEl.innerHTML = '<div class="loader"><div class="spinner"></div> Entrando…</div>';
+
+    const data = await supabaseAuth('token?grant_type=password', { email, password: senha });
+    if (data.access_token) {
+      tokenJWT = data.access_token;
+      localStorage.setItem('garimpo_token', tokenJWT);
+      await iniciarApp();
+    } else {
+      msgEl.innerHTML = `<div class="msg-erro">❌ ${data.error_description || 'E-mail ou senha incorretos.'}</div>`;
+    }
+  }
+
+  async function fazerCadastro() {
+    const nome  = document.getElementById('cad-nome').value.trim();
+    const email = document.getElementById('cad-email').value.trim();
+    const senha = document.getElementById('cad-senha').value;
+    const msgEl = document.getElementById('cad-msg');
+    msgEl.innerHTML = '';
+
+    if (!nome || !email || !senha) {
+      msgEl.innerHTML = '<div class="msg-erro">Preencha todos os campos.</div>';
+      return;
+    }
+
+    msgEl.innerHTML = '<div class="loader"><div class="spinner"></div> Criando conta…</div>';
+
+    const data = await supabaseAuth('signup', {
+      email, password: senha,
+      data: { nome },
+    });
+
+    if (data.access_token) {
+      tokenJWT = data.access_token;
+      localStorage.setItem('garimpo_token', tokenJWT);
+      await iniciarApp();
+    } else if (data.id) {
+      // Confirmação de email habilitada no Supabase
+      msgEl.innerHTML = '<div class="msg-ok">✅ Conta criada! Verifique seu e-mail para confirmar.</div>';
+    } else {
+      msgEl.innerHTML = `<div class="msg-erro">❌ ${data.error_description || 'Erro ao criar conta.'}</div>`;
+    }
+  }
+
+  function sair() {
+    localStorage.removeItem('garimpo_token');
+    tokenJWT = null;
+    perfilUsuario = null;
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('tela-auth').style.display = 'flex';
+  }
+
+  function mudarAba(aba) {
+    document.getElementById('form-login').style.display = aba === 'login' ? '' : 'none';
+    document.getElementById('form-cadastro').style.display = aba === 'cadastro' ? '' : 'none';
+    document.querySelectorAll('.auth-tab').forEach((t, i) => {
+      t.classList.toggle('ativo', (i === 0 && aba === 'login') || (i === 1 && aba === 'cadastro'));
+    });
+  }
+
+  // ────────────────────────────────────────
+  // Iniciar app após login
+  // ────────────────────────────────────────
+  async function iniciarApp() {
+    document.getElementById('tela-auth').style.display = 'none';
+    document.getElementById('app').style.display = '';
+
+    try {
+      const res = await fetch(`${API_URL}/perfil`, {
+        headers: { 'Authorization': `Bearer ${tokenJWT}` },
+      });
+      perfilUsuario = await res.json();
+
+      document.getElementById('nav-plano').textContent = perfilUsuario.plano.toUpperCase();
+      document.getElementById('nav-buscas').textContent =
+        `${perfilUsuario.buscas_restantes} busca${perfilUsuario.buscas_restantes !== 1 ? 's' : ''} restante${perfilUsuario.buscas_restantes !== 1 ? 's' : ''}`;
+    } catch (e) {
+      console.error('Erro ao carregar perfil', e);
+    }
+  }
+
+  // ────────────────────────────────────────
+  // Tabs
+  // ────────────────────────────────────────
+  function mudarTab(tab) {
+    document.querySelectorAll('.main-tab').forEach((t, i) => {
+      t.classList.toggle('ativo', (i === 0 && tab === 'buscar') || (i === 1 && tab === 'leads'));
+    });
+    document.getElementById('tab-buscar').style.display = tab === 'buscar' ? '' : 'none';
+    document.getElementById('tab-leads').style.display  = tab === 'leads'  ? '' : 'none';
+
+    if (tab === 'leads') carregarLeads();
+  }
+
+  // ────────────────────────────────────────
+  // Busca
+  // ────────────────────────────────────────
+  async function fazerBusca() {
+    const nicho  = document.getElementById('sel-nicho').value;
+    const cidade = document.getElementById('inp-cidade').value.trim();
+    const status = document.getElementById('busca-status');
+    const lista  = document.getElementById('lista-resultados');
+
+    if (!cidade) {
+      status.innerHTML = '<div class="msg-erro">Informe uma cidade.</div>';
+      return;
+    }
+
+    document.getElementById('btn-buscar').disabled = true;
+    status.innerHTML = '<div class="loader"><div class="spinner"></div> Buscando no Google…</div>';
+    lista.innerHTML = '';
+
+    try {
+      const res = await fetch(`${API_URL}/buscar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${tokenJWT}`,
+        },
+        body: JSON.stringify({ nicho, cidade }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        status.innerHTML = `<div class="msg-erro">❌ ${data.erro}</div>`;
+        return;
+      }
+
+      // Atualizar contador de buscas
+      document.getElementById('nav-buscas').textContent =
+        `${data.buscas_restantes} busca${data.buscas_restantes !== 1 ? 's' : ''} restante${data.buscas_restantes !== 1 ? 's' : ''}`;
+
+      status.innerHTML = `<div class="msg-ok">✅ ${data.total} resultado${data.total !== 1 ? 's' : ''} encontrado${data.total !== 1 ? 's' : ''} em <strong>${cidade}</strong></div>`;
+
+      if (data.total === 0) {
+        lista.innerHTML = '<div class="empty-state"><span class="emoji">🔭</span>Nenhum resultado encontrado. Tente outra cidade ou nicho.</div>';
+        return;
+      }
+
+      lista.innerHTML = data.resultados.map((l, i) => renderLeadBusca(l, i)).join('');
+    } catch (e) {
+      status.innerHTML = '<div class="msg-erro">❌ Erro de conexão com o servidor.</div>';
+      console.error(e);
+    } finally {
+      document.getElementById('btn-buscar').disabled = false;
+    }
+  }
+
+  function renderLeadBusca(lead, idx) {
+    const wa = lead.whatsapp
+      ? `<a class="btn-wa" href="https://wa.me/${lead.whatsapp}" target="_blank">💬 WhatsApp</a>`
+      : '';
+    const estrelas = lead.rating ? `⭐ ${lead.rating}` : '';
+
+    return `
+      <div class="lead-card" id="lead-busca-${idx}">
+        <div class="lead-info">
+          <h3>${lead.nome}</h3>
+          <p>📍 ${lead.endereco || lead.cidade}</p>
+          ${lead.telefone ? `<p>📞 ${lead.telefone}</p>` : ''}
+          ${estrelas ? `<p class="lead-rating">${estrelas}</p>` : ''}
+        </div>
+        <div class="lead-acoes">
+          ${wa}
+          <button class="btn btn-verde btn-sm" onclick="salvarLead(${JSON.stringify(lead).replace(/"/g, '&quot;')}, ${idx})">
+            ＋ Salvar
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  async function salvarLead(lead, idx) {
+    try {
+      const res = await fetch(`${API_URL}/salvar-lead`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${tokenJWT}`,
+        },
+        body: JSON.stringify({ lead }),
+      });
+
+      const data = await res.json();
+
+      const card = document.getElementById(`lead-busca-${idx}`);
+      if (res.ok) {
+        card.classList.add('salvo');
+        card.querySelector('.btn-verde').textContent = '✅ Salvo';
+        card.querySelector('.btn-verde').disabled = true;
+      } else {
+        alert(data.erro || 'Erro ao salvar.');
+      }
+    } catch (e) {
+      alert('Erro de conexão.');
+    }
+  }
+
+  // ────────────────────────────────────────
+  // Leads salvos
+  // ────────────────────────────────────────
+  async function carregarLeads(nicho) {
+    const lista = document.getElementById('lista-leads');
+    lista.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando leads…</div>';
+
+    try {
+      const url = nicho ? `${API_URL}/meus-leads?nicho=${nicho}` : `${API_URL}/meus-leads`;
+      const res = await fetch(url, {
+        headers: { 'Authorization': `Bearer ${tokenJWT}` },
+      });
+      const data = await res.json();
+      leadsCache = data.leads || [];
+
+      if (leadsCache.length === 0) {
+        lista.innerHTML = '<div class="empty-state"><span class="emoji">📭</span>Nenhum lead salvo ainda.<br>Use a aba Garimpar para encontrar clientes.</div>';
+        return;
+      }
+
+      lista.innerHTML = leadsCache.map(renderLeadSalvo).join('');
+    } catch (e) {
+      lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>';
+    }
+  }
+
+  function renderLeadSalvo(lead) {
+    const wa = lead.whatsapp
+      ? `<a class="btn-wa" href="https://wa.me/${lead.whatsapp}" target="_blank">💬 WhatsApp</a>`
+      : '';
+    const data = new Date(lead.salvo_em).toLocaleDateString('pt-BR');
+    const estrelas = lead.rating ? `⭐ ${lead.rating}` : '';
+
+    return `
+      <div class="lead-card">
+        <div class="lead-info">
+          <h3>${lead.nome}</h3>
+          <p>📍 ${lead.endereco || lead.cidade}</p>
+          ${lead.telefone ? `<p>📞 ${lead.telefone}</p>` : ''}
+          ${estrelas ? `<p class="lead-rating">${estrelas}</p>` : ''}
+          <p style="font-size:0.75rem;color:#94a3b8;margin-top:4px">Salvo em ${data}</p>
+        </div>
+        <div class="lead-acoes">${wa}</div>
+      </div>
+    `;
+  }
+
+  function filtrarLeads(nicho, el) {
+    nichoFiltro = nicho;
+    document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('ativo'));
+    el.classList.add('ativo');
+    carregarLeads(nicho);
+  }
+
+  // ────────────────────────────────────────
+  // Exportar CSV
+  // ────────────────────────────────────────
+  function exportarCSV() {
+    if (!leadsCache.length) { alert('Nenhum lead para exportar.'); return; }
+
+    const cabecalho = ['Nome', 'Telefone', 'WhatsApp', 'Endereço', 'Cidade', 'Estado', 'Nicho', 'Rating', 'Salvo em'];
+    const linhas = leadsCache.map(l => [
+      l.nome, l.telefone, l.whatsapp, l.endereco, l.cidade, l.estado, l.nicho, l.rating,
+      new Date(l.salvo_em).toLocaleDateString('pt-BR'),
+    ].map(v => `"${(v ?? '').toString().replace(/"/g, '""')}"`).join(','));
+
+    const csv = [cabecalho.join(','), ...linhas].join('\n');
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `garimpoapp_leads_${new Date().toISOString().slice(0,10)}.csv`;
+    link.click();
+  }
+
+  // ────────────────────────────────────────
+  // Auto-login se token salvo
+  // ────────────────────────────────────────
+  (async () => {
+    if (tokenJWT) {
+      try {
+        await iniciarApp();
+      } catch {
+        sair();
+      }
+    }
+  })();
+</script>
+</body>
+</html>

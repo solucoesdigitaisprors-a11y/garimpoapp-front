@@ -553,13 +553,19 @@
       const res = await fetch(`${API_URL}/perfil`, {
         headers: { 'Authorization': `Bearer ${tokenJWT}` },
       });
-      perfilUsuario = await res.json();
 
-      document.getElementById('nav-plano').textContent = perfilUsuario.plano.toUpperCase();
+      if (!res.ok) {
+        sair();
+        return;
+      }
+
+      perfilUsuario = await res.json();
+      document.getElementById('nav-plano').textContent = (perfilUsuario.plano || 'free').toUpperCase();
       document.getElementById('nav-buscas').textContent =
         `${perfilUsuario.buscas_restantes} busca${perfilUsuario.buscas_restantes !== 1 ? 's' : ''} restante${perfilUsuario.buscas_restantes !== 1 ? 's' : ''}`;
     } catch (e) {
       console.error('Erro ao carregar perfil', e);
+      sair();
     }
   }
 

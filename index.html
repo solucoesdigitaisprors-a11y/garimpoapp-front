@@ -194,7 +194,7 @@
     /* Formulário de busca */
     .busca-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr auto;
+      grid-template-columns: 1.2fr 0.8fr 1fr auto;
       gap: 12px;
       align-items: end;
     }
@@ -313,6 +313,7 @@
     /* Responsivo */
     @media (max-width: 600px) {
       .busca-grid { grid-template-columns: 1fr; }
+      #sel-estado { font-size: 0.85rem; }
       .nav-info .buscas-badge { display: none; }
       .lead-card { flex-direction: column; align-items: flex-start; }
     }
@@ -436,8 +437,41 @@
           </select>
         </div>
         <div class="form-group" style="margin:0">
+          <label>Estado</label>
+          <select id="sel-estado" onchange="preencherEstado()">
+            <option value="">Selecione</option>
+            <option value="AC">AC – Acre</option>
+            <option value="AL">AL – Alagoas</option>
+            <option value="AP">AP – Amapá</option>
+            <option value="AM">AM – Amazonas</option>
+            <option value="BA">BA – Bahia</option>
+            <option value="CE">CE – Ceará</option>
+            <option value="DF">DF – Distrito Federal</option>
+            <option value="ES">ES – Espírito Santo</option>
+            <option value="GO">GO – Goiás</option>
+            <option value="MA">MA – Maranhão</option>
+            <option value="MT">MT – Mato Grosso</option>
+            <option value="MS">MS – Mato Grosso do Sul</option>
+            <option value="MG">MG – Minas Gerais</option>
+            <option value="PA">PA – Pará</option>
+            <option value="PB">PB – Paraíba</option>
+            <option value="PR">PR – Paraná</option>
+            <option value="PE">PE – Pernambuco</option>
+            <option value="PI">PI – Piauí</option>
+            <option value="RJ">RJ – Rio de Janeiro</option>
+            <option value="RN">RN – Rio Grande do Norte</option>
+            <option value="RS">RS – Rio Grande do Sul</option>
+            <option value="RO">RO – Rondônia</option>
+            <option value="RR">RR – Roraima</option>
+            <option value="SC">SC – Santa Catarina</option>
+            <option value="SP">SP – São Paulo</option>
+            <option value="SE">SE – Sergipe</option>
+            <option value="TO">TO – Tocantins</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
           <label>Cidade</label>
-          <input type="text" id="inp-cidade" placeholder="Ex: São Paulo, SP" />
+          <input type="text" id="inp-cidade" placeholder="Ex: São Paulo" oninput="ajustarCidade()" />
         </div>
         <button class="btn btn-primary" onclick="fazerBusca()" id="btn-buscar">Buscar</button>
       </div>
@@ -618,14 +652,43 @@
   // ────────────────────────────────────────
   // Busca
   // ────────────────────────────────────────
+  // Preenche ", UF" no campo cidade ao selecionar estado
+  function preencherEstado() {
+    const uf = document.getElementById('sel-estado').value;
+    const cidadeEl = document.getElementById('inp-cidade');
+    if (!uf) return;
+    // Remove qualquer ", XX" anterior e adiciona o novo
+    let cidade = cidadeEl.value.replace(/,\s*[A-Z]{2}$/, '').trim();
+    cidadeEl.value = cidade ? `${cidade}, ${uf}` : '';
+    if (!cidade) cidadeEl.focus();
+  }
+
+  // Ao digitar na cidade, mantém o estado selecionado no final
+  function ajustarCidade() {
+    const uf = document.getElementById('sel-estado').value;
+    if (!uf) return;
+    const cidadeEl = document.getElementById('inp-cidade');
+    const val = cidadeEl.value;
+    // Se o usuário apagou o ", UF", não reinsere enquanto digita
+    if (val.endsWith(`, ${uf}`) || val === '') return;
+    // Reaplica a UF quando o campo perde foco (via blur no botão buscar)
+  }
+
   async function fazerBusca() {
     const nicho  = document.getElementById('sel-nicho').value;
-    const cidade = document.getElementById('inp-cidade').value.trim();
+    const uf     = document.getElementById('sel-estado').value;
+    let   cidade = document.getElementById('inp-cidade').value.trim();
     const status = document.getElementById('busca-status');
     const lista  = document.getElementById('lista-resultados');
 
+    // Garante que a UF está no final da cidade
+    if (uf && !cidade.endsWith(`, ${uf}`)) {
+      cidade = cidade.replace(/,\s*[A-Z]{2}$/, '').trim();
+      if (cidade) cidade = `${cidade}, ${uf}`;
+    }
+
     if (!cidade) {
-      status.innerHTML = '<div class="msg-erro">Informe uma cidade.</div>';
+      status.innerHTML = '<div class="msg-erro">Informe a cidade e selecione o estado.</div>';
       return;
     }
 
@@ -757,7 +820,7 @@
       <div class="lead-card">
         <div class="lead-info">
           <h3>${lead.nome}</h3>
-          <p>📍 ${lead.endereco || lead.cidade}</p>
+                <p>📍 ${lead.endereco || lead.cidade}</p>
           ${lead.telefone ? `<p>📞 ${lead.telefone}</p>` : ''}
           ${estrelas ? `<p class="lead-rating">${estrelas}</p>` : ''}
           <p style="font-size:0.75rem;color:#94a3b8;margin-top:4px">Salvo em ${data}</p>
@@ -774,42 +837,30 @@
     carregarLeads(nicho);
   }
 
-  // ────────────────────────────────────────
-  // Exportar CSV
-  // ────────────────────────────────────────
   function exportarCSV() {
     if (!leadsCache.length) { alert('Nenhum lead para exportar.'); return; }
-
-    const cabecalho = ['Nome', 'Telefone', 'WhatsApp', 'Endereço', 'Cidade', 'Estado', 'Nicho', 'Rating', 'Salvo em'];
-    const linhas = leadsCache.map(l => [
-      l.nome, l.telefone, l.whatsapp, l.endereco, l.cidade, l.estado, l.nicho, l.rating,
-      new Date(l.salvo_em).toLocaleDateString('pt-BR'),
-    ].map(v => `"${(v ?? '').toString().replace(/"/g, '""')}"`).join(','));
-
-    const csv = [cabecalho.join(','), ...linhas].join('\n');
+    const cols = ['nome','telefone','endereco','cidade','estado','rating','nicho'];
+    const header = cols.join(';');
+    const rows = leadsCache.map(l => cols.map(c => `"${String(l[c] ?? '').replace(/"/g,'""')}"`).join(';'));
+    const csv = [header, ...rows].join('\n');
     const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `garimpoapp_leads_${new Date().toISOString().slice(0,10)}.csv`;
-    link.click();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'garimpo_leads.csv'; a.click();
+    URL.revokeObjectURL(url);
   }
 
-  // ────────────────────────────────────────
-  // ────────────────────────────────────────
-  // Auto-login se token salvo e válido
-  // ────────────────────────────────────────
+  // ── Auto-login ──────────────────────────────────────────────
   (async () => {
     if (tokenJWT) {
-      // Mostra loading enquanto valida token (evita tela branca no cold start)
       document.getElementById('tela-loading').style.display = 'flex';
       try {
         const teste = await fetch(`${API_URL}/perfil`, {
           headers: { 'Authorization': `Bearer ${tokenJWT}` }
         });
         document.getElementById('tela-loading').style.display = 'none';
-        if (teste.ok) {
-          await iniciarApp();
-        } else {
+        if (teste.ok) { await iniciarApp(); }
+        else {
           localStorage.removeItem('garimpo_token');
           tokenJWT = null;
           document.getElementById('tela-auth').style.display = 'flex';

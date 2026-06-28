@@ -560,14 +560,37 @@
         <div class="form-group" style="margin:0">
           <label>Nicho</label>
           <select id="sel-nicho">
-            <option value="clinicas">Clínicas de Estética</option>
-            <option value="odonto">Odontológicas</option>
-            <option value="petshops">Pet Shops</option>
-            <option value="advocacia">Advocacia</option>
-            <option value="academias">Academias</option>
-            <option value="contabilidade">Contabilidades</option>
-            <option value="imobiliarias">Imobiliárias</option>
-            <option value="restaurantes">Restaurantes</option>
+            <optgroup label="— Saúde e Bem-estar —">
+              <option value="clinicas">Clínicas de Estética</option>
+              <option value="clinicas_medicas">Clínicas Médicas</option>
+              <option value="odonto">Odontológicas</option>
+              <option value="psicologos">Psicólogos</option>
+              <option value="farmacias">Farmácias</option>
+              <option value="academias">Academias</option>
+            </optgroup>
+            <optgroup label="— Beleza —">
+              <option value="saloes">Salões de Beleza</option>
+              <option value="barbearias">Barbearias</option>
+            </optgroup>
+            <optgroup label="— Alimentação —">
+              <option value="restaurantes">Restaurantes</option>
+              <option value="padarias">Padarias e Lanchonetes</option>
+            </optgroup>
+            <optgroup label="— Serviços Profissionais —">
+              <option value="advocacia">Advocacia</option>
+              <option value="contabilidade">Contabilidades</option>
+              <option value="imobiliarias">Imobiliárias</option>
+              <option value="escolas">Escolas Particulares</option>
+              <option value="agencias_marketing">Agências de Marketing</option>
+            </optgroup>
+            <optgroup label="— Comércio e Serviços —">
+              <option value="petshops">Pet Shops</option>
+              <option value="mecanicas">Oficinas Mecânicas</option>
+              <option value="construtoras">Construtoras</option>
+              <option value="hoteis">Hotéis e Pousadas</option>
+              <option value="eletricistas">Eletricistas</option>
+              <option value="fotografos">Fotógrafos</option>
+            </optgroup>
           </select>
         </div>
         <div class="form-group" style="margin:0">
@@ -605,7 +628,9 @@
         </div>
         <div class="form-group" style="margin:0">
           <label>Cidade</label>
-          <input type="text" id="inp-cidade" placeholder="Ex: São Paulo" oninput="ajustarCidade()" />
+          <select id="sel-cidade" disabled>
+            <option value="">Selecione o estado primeiro</option>
+          </select>
         </div>
         <button class="btn btn-primary" onclick="fazerBusca()" id="btn-buscar">Buscar</button>
       </div>
@@ -626,13 +651,24 @@
       <div class="leads-filtros" id="filtros-nicho">
         <div class="filtro-chip ativo" onclick="filtrarLeads(null, this)">Todos</div>
         <div class="filtro-chip" onclick="filtrarLeads('clinicas', this)">Estética</div>
+        <div class="filtro-chip" onclick="filtrarLeads('clinicas_medicas', this)">Clín. Médica</div>
         <div class="filtro-chip" onclick="filtrarLeads('odonto', this)">Odonto</div>
-        <div class="filtro-chip" onclick="filtrarLeads('petshops', this)">Pet</div>
-        <div class="filtro-chip" onclick="filtrarLeads('advocacia', this)">Advocacia</div>
+        <div class="filtro-chip" onclick="filtrarLeads('psicologos', this)">Psicólogo</div>
+        <div class="filtro-chip" onclick="filtrarLeads('farmacias', this)">Farmácia</div>
+        <div class="filtro-chip" onclick="filtrarLeads('saloes', this)">Salão</div>
+        <div class="filtro-chip" onclick="filtrarLeads('barbearias', this)">Barbearia</div>
         <div class="filtro-chip" onclick="filtrarLeads('academias', this)">Academia</div>
+        <div class="filtro-chip" onclick="filtrarLeads('restaurantes', this)">Restaurante</div>
+        <div class="filtro-chip" onclick="filtrarLeads('padarias', this)">Padaria</div>
+        <div class="filtro-chip" onclick="filtrarLeads('advocacia', this)">Advocacia</div>
         <div class="filtro-chip" onclick="filtrarLeads('contabilidade', this)">Contabilidade</div>
         <div class="filtro-chip" onclick="filtrarLeads('imobiliarias', this)">Imob.</div>
-        <div class="filtro-chip" onclick="filtrarLeads('restaurantes', this)">Restaurante</div>
+        <div class="filtro-chip" onclick="filtrarLeads('escolas', this)">Escolas</div>
+        <div class="filtro-chip" onclick="filtrarLeads('petshops', this)">Pet</div>
+        <div class="filtro-chip" onclick="filtrarLeads('mecanicas', this)">Mecânica</div>
+        <div class="filtro-chip" onclick="filtrarLeads('construtoras', this)">Construtora</div>
+        <div class="filtro-chip" onclick="filtrarLeads('hoteis', this)">Hotel</div>
+        <div class="filtro-chip" onclick="filtrarLeads('agencias_marketing', this)">Marketing</div>
       </div>
     </div>
 
@@ -761,38 +797,62 @@
     if (tab === 'leads') carregarLeads();
   }
 
+  // ── Cidades por estado ──────────────────────────────────────
+  const CIDADES = {
+    AC: ['Rio Branco','Cruzeiro do Sul','Sena Madureira','Tarauacá','Feijó','Brasileia'],
+    AL: ['Maceió','Arapiraca','Rio Largo','Palmeira dos Índios','União dos Palmares','Penedo','Delmiro Gouveia'],
+    AP: ['Macapá','Santana','Laranjal do Jari','Oiapoque','Mazagão'],
+    AM: ['Manaus','Parintins','Itacoatiara','Manacapuru','Tefé','Coari','Tabatinga','Humaitá'],
+    BA: ['Salvador','Feira de Santana','Vitória da Conquista','Camaçari','Juazeiro','Ilhéus','Itabuna','Lauro de Freitas','Barreiras','Jequié','Teixeira de Freitas','Paulo Afonso','Alagoinhas'],
+    CE: ['Fortaleza','Caucaia','Juazeiro do Norte','Maracanaú','Sobral','Crato','Itapipoca','Maranguape','Iguatu','Quixadá'],
+    DF: ['Brasília','Taguatinga','Ceilândia','Gama','Samambaia','Planaltina','Águas Claras','Sobradinho','Guará','Lago Norte','Lago Sul'],
+    ES: ['Vitória','Serra','Vila Velha','Cariacica','Linhares','Cachoeiro de Itapemirim','Colatina','Guarapari','São Mateus','Aracruz'],
+    GO: ['Goiânia','Aparecida de Goiânia','Anápolis','Rio Verde','Luziânia','Águas Lindas','Valparaíso de Goiás','Trindade','Formosa','Novo Gama','Catalão'],
+    MA: ['São Luís','Imperatriz','São José de Ribamar','Timon','Caxias','Codó','Paço do Lumiar','Açailândia','Bacabal','Balsas'],
+    MT: ['Cuiabá','Várzea Grande','Rondonópolis','Sinop','Tangará da Serra','Cáceres','Sorriso','Lucas do Rio Verde','Primavera do Leste'],
+    MS: ['Campo Grande','Dourados','Três Lagoas','Corumbá','Ponta Porã','Naviraí','Nova Andradina','Aquidauana','Sidrolândia'],
+    MG: ['Belo Horizonte','Uberlândia','Contagem','Juiz de Fora','Betim','Montes Claros','Ribeirão das Neves','Uberaba','Governador Valadares','Ipatinga','Sete Lagoas','Divinópolis','Santa Luzia','Poços de Caldas','Coronel Fabriciano','Barbacena','Teófilo Otoni'],
+    PA: ['Belém','Ananindeua','Santarém','Marabá','Castanhal','Parauapebas','Marituba','Altamira','Itaituba','Abaetetuba','Tucuruí'],
+    PB: ['João Pessoa','Campina Grande','Santa Rita','Patos','Bayeux','Sousa','Cajazeiras','Guarabira'],
+    PR: ['Curitiba','Londrina','Maringá','Ponta Grossa','Cascavel','São José dos Pinhais','Foz do Iguaçu','Colombo','Guarapuava','Paranaguá','Araucária','Toledo','Apucarana','Pinhais'],
+    PE: ['Recife','Caruaru','Olinda','Petrolina','Paulista','Jaboatão dos Guararapes','Camarajibe','Cabo de Santo Agostinho','Garanhuns','Vitória de Santo Antão','Gravatá'],
+    PI: ['Teresina','Parnaíba','Picos','Floriano','Campo Maior','Barras','União'],
+    RJ: ['Rio de Janeiro','São Gonçalo','Duque de Caxias','Nova Iguaçu','Niterói','Belford Roxo','Campos dos Goytacazes','Petrópolis','Volta Redonda','Macaé','Magé','Itaboraí','São João de Meriti','Mesquita','Nilópolis','Angra dos Reis','Cabo Frio','Nova Friburgo','Teresópolis','Resende'],
+    RN: ['Natal','Mossoró','Parnamirim','São Gonçalo do Amarante','Ceará-Mirim','Caicó','Açu','Santa Cruz'],
+    RS: ['Porto Alegre','Caxias do Sul','Pelotas','Canoas','Santa Maria','Gravataí','Viamão','Novo Hamburgo','São Leopoldo','Rio Grande','Alvorada','Passo Fundo','Sapucaia do Sul','Uruguaiana','Bagé','Bento Gonçalves','Erechim','Cachoeirinha','Santa Cruz do Sul'],
+    RO: ['Porto Velho','Ji-Paraná','Ariquemes','Vilhena','Cacoal','Rolim de Moura','Jaru','Guajará-Mirim'],
+    RR: ['Boa Vista','Rorainópolis','Caracaraí','Alto Alegre'],
+    SC: ['Florianópolis','Joinville','Blumenau','São José','Criciúma','Chapecó','Itajaí','Jaraguá do Sul','Palhoça','Balneário Camboriú','Lages','Brusque','Tubarão','Caçador','São Bento do Sul'],
+    SP: ['São Paulo','Guarulhos','Campinas','São Bernardo do Campo','Santo André','Ribeirão Preto','Osasco','Sorocaba','Mauá','São José dos Campos','Mogi das Cruzes','Santos','Diadema','Jundiaí','Carapicuíba','Piracicaba','Bauru','São Vicente','Franca','Guarujá','Taubaté','Limeira','Suzano','Taboão da Serra','Sumaré','Barueri','Cotia','Americana','São Carlos','Marília','Presidente Prudente','Araraquara','Jacareí','Hortolândia','Indaiatuba','Praia Grande','Itaquaquecetuba','Itu','Araçatuba','Botucatu','São João da Boa Vista','Rio Claro','Paulínia','Santana de Parnaíba'],
+    SE: ['Aracaju','Nossa Senhora do Socorro','Lagarto','Itabaiana','São Cristóvão','Estância','Tobias Barreto'],
+    TO: ['Palmas','Araguaína','Gurupi','Porto Nacional','Paraíso do Tocantins','Colinas do Tocantins','Guaraí'],
+  };
+
   // ── Busca ───────────────────────────────────────────────────
   function preencherEstado() {
     const uf = document.getElementById('sel-estado').value;
-    const cidadeEl = document.getElementById('inp-cidade');
-    if (!uf) return;
-    let cidade = cidadeEl.value.replace(/,\s*[A-Z]{2}$/, '').trim();
-    cidadeEl.value = cidade ? `${cidade}, ${uf}` : '';
-    if (!cidade) cidadeEl.focus();
-  }
-
-  function ajustarCidade() {
-    const uf = document.getElementById('sel-estado').value;
-    if (!uf) return;
-    const cidadeEl = document.getElementById('inp-cidade');
-    const val = cidadeEl.value;
-    if (val.endsWith(`, ${uf}`) || val === '') return;
+    const cidadeSel = document.getElementById('sel-cidade');
+    cidadeSel.innerHTML = '';
+    if (!uf || !CIDADES[uf]) {
+      cidadeSel.innerHTML = '<option value="">Selecione o estado primeiro</option>';
+      cidadeSel.disabled = true;
+      return;
+    }
+    cidadeSel.disabled = false;
+    cidadeSel.innerHTML = '<option value="">Selecione a cidade</option>' +
+      CIDADES[uf].map(c => `<option value="${c}, ${uf}">${c}</option>`).join('');
+    cidadeSel.focus();
   }
 
   async function fazerBusca() {
     const nicho  = document.getElementById('sel-nicho').value;
     const uf     = document.getElementById('sel-estado').value;
-    let   cidade = document.getElementById('inp-cidade').value.trim();
+    const cidade = document.getElementById('sel-cidade').value.trim();
     const status = document.getElementById('busca-status');
     const lista  = document.getElementById('lista-resultados');
 
-    if (uf && !cidade.endsWith(`, ${uf}`)) {
-      cidade = cidade.replace(/,\s*[A-Z]{2}$/, '').trim();
-      if (cidade) cidade = `${cidade}, ${uf}`;
-    }
-
     if (!cidade) {
-      status.innerHTML = '<div class="msg-erro">Informe a cidade e selecione o estado.</div>';
+      status.innerHTML = '<div class="msg-erro">Selecione o estado e a cidade.</div>';
       return;
     }
 
@@ -818,161 +878,3 @@
       }
 
       document.getElementById('nav-buscas').textContent =
-        `${data.buscas_restantes} busca${data.buscas_restantes !== 1 ? 's' : ''} restante${data.buscas_restantes !== 1 ? 's' : ''}`;
-
-      status.innerHTML = `<div class="msg-ok">✅ ${data.total} resultado${data.total !== 1 ? 's' : ''} encontrado${data.total !== 1 ? 's' : ''} em <strong>${cidade}</strong></div>`;
-
-      if (data.total === 0) {
-        lista.innerHTML = '<div class="empty-state"><span class="emoji">🔭</span>Nenhum resultado. Tente outra cidade ou nicho.</div>';
-        return;
-      }
-
-      lista.innerHTML = data.resultados.map((l, i) => renderLeadBusca(l, i)).join('');
-    } catch (e) {
-      status.innerHTML = '<div class="msg-erro">❌ Erro de conexão com o servidor.</div>';
-    } finally {
-      document.getElementById('btn-buscar').disabled = false;
-    }
-  }
-
-  function renderLeadBusca(lead, idx) {
-    const wa = lead.whatsapp
-      ? `<a class="btn-wa" href="https://wa.me/${lead.whatsapp}" target="_blank">💬 WhatsApp</a>`
-      : '';
-    const estrelas = lead.rating ? `⭐ ${lead.rating}` : '';
-
-    return `
-      <div class="lead-card" id="lead-busca-${idx}">
-        <div class="lead-info">
-          <h3>${lead.nome}</h3>
-          <p>📍 ${lead.endereco || lead.cidade}</p>
-          ${lead.telefone ? `<p>📞 ${lead.telefone}</p>` : ''}
-          ${estrelas ? `<p class="lead-rating">${estrelas}</p>` : ''}
-        </div>
-        <div class="lead-acoes">
-          ${wa}
-          <button class="btn btn-verde btn-sm" onclick="salvarLead(${JSON.stringify(lead).replace(/"/g, '&quot;')}, ${idx})">
-            ＋ Salvar
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
-  async function salvarLead(lead, idx) {
-    try {
-      const res = await fetch(`${API_URL}/salvar-lead`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokenJWT}`,
-        },
-        body: JSON.stringify({ lead }),
-      });
-
-      const data = await res.json();
-      const card = document.getElementById(`lead-busca-${idx}`);
-      if (res.ok) {
-        card.classList.add('salvo');
-        card.querySelector('.btn-verde').textContent = '✅ Salvo';
-        card.querySelector('.btn-verde').disabled = true;
-      } else {
-        alert(data.erro || 'Erro ao salvar.');
-      }
-    } catch {
-      alert('Erro de conexão.');
-    }
-  }
-
-  // ── Leads salvos ────────────────────────────────────────────
-  async function carregarLeads(nicho) {
-    const lista = document.getElementById('lista-leads');
-    lista.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando leads…</div>';
-
-    try {
-      const url = nicho ? `${API_URL}/meus-leads?nicho=${nicho}` : `${API_URL}/meus-leads`;
-      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${tokenJWT}` } });
-      const data = await res.json();
-      leadsCache = data.leads || [];
-
-      if (leadsCache.length === 0) {
-        lista.innerHTML = '<div class="empty-state"><span class="emoji">📭</span>Nenhum lead salvo ainda.<br>Use a aba Garimpar para encontrar clientes.</div>';
-        return;
-      }
-
-      lista.innerHTML = leadsCache.map(renderLeadSalvo).join('');
-    } catch {
-      lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>';
-    }
-  }
-
-  function renderLeadSalvo(lead) {
-    const wa = lead.whatsapp
-      ? `<a class="btn-wa" href="https://wa.me/${lead.whatsapp}" target="_blank">💬 WhatsApp</a>`
-      : '';
-    const data = new Date(lead.salvo_em).toLocaleDateString('pt-BR');
-    const estrelas = lead.rating ? `⭐ ${lead.rating}` : '';
-
-    return `
-      <div class="lead-card">
-        <div class="lead-info">
-          <h3>${lead.nome}</h3>
-          <p>📍 ${lead.endereco || lead.cidade}</p>
-          ${lead.telefone ? `<p>📞 ${lead.telefone}</p>` : ''}
-          ${estrelas ? `<p class="lead-rating">${estrelas}</p>` : ''}
-        </div>
-        <div class="lead-acoes">
-          ${wa}
-        </div>
-      </div>
-    `;
-  }
-
-  // ── Export CSV ─────────────────────────────────────────────────────
-  function exportarCSV() {
-    if (!leadsCache.length) { alert('Nenhum lead para exportar.'); return; }
-    const header = ['Nome','Endereço','Telefone','WhatsApp','Rating','Nicho','Salvo em'].join(',');
-    const rows = leadsCache.map(l => [
-      l.nome, l.endereco||l.cidade, l.telefone||'', l.whatsapp||'',
-      l.rating||'', l.nicho||'', l.salvo_em||''
-    ].map(v => '"' + String(v).replace(/"/g,'""') + '"').join(','));
-    const csv = [header, ...rows].join('\n');
-    const blob = new Blob(['﻿'+csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'leads_garimpoapp.csv'; a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  function filtrarLeads(nicho, el) {
-    document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('ativo'));
-    el.classList.add('ativo');
-    nichoFiltro = nicho;
-    carregarLeads(nicho);
-  }
-
-  // ── Init ──────────────────────────────────────────────────────────
-  (function() {
-    if (tokenJWT) {
-      document.getElementById('tela-auth').style.display = 'none';
-      document.getElementById('tela-loading').style.display = 'flex';
-      fetch(API_URL + '/perfil', { headers: { 'Authorization': 'Bearer ' + tokenJWT } })
-        .then(function(r) {
-          if (!r.ok) throw new Error('token inválido');
-          return r.json();
-        })
-        .then(function(perfil) {
-          perfilUsuario = perfil;
-          document.getElementById('tela-loading').style.display = 'none';
-          document.getElementById('nav-plano').textContent = (perfil.plano || 'free').toUpperCase();
-          document.getElementById('nav-buscas').textContent =
-            perfil.buscas_restantes + ' busca' + (perfil.buscas_restantes !== 1 ? 's' : '') +
-            ' restante' + (perfil.buscas_restantes !== 1 ? 's' : '');
-          document.getElementById('app').style.display = 'block';
-        })
-        .catch(function() { sair(); });
-    }
-  })();
-</script>
-</body>
-</html>
-                                                                                                                                                                                                                                                                                                                                    

@@ -6,37 +6,52 @@
   <title>GarimpoApp — Encontre Clientes</title>
   <style>
     :root {
-      --laranja: #f97316;
-      --laranja-dark: #ea6c0a;
-      --azul: #1e40af;
-      --verde: #16a34a;
-      --vermelho: #dc2626;
-      --cinza-bg: #f8fafc;
-      --cinza-borda: #e2e8f0;
-      --cinza-texto: #64748b;
-      --preto: #0f172a;
-      --branco: #ffffff;
+      --ouro:        #f5a523;
+      --ouro-dark:   #c8870a;
+      --ouro-glow:   rgba(245,165,35,0.35);
+      --ouro-borda:  rgba(245,165,35,0.3);
+      --verde:       #22c55e;
+      --vermelho:    #ef4444;
+      --bg:          #060d1c;
+      --bg-card:     rgba(255,255,255,0.04);
+      --bg-card2:    rgba(255,255,255,0.07);
+      --borda:       rgba(255,255,255,0.1);
+      --texto:       #ffffff;
+      --texto-muted: rgba(255,255,255,0.55);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--cinza-bg); color: var(--preto); }
 
-    /* ── Auth Screen ── */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    /* ══════════════════════════════════════
+       TELA DE AUTH
+    ══════════════════════════════════════ */
     #tela-auth {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #f97316 100%);
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(245,165,35,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(245,165,35,0.08) 0%, transparent 50%),
+        var(--bg);
     }
 
     .auth-card {
-      background: var(--branco);
-      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--ouro-borda);
+      border-radius: 20px;
       padding: 40px;
       width: 100%;
-      max-width: 400px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      max-width: 420px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 60px rgba(245,165,35,0.1), 0 20px 60px rgba(0,0,0,0.5);
     }
 
     .auth-logo {
@@ -44,22 +59,33 @@
       margin-bottom: 32px;
     }
 
-    .auth-logo h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--laranja);
+    .auth-logo .logo-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 12px var(--ouro));
     }
 
+    .auth-logo h1 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .auth-logo h1 span.g { color: var(--texto); }
+    .auth-logo h1 span.a { color: var(--ouro); }
+
     .auth-logo p {
-      color: var(--cinza-texto);
-      font-size: 0.9rem;
-      margin-top: 4px;
+      color: var(--texto-muted);
+      font-size: 0.88rem;
+      margin-top: 6px;
+      letter-spacing: 0.5px;
     }
 
     .auth-tabs {
       display: flex;
-      border-bottom: 2px solid var(--cinza-borda);
-      margin-bottom: 24px;
+      border-bottom: 1px solid var(--borda);
+      margin-bottom: 28px;
     }
 
     .auth-tab {
@@ -68,130 +94,254 @@
       text-align: center;
       cursor: pointer;
       font-weight: 600;
-      color: var(--cinza-texto);
+      font-size: 0.9rem;
+      color: var(--texto-muted);
       border-bottom: 2px solid transparent;
-      margin-bottom: -2px;
+      margin-bottom: -1px;
       transition: all 0.2s;
     }
 
     .auth-tab.ativo {
-      color: var(--laranja);
-      border-color: var(--laranja);
+      color: var(--ouro);
+      border-color: var(--ouro);
     }
 
+    /* Form controls */
     .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--preto); }
 
-    .form-group input {
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--texto-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input,
+    .form-group select,
+    select {
       width: 100%;
       padding: 12px 14px;
-      border: 1.5px solid var(--cinza-borda);
-      border-radius: 8px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--borda);
+      border-radius: 10px;
       font-size: 0.95rem;
-      transition: border-color 0.2s;
+      color: var(--texto);
       outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .form-group input:focus { border-color: var(--laranja); }
+    .form-group input::placeholder { color: var(--texto-muted); }
 
+    .form-group input:focus,
+    .form-group select:focus,
+    select:focus {
+      border-color: var(--ouro);
+      box-shadow: 0 0 0 3px var(--ouro-glow);
+    }
+
+    select option { background: #0d1b30; color: #fff; }
+
+    /* Botões */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       padding: 12px 20px;
-      border-radius: 8px;
+      border-radius: 10px;
       border: none;
       font-size: 0.95rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
+      letter-spacing: 0.3px;
     }
 
-    .btn-primary { background: var(--laranja); color: #fff; width: 100%; }
-    .btn-primary:hover { background: var(--laranja-dark); transform: translateY(-1px); }
-    .btn-secondary { background: var(--cinza-bg); color: var(--preto); border: 1.5px solid var(--cinza-borda); }
-    .btn-secondary:hover { background: var(--cinza-borda); }
-    .btn-verde { background: var(--verde); color: #fff; }
-    .btn-verde:hover { opacity: 0.9; }
-    .btn-sm { padding: 8px 14px; font-size: 0.85rem; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--ouro), var(--ouro-dark));
+      color: #000;
+      width: 100%;
+      box-shadow: 0 4px 20px var(--ouro-glow);
+    }
 
-    .msg-erro { background: #fee2e2; color: var(--vermelho); border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-top: 12px; }
-    .msg-ok { background: #dcfce7; color: var(--verde); border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-top: 12px; }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(245,165,35,0.5);
+    }
 
-    /* ── App Principal ── */
-    #app { display: none; min-height: 100vh; }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      transform: none;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--bg-card2);
+      color: var(--texto);
+      border: 1px solid var(--borda);
+    }
+
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+
+    .btn-verde {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(22,163,74,0.3);
+    }
+
+    .btn-verde:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .btn-sm { padding: 8px 14px; font-size: 0.82rem; }
+
+    /* Mensagens */
+    .msg-erro {
+      background: rgba(239,68,68,0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      margin-top: 12px;
+    }
+
+    .msg-ok {
+      background: rgba(34,197,94,0.12);
+      color: #86efac;
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      margin-top: 12px;
+    }
+
+    /* ══════════════════════════════════════
+       LOADING
+    ══════════════════════════════════════ */
+    #tela-loading {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      background: var(--bg);
+    }
+
+    #tela-loading .logo-loading {
+      font-size: 2.2rem;
+      font-weight: 900;
+    }
+
+    #tela-loading .logo-loading span { color: var(--ouro); }
+
+    #tela-loading p { color: var(--texto-muted); font-size: 0.9rem; }
+
+    /* ══════════════════════════════════════
+       APP PRINCIPAL
+    ══════════════════════════════════════ */
+    #app {
+      display: none;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 0% 0%, rgba(245,165,35,0.06) 0%, transparent 50%),
+        var(--bg);
+    }
 
     /* Navbar */
     nav {
-      background: var(--branco);
-      border-bottom: 1.5px solid var(--cinza-borda);
+      background: rgba(6,13,28,0.9);
+      border-bottom: 1px solid var(--ouro-borda);
       padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 60px;
+      height: 62px;
       position: sticky;
       top: 0;
       z-index: 100;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 2px 20px rgba(245,165,35,0.08);
     }
 
-    .nav-logo { font-size: 1.3rem; font-weight: 800; color: var(--laranja); text-decoration: none; }
-    .nav-logo span { color: var(--preto); }
+    .nav-logo {
+      font-size: 1.35rem;
+      font-weight: 900;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
 
-    .nav-info { display: flex; align-items: center; gap: 16px; }
+    .nav-logo span.g { color: #fff; }
+    .nav-logo span.a { color: var(--ouro); }
+    .nav-logo .icon { margin-right: 4px; filter: drop-shadow(0 0 6px var(--ouro)); }
+
+    .nav-info { display: flex; align-items: center; gap: 14px; }
 
     .plano-badge {
-      background: var(--laranja);
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 3px 10px;
+      background: linear-gradient(135deg, var(--ouro), var(--ouro-dark));
+      color: #000;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 12px;
       border-radius: 20px;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .buscas-badge {
       font-size: 0.82rem;
-      color: var(--cinza-texto);
+      color: var(--texto-muted);
     }
 
-    /* Tabs principais */
+    /* Tabs */
     .main-tabs {
-      background: var(--branco);
-      border-bottom: 1.5px solid var(--cinza-borda);
+      background: rgba(6,13,28,0.7);
+      border-bottom: 1px solid var(--borda);
       padding: 0 24px;
       display: flex;
       gap: 4px;
     }
 
     .main-tab {
-      padding: 14px 18px;
+      padding: 14px 20px;
       cursor: pointer;
       font-weight: 600;
-      color: var(--cinza-texto);
-      border-bottom: 3px solid transparent;
+      color: var(--texto-muted);
+      border-bottom: 2px solid transparent;
       font-size: 0.92rem;
       transition: all 0.2s;
+      margin-bottom: -1px;
     }
 
-    .main-tab.ativo { color: var(--laranja); border-color: var(--laranja); }
+    .main-tab.ativo { color: var(--ouro); border-color: var(--ouro); }
+    .main-tab:hover:not(.ativo) { color: var(--texto); }
 
     /* Container */
     .container { max-width: 900px; margin: 32px auto; padding: 0 24px; }
 
     /* Card */
     .card {
-      background: var(--branco);
-      border-radius: 12px;
-      border: 1.5px solid var(--cinza-borda);
+      background: var(--bg-card);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
       padding: 24px;
       margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+      transition: border-color 0.2s;
     }
 
-    .card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+    .card:hover { border-color: var(--ouro-borda); }
 
-    /* Formulário de busca */
+    .card h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: var(--texto);
+    }
+
+    /* Busca grid */
     .busca-grid {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr 1fr auto;
@@ -199,67 +349,60 @@
       align-items: end;
     }
 
-    select {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid var(--cinza-borda);
-      border-radius: 8px;
-      font-size: 0.95rem;
-      outline: none;
-      background: #fff;
-      cursor: pointer;
-    }
-
-    select:focus { border-color: var(--laranja); }
-
-    /* Lista de resultados */
+    /* Resultados */
     #lista-resultados { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
 
     .lead-card {
-      background: var(--branco);
-      border: 1.5px solid var(--cinza-borda);
-      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
       padding: 16px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
     }
 
-    .lead-card:hover { border-color: var(--laranja); }
-    .lead-card.salvo { opacity: 0.6; }
+    .lead-card:hover {
+      border-color: var(--ouro-borda);
+      box-shadow: 0 0 20px rgba(245,165,35,0.08);
+    }
 
-    .lead-info h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .lead-card.salvo { opacity: 0.5; }
+
+    .lead-info h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--texto);
+    }
 
     .lead-info p {
       font-size: 0.82rem;
-      color: var(--cinza-texto);
+      color: var(--texto-muted);
       margin-bottom: 2px;
     }
 
-    .lead-rating {
-      font-size: 0.8rem;
-      color: #b45309;
-      font-weight: 600;
-    }
+    .lead-rating { font-size: 0.8rem; color: var(--ouro); font-weight: 600; }
 
     .lead-acoes { display: flex; gap: 8px; flex-shrink: 0; }
 
-    /* Whatsapp btn */
+    /* WhatsApp btn */
     .btn-wa {
-      background: #25d366;
+      background: linear-gradient(135deg, #25d366, #128c4e);
       color: #fff;
       border: none;
       border-radius: 8px;
       padding: 8px 12px;
       font-size: 0.82rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 5px;
+      box-shadow: 0 2px 10px rgba(37,211,102,0.25);
     }
 
     /* Loader */
@@ -269,13 +412,13 @@
       justify-content: center;
       gap: 10px;
       padding: 40px;
-      color: var(--cinza-texto);
+      color: var(--texto-muted);
     }
 
     .spinner {
-      width: 20px; height: 20px;
-      border: 3px solid var(--cinza-borda);
-      border-top-color: var(--laranja);
+      width: 22px; height: 22px;
+      border: 3px solid rgba(245,165,35,0.2);
+      border-top-color: var(--ouro);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
@@ -284,75 +427,72 @@
 
     .empty-state {
       text-align: center;
-      padding: 40px;
-      color: var(--cinza-texto);
+      padding: 48px;
+      color: var(--texto-muted);
     }
 
     .empty-state .emoji { font-size: 3rem; display: block; margin-bottom: 12px; }
 
-    /* Leads salvos */
-    .leads-filtros { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    /* Filtros */
+    .leads-filtros { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
 
     .filtro-chip {
       padding: 6px 14px;
       border-radius: 20px;
-      border: 1.5px solid var(--cinza-borda);
-      font-size: 0.82rem;
-      font-weight: 600;
+      border: 1px solid var(--borda);
+      font-size: 0.8rem;
+         font-weight: 600;
       cursor: pointer;
-      background: #fff;
-      color: var(--cinza-texto);
+      background: transparent;
+      color: var(--texto-muted);
       transition: all 0.2s;
     }
 
-    .filtro-chip.ativo { background: var(--laranja); color: #fff; border-color: var(--laranja); }
+    .filtro-chip:hover { border-color: var(--ouro-borda); color: var(--texto); }
 
-    /* Exportar */
-    .acoes-topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .filtro-chip.ativo {
+      background: linear-gradient(135deg, var(--ouro), var(--ouro-dark));
+      color: #000;
+      border-color: transparent;
+    }
+
+    .acoes-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    /* Divider */
+    .auth-divider {
+      text-align: center;
+      color: var(--texto-muted);
+      font-size: 0.78rem;
+      margin: 8px 0;
+    }
 
     /* Responsivo */
     @media (max-width: 600px) {
       .busca-grid { grid-template-columns: 1fr; }
-      #sel-estado { font-size: 0.85rem; }
       .nav-info .buscas-badge { display: none; }
       .lead-card { flex-direction: column; align-items: flex-start; }
+      .auth-card { margin: 16px; padding: 28px 24px; }
     }
-
-    /* ── Loading Screen ── */
-    #tela-loading {
-      display: none;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 16px;
-      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #f97316 100%);
-    }
-    #tela-loading .logo-loading {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #fff;
-    }
-    #tela-loading .spinner-loading {
-      width: 36px; height: 36px;
-      border: 4px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    #tela-loading p { color: rgba(255,255,255,0.8); font-size: 0.9rem; }
   </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════
+<!-- ══════════════════════════════════════
      TELA DE LOGIN / CADASTRO
-════════════════════════════════════════ -->
+══════════════════════════════════════ -->
 <div id="tela-auth">
   <div class="auth-card">
     <div class="auth-logo">
-      <h1>⛏️ GarimpoApp</h1>
-      <p>Encontre clientes para seu negócio</p>
+      <span class="logo-icon">⛏️</span>
+      <h1>
+        <span class="g">GARIMPO</span><span class="a">APP</span>
+      </h1>
+      <p>ENCONTRE LEADS EM TODO O BRASIL</p>
     </div>
 
     <div class="auth-tabs">
@@ -394,18 +534,21 @@
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     APP PRINCIPAL
-════════════════════════════════════════ -->
+<!-- Loading -->
 <div id="tela-loading" style="display:none">
-  <div class="logo-loading">⛏️ GarimpoApp</div>
-  <div class="spinner-loading"></div>
+  <div class="logo-loading">⛏️ GARIMPO<span>APP</span></div>
+  <div class="spinner" style="width:36px;height:36px;border-width:4px"></div>
   <p>Entrando na sua conta…</p>
 </div>
 
+<!-- ══════════════════════════════════════
+     APP PRINCIPAL
+══════════════════════════════════════ -->
 <div id="app" style="display:none">
   <nav>
-    <a class="nav-logo" href="#">⛏️ Garimpo<span>App</span></a>
+    <a class="nav-logo" href="#">
+      <span class="icon">⛏️</span><span class="g">GARIMPO</span><span class="a">APP</span>
+    </a>
     <div class="nav-info">
       <span class="buscas-badge" id="nav-buscas">— buscas restantes</span>
       <span class="plano-badge" id="nav-plano">free</span>
@@ -507,32 +650,23 @@
 </div>
 
 <script>
-  // ════════════════════════════════════════
-  // CONFIGURAÇÃO — troque pela URL do seu backend no Railway
-  // ════════════════════════════════════════
-  // Para testes locais: 'http://localhost:3000'
-  // Para produção (Railway): 'https://garimpoapp-backend-production.up.railway.app'
-  const API_URL = 'https://garimpoapp-backend-production.up.railway.app';
-
-  // Supabase (para auth no frontend)
+  // ══════════════════════════════════════════════════════════════
+  // CONFIG
+  // ══════════════════════════════════════════════════════════════
+  const API_URL      = 'https://garimpoapp-backend-production.up.railway.app';
   const SUPABASE_URL = 'https://pupnynccxtdvqkoflhzc.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_2QU5GcePpzI2D30q_T7FyQ_Bp-Eee7F';
 
-  // ────────────────────────────────────────
-  // Auth via Supabase REST (sem biblioteca)
-  // ────────────────────────────────────────
   let tokenJWT = localStorage.getItem('garimpo_token') || null;
   let perfilUsuario = null;
   let leadsCache = [];
   let nichoFiltro = null;
 
+  // ── Auth ────────────────────────────────────────────────────
   async function supabaseAuth(endpoint, body) {
     const res = await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_ANON_KEY,
-      },
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
       body: JSON.stringify(body),
     });
     return res.json();
@@ -575,17 +709,13 @@
 
     msgEl.innerHTML = '<div class="loader"><div class="spinner"></div> Criando conta…</div>';
 
-    const data = await supabaseAuth('signup', {
-      email, password: senha,
-      data: { nome },
-    });
+    const data = await supabaseAuth('signup', { email, password: senha, data: { nome } });
 
     if (data.access_token) {
       tokenJWT = data.access_token;
       localStorage.setItem('garimpo_token', tokenJWT);
       await iniciarApp();
     } else if (data.id) {
-      // Confirmação de email habilitada no Supabase
       msgEl.innerHTML = '<div class="msg-ok">✅ Conta criada! Verifique seu e-mail para confirmar.</div>';
     } else {
       msgEl.innerHTML = `<div class="msg-erro">❌ ${data.error_description || 'Erro ao criar conta.'}</div>`;
@@ -601,16 +731,14 @@
   }
 
   function mudarAba(aba) {
-    document.getElementById('form-login').style.display = aba === 'login' ? '' : 'none';
+    document.getElementById('form-login').style.display    = aba === 'login'    ? '' : 'none';
     document.getElementById('form-cadastro').style.display = aba === 'cadastro' ? '' : 'none';
     document.querySelectorAll('.auth-tab').forEach((t, i) => {
       t.classList.toggle('ativo', (i === 0 && aba === 'login') || (i === 1 && aba === 'cadastro'));
     });
   }
 
-  // ────────────────────────────────────────
-  // Iniciar app após login
-  // ────────────────────────────────────────
+  // ── App ─────────────────────────────────────────────────────
   async function iniciarApp() {
     document.getElementById('tela-auth').style.display = 'none';
     document.getElementById('app').style.display = 'block';
@@ -620,11 +748,7 @@
         headers: { 'Authorization': `Bearer ${tokenJWT}` },
       });
 
-      if (!res.ok) {
-        // Token expirado ou inválido — volta para login
-        sair();
-        return;
-      }
+      if (!res.ok) { sair(); return; }
 
       perfilUsuario = await res.json();
       document.getElementById('nav-plano').textContent = (perfilUsuario.plano || 'free').toUpperCase();
@@ -636,42 +760,32 @@
     }
   }
 
-  // ────────────────────────────────────────
-  // Tabs
-  // ────────────────────────────────────────
+  // ── Tabs ────────────────────────────────────────────────────
   function mudarTab(tab) {
     document.querySelectorAll('.main-tab').forEach((t, i) => {
       t.classList.toggle('ativo', (i === 0 && tab === 'buscar') || (i === 1 && tab === 'leads'));
     });
     document.getElementById('tab-buscar').style.display = tab === 'buscar' ? '' : 'none';
     document.getElementById('tab-leads').style.display  = tab === 'leads'  ? '' : 'none';
-
     if (tab === 'leads') carregarLeads();
   }
 
-  // ────────────────────────────────────────
-  // Busca
-  // ────────────────────────────────────────
-  // Preenche ", UF" no campo cidade ao selecionar estado
+  // ── Busca ───────────────────────────────────────────────────
   function preencherEstado() {
     const uf = document.getElementById('sel-estado').value;
     const cidadeEl = document.getElementById('inp-cidade');
     if (!uf) return;
-    // Remove qualquer ", XX" anterior e adiciona o novo
     let cidade = cidadeEl.value.replace(/,\s*[A-Z]{2}$/, '').trim();
     cidadeEl.value = cidade ? `${cidade}, ${uf}` : '';
     if (!cidade) cidadeEl.focus();
   }
 
-  // Ao digitar na cidade, mantém o estado selecionado no final
   function ajustarCidade() {
     const uf = document.getElementById('sel-estado').value;
     if (!uf) return;
     const cidadeEl = document.getElementById('inp-cidade');
     const val = cidadeEl.value;
-    // Se o usuário apagou o ", UF", não reinsere enquanto digita
     if (val.endsWith(`, ${uf}`) || val === '') return;
-    // Reaplica a UF quando o campo perde foco (via blur no botão buscar)
   }
 
   async function fazerBusca() {
@@ -681,7 +795,6 @@
     const status = document.getElementById('busca-status');
     const lista  = document.getElementById('lista-resultados');
 
-    // Garante que a UF está no final da cidade
     if (uf && !cidade.endsWith(`, ${uf}`)) {
       cidade = cidade.replace(/,\s*[A-Z]{2}$/, '').trim();
       if (cidade) cidade = `${cidade}, ${uf}`;
@@ -713,21 +826,19 @@
         return;
       }
 
-      // Atualizar contador de buscas
       document.getElementById('nav-buscas').textContent =
         `${data.buscas_restantes} busca${data.buscas_restantes !== 1 ? 's' : ''} restante${data.buscas_restantes !== 1 ? 's' : ''}`;
 
       status.innerHTML = `<div class="msg-ok">✅ ${data.total} resultado${data.total !== 1 ? 's' : ''} encontrado${data.total !== 1 ? 's' : ''} em <strong>${cidade}</strong></div>`;
 
       if (data.total === 0) {
-        lista.innerHTML = '<div class="empty-state"><span class="emoji">🔭</span>Nenhum resultado encontrado. Tente outra cidade ou nicho.</div>';
+        lista.innerHTML = '<div class="empty-state"><span class="emoji">🔭</span>Nenhum resultado. Tente outra cidade ou nicho.</div>';
         return;
       }
 
       lista.innerHTML = data.resultados.map((l, i) => renderLeadBusca(l, i)).join('');
     } catch (e) {
       status.innerHTML = '<div class="msg-erro">❌ Erro de conexão com o servidor.</div>';
-      console.error(e);
     } finally {
       document.getElementById('btn-buscar').disabled = false;
     }
@@ -769,7 +880,6 @@
       });
 
       const data = await res.json();
-
       const card = document.getElementById(`lead-busca-${idx}`);
       if (res.ok) {
         card.classList.add('salvo');
@@ -778,23 +888,19 @@
       } else {
         alert(data.erro || 'Erro ao salvar.');
       }
-    } catch (e) {
+    } catch {
       alert('Erro de conexão.');
     }
   }
 
-  // ────────────────────────────────────────
-  // Leads salvos
-  // ────────────────────────────────────────
+  // ── Leads salvos ────────────────────────────────────────────
   async function carregarLeads(nicho) {
     const lista = document.getElementById('lista-leads');
     lista.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando leads…</div>';
 
     try {
       const url = nicho ? `${API_URL}/meus-leads?nicho=${nicho}` : `${API_URL}/meus-leads`;
-      const res = await fetch(url, {
-        headers: { 'Authorization': `Bearer ${tokenJWT}` },
-      });
+      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${tokenJWT}` } });
       const data = await res.json();
       leadsCache = data.leads || [];
 
@@ -804,7 +910,7 @@
       }
 
       lista.innerHTML = leadsCache.map(renderLeadSalvo).join('');
-    } catch (e) {
+    } catch {
       lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>';
     }
   }
@@ -820,59 +926,59 @@
       <div class="lead-card">
         <div class="lead-info">
           <h3>${lead.nome}</h3>
-                <p>📍 ${lead.endereco || lead.cidade}</p>
+          <p>📍 ${lead.endereco || lead.cidade}</p>
           ${lead.telefone ? `<p>📞 ${lead.telefone}</p>` : ''}
           ${estrelas ? `<p class="lead-rating">${estrelas}</p>` : ''}
-          <p style="font-size:0.75rem;color:#94a3b8;margin-top:4px">Salvo em ${data}</p>
         </div>
-        <div class="lead-acoes">${wa}</div>
+        <div class="lead-acoes">
+          ${wa}
+        </div>
       </div>
     `;
   }
 
-  function filtrarLeads(nicho, el) {
-    nichoFiltro = nicho;
-    document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('ativo'));
-    el.classList.add('ativo');
-    carregarLeads(nicho);
-  }
-
+  // ── Export CSV ─────────────────────────────────────────────────────
   function exportarCSV() {
     if (!leadsCache.length) { alert('Nenhum lead para exportar.'); return; }
-    const cols = ['nome','telefone','endereco','cidade','estado','rating','nicho'];
-    const header = cols.join(';');
-    const rows = leadsCache.map(l => cols.map(c => `"${String(l[c] ?? '').replace(/"/g,'""')}"`).join(';'));
+    const header = ['Nome','Endereço','Telefone','WhatsApp','Rating','Nicho','Salvo em'].join(',');
+    const rows = leadsCache.map(l => [
+      l.nome, l.endereco||l.cidade, l.telefone||'', l.whatsapp||'',
+      l.rating||'', l.nicho||'', l.salvo_em||''
+    ].map(v => '"' + String(v).replace(/"/g,'""') + '"').join(','));
     const csv = [header, ...rows].join('\n');
-    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'garimpo_leads.csv'; a.click();
+    const a = document.createElement('a'); a.href = url; a.download = 'leads_garimpoapp.csv'; a.click();
     URL.revokeObjectURL(url);
   }
 
-  // ── Auto-login ──────────────────────────────────────────────
-  (async () => {
+  function filtrarLeads(nicho, el) {
+    document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('ativo'));
+    el.classList.add('ativo');
+    nichoFiltro = nicho;
+    carregarLeads(nicho);
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────
+  (function() {
     if (tokenJWT) {
+      document.getElementById('tela-auth').style.display = 'none';
       document.getElementById('tela-loading').style.display = 'flex';
-      try {
-        const teste = await fetch(`${API_URL}/perfil`, {
-          headers: { 'Authorization': `Bearer ${tokenJWT}` }
-        });
-        document.getElementById('tela-loading').style.display = 'none';
-        if (teste.ok) { await iniciarApp(); }
-        else {
-          localStorage.removeItem('garimpo_token');
-          tokenJWT = null;
-          document.getElementById('tela-auth').style.display = 'flex';
-        }
-      } catch {
-        document.getElementById('tela-loading').style.display = 'none';
-        localStorage.removeItem('garimpo_token');
-        tokenJWT = null;
-        document.getElementById('tela-auth').style.display = 'flex';
-      }
-    } else {
-      document.getElementById('tela-auth').style.display = 'flex';
+      fetch(API_URL + '/perfil', { headers: { 'Authorization': 'Bearer ' + tokenJWT } })
+        .then(function(r) {
+          if (!r.ok) throw new Error('token inválido');
+          return r.json();
+        })
+        .then(function(perfil) {
+          perfilUsuario = perfil;
+          document.getElementById('tela-loading').style.display = 'none';
+          document.getElementById('nav-plano').textContent = (perfil.plano || 'free').toUpperCase();
+          document.getElementById('nav-buscas').textContent =
+            perfil.buscas_restantes + ' busca' + (perfil.buscas_restantes !== 1 ? 's' : '') +
+            ' restante' + (perfil.buscas_restantes !== 1 ? 's' : '');
+          document.getElementById('app').style.display = 'block';
+        })
+        .catch(function() { sair(); });
     }
   })();
 </script>

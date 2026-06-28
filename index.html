@@ -609,8 +609,7 @@
             <option value="MA">MA – Maranhão</option>
             <option value="MT">MT – Mato Grosso</option>
             <option value="MS">MS – Mato Grosso do Sul</option>
-            <option value="MG">MG – Minas Gerais</option>
-            <option value="PA">PA – Pará</option>
+            <option value="MG">MG – Minas Gerais</option value="PA">PA – Pará</option>
             <option value="PB">PB – Paraíba</option>
             <option value="PR">PR – Paraná</option>
             <option value="PE">PE – Pernambuco</option>
@@ -656,7 +655,7 @@
         <div class="filtro-chip" onclick="filtrarLeads('psicologos', this)">Psicólogo</div>
         <div class="filtro-chip" onclick="filtrarLeads('farmacias', this)">Farmácia</div>
         <div class="filtro-chip" onclick="filtrarLeads('saloes', this)">Salão</div>
-        <div class="filtro-chip" onclick="filtrarLeads('barbearias', this)">Barbearia</div>
+        <div class="fi       <div class="filtro-chip" onclick="filtrarLeads('barbearias', this)">Barbearia</div>
         <div class="filtro-chip" onclick="filtrarLeads('academias', this)">Academia</div>
         <div class="filtro-chip" onclick="filtrarLeads('restaurantes', this)">Restaurante</div>
         <div class="filtro-chip" onclick="filtrarLeads('padarias', this)">Padaria</div>
@@ -805,9 +804,9 @@
     AM: ['Manaus','Parintins','Itacoatiara','Manacapuru','Tefé','Coari','Tabatinga','Humaitá'],
     BA: ['Salvador','Feira de Santana','Vitória da Conquista','Camaçari','Juazeiro','Ilhéus','Itabuna','Lauro de Freitas','Barreiras','Jequié','Teixeira de Freitas','Paulo Afonso','Alagoinhas'],
     CE: ['Fortaleza','Caucaia','Juazeiro do Norte','Maracanaú','Sobral','Crato','Itapipoca','Maranguape','Iguatu','Quixadá'],
-    DF: ['Brasília','Taguatinga','Ceilândia','Gama','Samambaia','Planaltina','Águas Claras','Sobradinho','Guará','Lago Norte','Lago Sul'],
+    DF: ['Brasília','Taguatinga','Ceilândia','Game','Samambaia','Planaltina','Águas Claras','Sobradinho','Guará','Lago Norte','Lago Sul'],
     ES: ['Vitória','Serra','Vila Velha','Cariacica','Linhares','Cachoeiro de Itapemirim','Colatina','Guarapari','São Mateus','Aracruz'],
-    GO: ['Goiânia','Aparecida de Goiânia','Anápolis','Rio Verde','Luziânia','Águas Lindas','Valparaíso de Goiás','Trindade','Formosa','Novo Gama','Catalão'],
+    GO: ['Goiânia','Aparecida de Goiânia','Anápolis','Rio Verde','Luziânia','Águas Lindas','Valparaíso de Goiás','Trindade','Formosa','Novo Game','Catalão'],
     MA: ['São Luís','Imperatriz','São José de Ribamar','Timon','Caxias','Codó','Paço do Lumiar','Açailândia','Bacabal','Balsas'],
     MT: ['Cuiabá','Várzea Grande','Rondonópolis','Sinop','Tangará da Serra','Cáceres','Sorriso','Lucas do Rio Verde','Primavera do Leste'],
     MS: ['Campo Grande','Dourados','Três Lagoas','Corumbá','Ponta Porã','Naviraí','Nova Andradina','Aquidauana','Sidrolândia'],
@@ -823,7 +822,7 @@
     RO: ['Porto Velho','Ji-Paraná','Ariquemes','Vilhena','Cacoal','Rolim de Moura','Jaru','Guajará-Mirim'],
     RR: ['Boa Vista','Rorainópolis','Caracaraí','Alto Alegre'],
     SC: ['Florianópolis','Joinville','Blumenau','São José','Criciúma','Chapecó','Itajaí','Jaraguá do Sul','Palhoça','Balneário Camboriú','Lages','Brusque','Tubarão','Caçador','São Bento do Sul'],
-    SP: ['São Paulo','Guarulhos','Campinas','São Bernardo do Campo','Santo André','Ribeirão Preto','Osasco','Sorocaba','Mauá','São José dos Campos','Mogi das Cruzes','Santos','Diadema','Jundiaí','Carapicuíba','Piracicaba','Bauru','São Vicente','Franca','Guarujá','Taubaté','Limeira','Suzano','Taboão da Serra','Sumaré','Barueri','Cotia','Americana','São Carlos','Marília','Presidente Prudente','Araraquara','Jacareí','Hortolândia','Indaiatuba','Praia Grande','Itaquaquecetuba','Itu','Araçatuba','Botucatu','São João da Boa Vista','Rio Claro','Paulínia','Santana de Parnaíba'],
+    SP: ['São Paulo','Guarulhos','Campinas','São Bernardo do Campo','Santo Andrç','Ribeirão Preto','Osasco','Sorocaba','Mauá','São José dos Campos','Mogi das Cruzes','Santos','Diadema','Jundiaí','Carapicuíba','Piracicaba','Bauru','São Vicente','Franca','Guarujá','Taubaté','Limeira','Suzano','Taboão da Serra','Sumaré','Barueri','Cotia','Americana','São Carlos','Marília','Presidente Prudente','Araraquara','Jacareí','Hortolândia','Indaiatuba','Praia Grande','Itaquaquecetuba','Itu','Araçatuba','Botucatu','São João da Boa Vista','Rio Claro','Paulínia','Santana de Parnaíba'],
     SE: ['Aracaju','Nossa Senhora do Socorro','Lagarto','Itabaiana','São Cristóvão','Estância','Tobias Barreto'],
     TO: ['Palmas','Araguaína','Gurupi','Porto Nacional','Paraíso do Tocantins','Colinas do Tocantins','Guaraí'],
   };
@@ -878,3 +877,143 @@
       }
 
       document.getElementById('nav-buscas').textContent =
+      document.getElementById('nav-buscas').textContent =
+        `${data.buscas_restantes} busca${data.buscas_restantes !== 1 ? 's' : ''} restante${data.buscas_restantes !== 1 ? 's' : ''}`;
+
+      if (data.total === 0) {
+        status.innerHTML = '<div class="msg-erro">Nenhum resultado encontrado.</div>';
+        return;
+      }
+
+      status.innerHTML = `<div class="msg-ok">✅ ${data.total} resultado${data.total !== 1 ? 's' : ''} encontrado${data.total !== 1 ? 's' : ''}</div>`;
+      renderizarResultados(data.resultados);
+
+    } catch (e) {
+      console.error('Erro na busca:', e);
+      status.innerHTML = '<div class="msg-erro">❌ Erro de conexão com o servidor.</div>';
+    } finally {
+      document.getElementById('btn-buscar').disabled = false;
+    }
+  }
+
+  // ── Renderizar resultados ────────────────────────────────────
+  function renderizarResultados(resultados) {
+    const lista = document.getElementById('lista-resultados');
+    lista.innerHTML = resultados.map(r => `
+      <div class="lead-card">
+        <div class="lead-info">
+          <div class="lead-nome">${r.nome}</div>
+          <div class="lead-detalhes">
+            ${r.telefone ? `📞 ${r.telefone}` : ''}
+            ${r.cidade ? ` · 📍 ${r.cidade}${r.estado ? ', ' + r.estado : ''}` : ''}
+            ${r.rating ? ` · ⭐ ${r.rating}` : ''}
+          </div>
+          <div class="lead-endereco">${r.endereco || ''}</div>
+        </div>
+        <div class="lead-acoes">
+          ${r.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${r.whatsapp}" target="_blank">WhatsApp</a>` : ''}
+          <button class="btn btn-secondary btn-sm" onclick="salvarLead(${JSON.stringify(r).replace(/"/g, '&quot;')}, this)">Salvar</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── Salvar lead ──────────────────────────────────────────────
+  async function salvarLead(lead, btn) {
+    btn.disabled = true;
+    btn.textContent = '…';
+    try {
+      const res = await fetch(`${API_URL}/salvar-lead`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${tokenJWT}`,
+        },
+        body: JSON.stringify({ lead }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        btn.textContent = '✅';
+        btn.style.background = 'var(--verde)';
+      } else {
+        btn.disabled = false;
+        btn.textContent = data.erro === 'Lead já salvo.' ? '✅ Já salvo' : 'Erro';
+      }
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = 'Erro';
+    }
+  }
+
+  // ── Carregar leads ───────────────────────────────────────────
+  async function carregarLeads() {
+    const lista = document.getElementById('lista-leads');
+    lista.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando…</div>';
+    try {
+      const params = nichoFiltro ? `?nicho=${nichoFiltro}` : '';
+      const res = await fetch(`${API_URL}/meus-leads${params}`, {
+        headers: { 'Authorization': `Bearer ${tokenJWT}` },
+      });
+      if (!res.ok) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>'; return; }
+      const data = await res.json();
+      leadsCache = data.leads;
+      if (data.total === 0) {
+        lista.innerHTML = '<div class="msg-erro" style="text-align:center;padding:32px">Nenhum lead salvo ainda.</div>';
+        return;
+      }
+      lista.innerHTML = data.leads.map(l => `
+        <div class="lead-card">
+          <div class="lead-info">
+            <div class="lead-nome">${l.nome}</div>
+            <div class="lead-detalhes">
+              ${l.telefone ? `📞 ${l.telefone}` : ''}
+              ${l.cidade ? ` · 📍 ${l.cidade}${l.estado ? ', ' + l.estado : ''}` : ''}
+              ${l.rating ? ` · ⭐ ${l.rating}` : ''}
+            </div>
+            <div class="lead-endereco" style="font-size:0.78rem;color:var(--texto-muted)">${l.nicho || ''}</div>
+          </div>
+          <div class="lead-acoes">
+            ${l.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${l.whatsapp}" target="_blank">WhatsApp</a>` : ''}
+          </div>
+        </div>
+      `).join('');
+    } catch (e) {
+      lista.innerHTML = '<div class="msg-erro">Erro de conexão.</div>';
+    }
+  }
+
+  // ── Filtrar leads ────────────────────────────────────────────
+  function filtrarLeads(nicho, el) {
+    nichoFiltro = nicho;
+    document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('ativo'));
+    el.classList.add('ativo');
+    carregarLeads();
+  }
+
+  // ── Exportar CSV ─────────────────────────────────────────────
+  function exportarCSV() {
+    if (!leadsCache.length) { alert('Nenhum lead para exportar.'); return; }
+    const headers = ['Nome', 'Telefone', 'WhatsApp', 'Endereço', 'Cidade', 'Estado', 'Rating', 'Nicho'];
+    const rows = leadsCache.map(l => [
+      l.nome, l.telefone, l.whatsapp, l.endereco, l.cidade, l.estado, l.rating ?? '', l.nicho ?? ''
+    ].map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'garimpo_leads.csv'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── Init ─────────────────────────────────────────────────────
+  (async () => {
+    if (tokenJWT) {
+      document.getElementById('tela-auth').style.display = 'none';
+      document.getElementById('tela-loading').style.display = 'flex';
+      await iniciarApp();
+      document.getElementById('tela-loading').style.display = 'none';
+    }
+ %})();
+</script>
+</body>
+</html>

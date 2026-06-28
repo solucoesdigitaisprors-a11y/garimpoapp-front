@@ -59,13 +59,6 @@
       margin-bottom: 32px;
     }
 
-    .auth-logo .logo-icon {
-      font-size: 3rem;
-      display: block;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 0 12px var(--ouro));
-    }
-
     .auth-logo h1 {
       font-size: 2.2rem;
       font-weight: 900;
@@ -275,7 +268,6 @@
 
     .nav-logo span.g { color: #fff; }
     .nav-logo span.a { color: var(--ouro); }
-    .nav-logo .icon { margin-right: 4px; filter: drop-shadow(0 0 6px var(--ouro)); }
 
     .nav-info { display: flex; align-items: center; gap: 14px; }
 
@@ -441,7 +433,7 @@
       border-radius: 20px;
       border: 1px solid var(--borda);
       font-size: 0.8rem;
-         font-weight: 600;
+      font-weight: 600;
       cursor: pointer;
       background: transparent;
       color: var(--texto-muted);
@@ -488,7 +480,6 @@
 <div id="tela-auth">
   <div class="auth-card">
     <div class="auth-logo">
-      <span class="logo-icon">⛏️</span>
       <h1>
         <span class="g">GARIMPO</span><span class="a">APP</span>
       </h1>
@@ -536,7 +527,7 @@
 
 <!-- Loading -->
 <div id="tela-loading" style="display:none">
-  <div class="logo-loading">⛏️ GARIMPO<span>APP</span></div>
+  <div class="logo-loading">GARIMPO<span>APP</span></div>
   <div class="spinner" style="width:36px;height:36px;border-width:4px"></div>
   <p>Entrando na sua conta…</p>
 </div>
@@ -547,7 +538,7 @@
 <div id="app" style="display:none">
   <nav>
     <a class="nav-logo" href="#">
-      <span class="icon">⛏️</span><span class="g">GARIMPO</span><span class="a">APP</span>
+      <span class="g">GARIMPO</span><span class="a">APP</span>
     </a>
     <div class="nav-info">
       <span class="buscas-badge" id="nav-buscas">— buscas restantes</span>
@@ -946,7 +937,7 @@
       l.rating||'', l.nicho||'', l.salvo_em||''
     ].map(v => '"' + String(v).replace(/"/g,'""') + '"').join(','));
     const csv = [header, ...rows].join('\n');
-    const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['﻿'+csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = 'leads_garimpoapp.csv'; a.click();
     URL.revokeObjectURL(url);
@@ -984,3 +975,4 @@
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                    

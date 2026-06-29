@@ -834,12 +834,12 @@
     PE: ['Recife','Caruaru','Olinda','Petrolina','Paulista','Jaboatão dos Guararapes','Camarajibe','Cabo de Santo Agostinho','Garanhuns','Vitória de Santo Antão','Gravatá'],
     PI: ['Teresina','Parnaíba','Picos','Floriano','Campo Maior','Barras','União'],
     RJ: ['Rio de Janeiro','São Gonçalo','Duque de Caxias','Nova Iguaçu','Niterói','Belford Roxo','Campos dos Goytacazes','Petrópolis','Volta Redonda','Macaé','Magé','Itaboraí','São João de Meriti','Mesquita','Nilópolis','Angra dos Reis','Cabo Frio','Nova Friburgo','Teresópolis','Resende'],
-    RN: ['Natal','Mossoró','Parnamirim','São Gonçalo do Amarante','Ceará-Mirim','Caicó','Açu','Santa Cruz'],
+    RN: ['Natal','Mossoró','Parnamirim','São Gonçalo do Amarante','Ceará-Mirim','Caicó','Açõ','Santa Cruz'],
     RS: ['Porto Alegre','Caxias do Sul','Pelotas','Canoas','Santa Maria','Gravataí','Viamão','Novo Hamburgo','São Leopoldo','Rio Grande','Alvorada','Passo Fundo','Sapucaia do Sul','Uruguaiana','Bagé','Bento Gonçalves','Erechim','Cachoeirinha','Santa Cruz do Sul'],
     RO: ['Porto Velho','Ji-Paraná','Ariquemes','Vilhena','Cacoal','Rolim de Moura','Jaru','Guajará-Mirim'],
     RR: ['Boa Vista','Rorainópolis','Caracaraí','Alto Alegre'],
-    SC: ['Florianópolis','Joinville','Blumenau','São José','Criciúma','Chapecó','Itajaí','Jaraguá do Sul','Palhoça','Balneário Camboriú','Lages','Brusque','Tubarão','Caçador','São Bento do Sul'],
-    SP: ['São Paulo','Guarulhos','Campinas','São Bernardo do Campo','Santo André','Ribeirão Preto','Osasco','Sorocaba','Mauá','São José dos Campos','Mogi das Cruzes','Santos','Diadema','Jundiaí','Carapicuíba','Piracicaba','Bauru','São Vicente','Franca','Guarujá','Taubaté','Limeira','Suzano','Taboão da Serra','Sumaré','Barueri','Cotia','Americana','São Carlos','Marília','Presidente Prudente','Araraquara','Jacareí','Hortolândia','Indaiatuba','Praia Grande','Itaquaquecetuba','Itu','Araçatuba','Botucaut','São João da Boa Vista','Rio Claro','Paulínia','Santana de Parnaíba'],
+    SC: ['Florianópolis','Joinville','Blumenau','São José','Criciúla','Chapecó','Itajaí','Jaraguá do Sul','Palhoça','Balneário Camboriú','Lages','Brusque','Tubarã','Caçador'São Bento do Sul'],
+    SP: ['São Paulo','Guarulhos','Campinas','São Bernardo do Campo','Santo André','Ribeirão Preto','Osasco','Sorocaba','Mauá','São José dos Campos','Mogi das Cruzes','Santos','Diadema','Jundiaí','Carapicuíba','Piracicaba','Bauru','São Vicente','França','Guarujá','Taubaté','Limeira','Suzano','Taboão da Serra','Sumaré','Barueri','Cotia','Americana','São Carlos','Marília','Presidente Prudente','Araraquara','Jacareí','Hortolândia','Indaiatuba','Praia Grande','Itaquaquecetuba','Itu','Araçatuba','Botucatu','São João da Boa Vista','Rio Claro','Paulínia','Santana de Parnaíba'],
     SE: ['Aracaju','Nossa Senhora do Socorro','Lagarto','Itabaiana','São Cristóvão','Estância','Tobias Barreto'],
     TO: ['Palmas','Araguaína','Gurupi','Porto Nacional','Paraíso do Tocantins','Colinas do Tocantins','Guaraí'],
   };
@@ -864,7 +864,7 @@
     const status = document.getElementById('busca-status');
     status.innerHTML = '<div class="loader"><div class="spinner"></div> Redirecionando para pagamento…</div>';
     try {
-      const priceId = 'price_1TnQPD5rKd9u6SOZGxlHgoLE'; // substituir após criar produto no Stripe
+      const priceId = 'price_1TnQPD5rKd9u6SOZGxlHgoLE';
       const res = await fetch(`${API_URL}/criar-checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenJWT}` },
@@ -990,6 +990,7 @@
   }
 
   // ── Carregar leads ───────────────────────────────────────────
+  async function   // ── Carregar leads ───────────────────────────────────────────
   async function carregarLeads() {
     const lista = document.getElementById('lista-leads');
     lista.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando…</div>';
@@ -1000,14 +1001,59 @@
       });
       if (!res.ok) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>'; return; }
       const data = await res.json();
-      leadsCache = data.leads;
-      if (data.total === 0) {
+      leadsCache = data.leads || [];
+      if (leadsCache.length === 0) {
         lista.innerHTML = '<div class="msg-erro" style="text-align:center;padding:32px">Nenhum lead salvo ainda.</div>';
         return;
       }
-      lista.innerHTML = data.leads.map(l => `
+      lista.innerHTML = leadsCache.map(l => `
         <div class="lead-card">
           <div class="lead-info">
             <div class="lead-nome">${l.nome}</div>
             <div class="lead-detalhes">
-         
+              ${l.telefone ? `📞 ${l.telefone}` : ''}
+              ${l.cidade ? ` · 📍 ${l.cidade}${l.estado ? ', ' + l.estado : ''}` : ''}
+              ${l.rating ? ` · ⭐ ${l.rating}` : ''}
+            </div>
+            <div class="lead-endereco">${l.endereco || ''}</div>
+          </div>
+          <div class="lead-acoes">
+            ${l.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${l.whatsapp}" target="_blank">WhatsApp</a>` : ''}
+          </div>
+        </div>
+      `).join('');
+    } catch (e) {
+      lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>';
+    }
+  }
+
+  // ── Filtrar leads ─────────────────────────────────────────────
+  function filtrarLeads(nicho, el) {
+    nichoFiltro = nicho;
+    document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('ativo'));
+    if (el) el.classList.add('ativo');
+    carregarLeads();
+  }
+
+  // ── Exportar CSV ──────────────────────────────────────────────
+  function exportarCSV() {
+    if (!leadsCache.length) { alert('Nenhum lead para exportar.'); return; }
+    const headers = ['Nome','Telefone','WhatsApp','Endereço','Cidade','Estado','Rating','Nicho'];
+    const rows = leadsCache.map(l => [
+      l.nome, l.telefone, l.whatsapp, l.endereco, l.cidade, l.estado, l.rating ?? '', l.nicho ?? ''
+    ].map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'garimpo_leads.csv'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── Init ──────────────────────────────────────────────────────
+  if (tokenJWT) {
+    iniciarApp();
+  }
+</script>
+</body>
+</html>

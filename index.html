@@ -543,25 +543,25 @@
     <div class="nav-info">
       <span class="buscas-badge" id="nav-buscas">— buscas restantes</span>
       <span class="plano-badge" id="nav-plano">free</span>
-      <button class="btn btn-primary btn-sm" id="btn-assinar" onclick="assinarPlano()" style="display:none">⚡ Assinar</button>
+      <button class="btn btn-primary btn-sm" id="btn-assinar" onclick="assinarPlano()" style="display:none">Assinar</button>
       <button class="btn btn-secondary btn-sm" onclick="sair()">Sair</button>
     </div>
   </nav>
 
   <!-- Banner upgrade (visível apenas para plano free) -->
   <div id="banner-upgrade" style="display:none; background:linear-gradient(90deg,#f5a523,#c8870a); color:#060d1c; text-align:center; padding:10px 16px; font-weight:600; font-size:0.9rem;">
-    🚀 Você está no plano gratuito — <a href="#" onclick="assinarPlano(); return false;" style="color:#060d1c; text-decoration:underline;">Assine por R$49,90/mês</a> e desbloqueie 100 buscas mensais.
+    Você está no plano gratuito — <a href="#" onclick="assinarPlano(); return false;" style="color:#060d1c; text-decoration:underline;">Assine por R$49,00/mês</a> e desbloqueie 10 buscas mensais.
   </div>
 
   <div class="main-tabs">
-    <div class="main-tab ativo" onclick="mudarTab('buscar')">🔍 Garimpar</div>
-    <div class="main-tab" onclick="mudarTab('leads')">📋 Meus Leads</div>
+    <div class="main-tab ativo" onclick="mudarTab('buscar')">Garimpar</div>
+    <div class="main-tab" onclick="mudarTab('leads')">Meus Leads</div>
   </div>
 
   <!-- Tab: Garimpar -->
   <div id="tab-buscar" class="container">
     <div class="card">
-      <h2>🔍 Buscar negócios</h2>
+      <h2>Buscar negócios</h2>
       <div class="busca-grid">
         <div class="form-group" style="margin:0">
           <label>Nicho</label>
@@ -650,7 +650,7 @@
   <div id="tab-leads" class="container" style="display:none">
     <div class="card">
       <div class="acoes-topo">
-        <h2>📋 Leads Salvos</h2>
+        <h2>Leads Salvos</h2>
         <button class="btn btn-verde btn-sm" onclick="exportarCSV()">⬇ Exportar CSV</button>
       </div>
 
@@ -724,7 +724,7 @@
       localStorage.setItem('garimpo_token', tokenJWT);
       await iniciarApp();
     } else {
-      msgEl.innerHTML = `<div class="msg-erro">❌ ${data.error_description || 'E-mail ou senha incorretos.'}</div>`;
+      msgEl.innerHTML = `<div class="msg-erro">${data.error_description || 'E-mail ou senha incorretos.'}</div>`;
     }
   }
 
@@ -749,9 +749,9 @@
       localStorage.setItem('garimpo_token', tokenJWT);
       await iniciarApp();
     } else if (data.id) {
-      msgEl.innerHTML = '<div class="msg-ok">✅ Conta criada! Verifique seu e-mail para confirmar.</div>';
+      msgEl.innerHTML = '<div class="msg-ok">Conta criada! Verifique seu e-mail para confirmar.</div>';
     } else {
-      msgEl.innerHTML = `<div class="msg-erro">❌ ${data.error_description || 'Erro ao criar conta.'}</div>`;
+      msgEl.innerHTML = `<div class="msg-erro">${data.error_description || 'Erro ao criar conta.'}</div>`;
     }
   }
 
@@ -794,7 +794,7 @@
       // Verificar retorno de pagamento
       const params = new URLSearchParams(location.search);
       if (params.get('pagamento') === 'sucesso') {
-        alert('✅ Assinatura confirmada! Bem-vindo ao plano Básico.');
+        alert('Assinatura confirmada! Bem-vindo ao plano Básico.');
         history.replaceState({}, '', location.pathname);
       }
     } catch (e) {
@@ -827,233 +827,87 @@
     MA: ['São Luís','Imperatriz','São José de Ribamar','Timon','Caxias','Codó','Paço do Lumiar','Açailândia','Bacabal','Balsas'],
     MT: ['Cuiabá','Várzea Grande','Rondonópolis','Sinop','Tangará da Serra','Cáceres','Sorriso','Lucas do Rio Verde','Primavera do Leste'],
     MS: ['Campo Grande','Dourados','Três Lagoas','Corumbá','Ponta Porã','Naviraí','Nova Andradina','Aquidauana','Sidrolândia'],
-    MG: ['Belo Horizonte','Uberlândia','Contagem','Juiz de Fora','Betim','Montes Claros','Ribeirão das Neves','Uberaba','Governador Valadares','Ipatinga','Sete Lagoas','Divinópolis','Santa Luzia','Poços de Caldas','Coronel Fabriciano','Barbacena','Teófilo Otoni'],
-    PA: ['Belém','Ananindeua','Santarém','Marabá','Castanhal','Parauapebas','Marituba','Altamira','Itaituba','Abaetetuba','Tucuruí'],
-    PB: ['João Pessoa','Campina Grande','Santa Rita','Patos','Bayeux','Sousa','Cajazeiras','Guarabira'],
-    PR: ['Curitiba','Londrina','Maringá','Ponta Grossa','Cascavel','São José dos Pinhais','Foz do Iguaçu','Colombo','Guarapuava','Paranaguá','Araucária','Toledo','Apucarana','Pinhais'],
-    PE: ['Recife','Caruaru','Olinda','Petrolina','Paulista','Jaboatão dos Guararapes','Camarajibe','Cabo de Santo Agostinho','Garanhuns','Vitória de Santo Antão','Gravatá'],
-    PI: ['Teresina','Parnaíba','Picos','Floriano','Campo Maior','Barras','União'],
-    RJ: ['Rio de Janeiro','São Gonçalo','Duque de Caxias','Nova Iguaçu','Niterói','Belford Roxo','Campos dos Goytacazes','Petrópolis','Volta Redonda','Macaé','Magé','Itaboraí','São João de Meriti','Mesquita','Nilópolis','Angra dos Reis','Cabo Frio','Nova Friburgo','Teresópolis','Resende'],
-    RN: ['Natal','Mossoró','Parnamirim','São Gonçalo do Amarante','Ceará-Mirim','Caicó','Açõ','Santa Cruz'],
-    RS: ['Porto Alegre','Caxias do Sul','Pelotas','Canoas','Santa Maria','Gravataí','Viamão','Novo Hamburgo','São Leopoldo','Rio Grande','Alvorada','Passo Fundo','Sapucaia do Sul','Uruguaiana','Bagé','Bento Gonçalves','Erechim','Cachoeirinha','Santa Cruz do Sul'],
-    RO: ['Porto Velho','Ji-Paraná','Ariquemes','Vilhena','Cacoal','Rolim de Moura','Jaru','Guajará-Mirim'],
-    RR: ['Boa Vista','Rorainópolis','Caracaraí','Alto Alegre'],
-    SC: ['Florianópolis','Joinville','Blumenau','São José','Criciúla','Chapecó','Itajaí','Jaraguá do Sul','Palhoça','Balneário Camboriú','Lages','Brusque','Tubarã','Caçador'São Bento do Sul'],
-    SP: ['São Paulo','Guarulhos','Campinas','São Bernardo do Campo','Santo André','Ribeirão Preto','Osasco','Sorocaba','Mauá','São José dos Campos','Mogi das Cruzes','Santos','Diadema','Jundiaí','Carapicuíba','Piracicaba','Bauru','São Vicente','França','Guarujá','Taubaté','Limeira','Suzano','Taboão da Serra','Sumaré','Barueri','Cotia','Americana','São Carlos','Marília','Presidente Prudente','Araraquara','Jacareí','Hortolândia','Indaiatuba','Praia Grande','Itaquaquecetuba','Itu','Araçatuba','Botucatu','São João da Boa Vista','Rio Claro','Paulínia','Santana de Parnaíba'],
-    SE: ['Aracaju','Nossa Senhora do Socorro','Lagarto','Itabaiana','São Cristóvão','Estância','Tobias Barreto'],
-    TO: ['Palmas','Araguaína','Gurupi','Porto Nacional','Paraíso do Tocantins','Colinas do Tocantins','Guaraí'],
-  };
+    MG: ['Belo Horizonte','Uberlândia','Contagem','Juiz de Fora','Betim','Montes Claros','Ribeirão das Neves','Uberaba','Governador Valadares','Ipatinga','Sete Lagoas','Divinópolis','Santa Luzia','Poço de Caldas','Coronel Fabriciano','Barbacena','Teófilo Otoni'],
+    PA: ['Belém','Ananind]XI�	��[�\��[I�	�X\�X��I�	��\�[�[	�	�\�]X\X�\��	�X\�]X�I�	�[[Z\�I�	�]Z]X�I�	�X�Y]]X�I�	�X�\�p�I�K����қ����\���I�	��[\[�Hܘ[�I�	��[�H�]I�	�]���	И^Y]^	�	���\�I�	��Z�^�Z\�\��	��X\�X�\�I�K������\�]X�I�	�ۙ�[�I�	�X\�[���I�	�۝Hܛ���I�	��\��]�[	�	���������H��[�Z\��	ћވ�Y�Xp��I�	����X���	��X\�\X]�I�	�\�[�Y�p�I�	�\�]X��\�XI�	��Y��	�\X�\�[�I�	�[�Z\��K�N��ԙX�Y�I�	��\�X\�I�	��[�I�	�]��[�I�	�][\�I�	ҘX��]0������X\�\�\\��	��[X\�Z�X�I�	��X��H�[��Y���[���	��\�[�[���	՚]0�ܚXHH�[��[�0����	�ܘ]�]0�I�K�N���\�\�[�I�	�\��p�X�I�	�X����	ћܚX[���	��[\�XZ[܉�	И\��\��	�[�p����K�����Ԛ[�H�[�Z\���	������۰��[��	�\]YHH�^X\��	ӛݘHY�Xp��I�	Ӛ]\���I�	Й[�ܙ����	��[\������]X�^�\��	�]����\��	՛�H�YۙI�	�XX�p�I�	�XY��I�	�]X�ܘp�I�	����������HY\�]I�	�Y\�]Z]I�	Ӛ[0���\��	�[�ܘH���Z\��	��X����[��	ӛݘH��X�\����	�\�\����\��	ԙ\�[�I�K�����Ә][	�	�[���ܰ���	�\��[Z\�[I�	������۰��[��[X\�[�I�	��X\��KSZ\�[I�	��ZX����	�p��I�	��[�Hܝ^��K��Έ��ܝ�[YܙI�	��^X\���[	�	�[�\��	��[��\��	��[�HX\�XI�	�ܘ]�]p�I�	՚X[p����	ӛݛ�[X�\����	�����[����	Ԛ[�ܘ[�I�	�[�ܘYI�	�\����[���	��\X�ZXH��[	�	�\�Y�XZX[�I�	ИY��I�	Й[���۰��[�\��	�\�X�[I�	��X��Z\�[�I�	��[�Hܝ^���[	�K��Έ��ܝ��[��	ҚKT\�[��I�	�\�\]Y[Y\��	՚[[�I�	��X��[	�	ԛ�[HH[�\�I�	Ҙ\�I�	��XZ�\��KSZ\�[I�K�����Л�H�\�I�	ԛܘZ[����\��	��\�X�\�p�I�	�[�[YܙI�K��Έ�ћܚX[����\��	қ�[��[I�	Л[Y[�]I�	���������I�	�ܚX�p�XI�	��\X����	�]Z�p�I�	Ҙ\�Y�p�H��[	�	�[���I�	И[�p�\�[��[X�ܚp��	�Y�\��	М�\�]YI�	�X�\�����	��p��Y܉�	������[����[	�K���������][��	��X\�[���	��[\[�\��	������\��\����[\��	��[��[���I�	ԚX�Z\�����]��	���\����	��ܛ��X�I�	�X]p�I�	���������H���[\���	�[��H\�ܝ^�\��	��[����	�XY[XI�	ҝ[�Xp�I�	��\�\X�p�X�I�	�\�X�X�X�I�	И]\�I�	������X�[�I�	ќ�[��I�	��X\�Z��I�	�]X�]0�I�	�[YZ\�I�	��^�[���	�X�����H�\��I�	��[X\��I�	И\�Y\�I�	���XI�	�[Y\�X�[�I�	������\����	�X\��[XI�	��\�Y[�H�Y[�I�	�\�\�\]X\�I�	ҘX�\�p�I�	�ܝ�0蛙XI�	�[�ZX]X�I�	��ZXHܘ[�I�	�]\]X\]YX�]X�I�	�]I�	�\�p��]X�I�	Л�X�]I�	����������H��H�\�I�	Ԛ[��\���	�][0�[�XI�	��[�[�HH\��p�X�I�K��N���\�X�Z�I�	ӛ���H�[�ܘH����ܜ���	�Y�\���	�]X�ZX[�I�	�����ܚ\�0�ݰ����	�\�0蛘�XI�	�ؚX\��\��]��K�Έ��[X\��	�\�Y�Xp�[�I�	��\�\I�	�ܝ��X�[ۘ[	�	�\�p�\�����[�[���	���[�\����[�[���	��X\�p�I�K�N���8� 8� �\��H8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� ��[��[ۈ�Y[��\�\�Y�
+H�ۜ�Y�H��[Y[���][[Y[��RY
+	��[Y\�Y��K��[YN�ۜ��YYT�[H��[Y[���][[Y[��RY
+	��[X�YYI�N�YYT�[�[��\�SH	��Y�
+]Y�P�QQT��Y�JH�YYT�[�[��\�SH	��[ۈ�[YOH����[X�[ۙH�\�Y��[YZ\����[ۏ���YYT�[�\�X�YH�YN�]\��B��YYT�[�\�X�YH�[�N�YYT�[�[��\�SH	��[ۈ�[YOH����[X�[ۙHH�YYO��[ۏ��
+�QQT��Y�K�X\
+�O��[ۈ�[YOH���K	�Y�H����O��[ۏ�
+K���[�	��N�YYT�[����\�
+NB��\�[���[��[ۈ\��[�\�[��
+H�ۜ��]\�H��[Y[���][[Y[��RY
+	؝\��K\�]\��N�]\˚[��\�SH	�]��\��H��Y\���]��\��H��[��\����]���Y\�X�[ۘ[��\�HY�[Y[���)��]����H�ۜ��X�RYH	��X�W�U�T
+\��]M��֑���I��ۜ��\�H]�Z]�]�
+	�TW�T�K�ܚX\�X�X���]Y]��	���	��XY\�Έ�	��۝[�U\IΈ	�\X�][ۋڜ�ۉ�	�]]ܚ^�][ۉΈ�X\�\�	���[���XK���N���Ӌ���[��Y�J��X�RYJK�JN�ۜ�]HH]�Z]�\˚��ۊ
+NY�
+]K�\�
+H��][ۋ��Y�H]K�\�H[�H�]\˚[��\�SH]��\��H�\��Y\��ȏ��]K�\���	�\���[�[�X�X\�Y�[Y[�ˉ�O�]��B�H�]�
+JH�]\˚[��\�SH	�]��\��H�\��Y\��ȏ�\���H�ۙ^0��ˈ[�H�ݘ[Y[�K��]���B�B��\�[���[��[ۈ�^�\��\��J
+H�ۜ��X��H��[Y[���][[Y[��RY
+	��[[�X���K��[YN�ۜ�Y�H��[Y[���][[Y[��RY
+	��[Y\�Y��K��[YN�ۜ��YYHH��[Y[���][[Y[��RY
+	��[X�YYI�K��[YK��[J
+N�ۜ��]\�H��[Y[���][[Y[��RY
+	؝\��K\�]\��N�ۜ�\�HH��[Y[���][[Y[��RY
+	�\�K\�\�[Y���N�����]YX\��H[����YH�[H�\��\��\�[�\Y�
+\��[\�X\�[�˜[��OOH	ٜ�YI�	��\��[\�X\�[�˘�\��\�ܙ\�[�\�H
+H�]\˚[��\�SH	�]��\��H�\��Y\��ȏ��X\��\��\�ܘ]Z]\�X�X�\�[K�H�Y�H�Ȉۘ�X��H�\��[�\�[��
+N��]\���[�NȈ�[OH���܎��\�K[�\��H��\��[�HY�ܘO�O�\�H�۝[�X\���]����]\��B��Y�
+X�YYJH�]\˚[��\�SH	�]��\��H�\��Y\��ȏ��[X�[ۙH�\�Y�HH�YYK��]����]\��B����[Y[���][[Y[��RY
+	؝�X�\��\��K�\�X�YH�YN�]\˚[��\�SH	�]��\��H��Y\���]��\��H��[��\����]���\��[��������x�)��]���\�K�[��\�SH	����H�ۜ��\�H]�Z]�]�
+	�TW�T�K؝\��\�Y]��	���	��XY\�Έ	��۝[�U\IΈ	�\X�][ۋڜ�ۉ��	�]]ܚ^�][ۉΈ�X\�\�	���[���X�K���N���Ӌ���[��Y�J��X���YYHJK�JN��ۜ�]HH]�Z]�\˚��ۊ
+N�Y�
+\�\˛��H�]\˚[��\�SH]��\��H�\��Y\��ȏ��]K�\���O�]���]\��B����[Y[���][[Y[��RY
+	ۘ]�X�\��\��K�^�۝[�B���[Y[���][[Y[��RY
+	ۘ]�X�\��\��K�^�۝[�B�	�]K��\��\�ܙ\�[�\�H�\��I�]K��\��\�ܙ\�[�\�OOHH�	����	��H�\�[�I�]K��\��\�ܙ\�[�\�OOHH�	����	��X�Y�
+]K��[OOH
+H�]\˚[��\�SH	�]��\��H�\��Y\��ȏ��[�[H�\�[Y�[��۝�Yˏ�]����]\��B���]\˚[��\�SH]��\��H�\��[�ȏ��]K��[H�\�[Y��]K��[OOHH�	����	��H[��۝�Y��]K��[OOHH�	����	��O�]���[�\�^�\��\�[Y��]K��\�[Y��N�H�]�
+JH�ۜ��K�\��܊	�\����H�\��N��JN�]\˚[��\�SH	�]��\��H�\��Y\��ȏ�\���H�ۙ^0�����H��\��Y܋��]���H�[�[H��[Y[���][[Y[��RY
+	؝�X�\��\��K�\�X�YH�[�NB�B����8� 8� �[�\�^�\��\�[Y��8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� ��[��[ۈ�[�\�^�\��\�[Y���\�[Y��H�ۜ�\�HH��[Y[���][[Y[��RY
+	�\�K\�\�[Y���N\�K�[��\�SH�\�[Y�˛X\
+�O��]��\��H�XYX�\����]��\��H�XYZ[��ȏ��]��\��H�XY[��YH��܋���Y_O�]���]��\��H�XYY][\ȏ��	܋�[Y�ۙH�[�	܋�[Y�ۙ_X�	��B�	܋��YYH�	܋��YY_I܋�\�Y��	�	�
+���\�Y��	��X�	��B�	܋��][�����N�	܋��][��X�	��B��]���]��\��H�XYY[�\�X�ȏ�܋�[�\�X��	��O�]����]���]��\��H�XYXX��\ȏ��	܋��]�\�H�\��H�����]�\�H��\�H��Y�H�΋���K�YK�܋��]�\H�\��]H�؛[�ȏ��]�\�O��	��B��]ۈ�\��H�����\�X�ۙ\�H��\�H�ۘ�X��H��[�\�XY
+	Ҕ�Ӌ���[��Y�J�K��\X�Jȋ��	ɜ][���_K\�H���[�\�؝]ۏ���]����]���
+K���[�	��NB����8� 8� �[�\�XY8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� �\�[���[��[ۈ�[�\�XY
+XY��H���\�X�YH�YN���^�۝[�H	��)���H�ۜ��\�H]�Z]�]�
+	�TW�T�K��[�\�[XYY]��	���	��XY\�Έ	��۝[�U\IΈ	�\X�][ۋڜ�ۉ��	�]]ܚ^�][ۉΈ�X\�\�	���[���X�K���N���Ӌ���[��Y�J�XYJK�JN�ۜ�]HH]�Z]�\˚��ۊ
+NY�
+�\˛��H���^�۝[�H	��[�������[K��X��ܛ�[�H	ݘ\�K]�\�JI�H[�H���\�X�YH�[�N���^�۝[�H]K�\���OOH	�XY��H�[�ˉ��	Ұ�H�[����	�\����B�H�]�
+JH���\�X�YH�[�N���^�۝[�H	�\����B�B����8� 8� �\��Y�\�XY�8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� �\�[���[��[ۈ�\��Y�\�XY�
+H�ۜ�\�HH��[Y[���][[Y[��RY
+	�\�K[XY��N\�K�[��\�SH	�]��\��H��Y\���]��\��H��[��\����]���\��Y�[���)��]����H�ۜ�\�[\�H�X�њ[���ۚX��IۚX�њ[��X�	���ۜ��\�H]�Z]�]�
+	�TW�T�K�Y]\�[XY��\�[\�XXY\�Έ�	�]]ܚ^�][ۉΈ�X\�\�	���[���XK�JNY�
+\�\˛��H�\�K�[��\�SH	�]��\��H�\��Y\��ȏ�\���[��\��Y�\�XYˏ�]�����]\���B��ۜ�]HH]�Z]�\˚��ۊ
+NXY��X�HH]K�XY��NY�
+XY��X�K�[��OOH
+H\�K�[��\�SH	�]��\��H�\��Y\��Ȉ�[OH�^X[Yێ��[�\��Y[�Ό̜���[�[HXY�[��Z[�K��]����]\��B�\�K�[��\�SHXY��X�K�X\
+O��]��\��H�XYX�\����]��\��H�XYZ[��ȏ��]��\��H�XY[��YH������Y_O�]���]��\��H�XYY][\ȏ��	��[Y�ۙH�[�	��[Y�ۙ_X�	��B�	���YYH�	���YY_I��\�Y��	�	�
+��\�Y��	��X�	��B�	���][�����N�	���][��X�	��B��]���]��\��H�XYY[�\�X�ȏ���[�\�X��	��O�]����]���]��\��H�XYXX��\ȏ��	���]�\�H�\��H�����]�\�H��\�H��Y�H�΋���K�YK����]�\H�\��]H�؛[�ȏ��]�\�O��	��B��]����]���
+K���[�	��NH�]�
+JH\�K�[��\�SH	�]��\��H�\��Y\��ȏ�\���[��\��Y�\�XYˏ�]���B�B����8� 8� �[�\�XY�8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� ��[��[ۈ�[�\�XY��X��[
+H�X�њ[��H�X����[Y[��]Y\�T�[X�ܐ[
+	˙�[��X�\	�K��ܑXX�
+�O�˘�\��\���[[ݙJ	�]]���JNY�
+[
+H[��\��\��Y
+	�]]���N�\��Y�\�XY�
+NB����8� 8� ^ܝ\��Ո8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� ��[��[ۈ^ܝ\��Պ
+HY�
+[XY��X�K�[��
+H�[\�
+	ә[�[HXY\�H^ܝ\���N��]\���B��ۜ�XY\��H�ӛ�YI�	�[Y�ۙI�	��]�\	�	�[�\�p����	��YYI�	�\�Y��	Ԙ][���	ӚX���N�ۜ�����HXY��X�K�X\
+O����YK�[Y�ۙK��]�\�[�\�X����YYK�\�Y���][����	����X����	�K�X\
+�O�����[�����	��K��\X�Jȋ��	Ȉ��_H�
+K���[�	�	�JN�ۜ��݈H�XY\�˚��[�	�	�K�������K���[�	���N�ۜ��؈H�]��؊������
+��ݗK�\N�	�^��ݎ��\��]]]�N��JN�ۜ�\�HT��ܙX]Sؚ�X�T�
+�؊N�ۜ�HH��[Y[��ܙX]Q[[Y[�
+	�I�NK��Y�H\��K��ۛ�YH	��\�[\��XY˘�݉��K��X��
+NT���]���Sؚ�X�T�
+\�
+NB����8� 8� [�]8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� 8� �Y�
+��[���
+H[�X�X\�\
 
-  // ── Busca ───────────────────────────────────────────────────
-  function preencherEstado() {
-    const uf = document.getElementById('sel-estado').value;
-    const cidadeSel = document.getElementById('sel-cidade');
-    cidadeSel.innerHTML = '';
-    if (!uf || !CIDADES[uf]) {
-      cidadeSel.innerHTML = '<option value="">Selecione o estado primeiro</option>';
-      cidadeSel.disabled = true;
-      return;
-    }
-    cidadeSel.disabled = false;
-    cidadeSel.innerHTML = '<option value="">Selecione a cidade</option>' +
-      CIDADES[uf].map(c => `<option value="${c}, ${uf}">${c}</option>`).join('');
-    cidadeSel.focus();
-  }
-
-  async function assinarPlano() {
-    const status = document.getElementById('busca-status');
-    status.innerHTML = '<div class="loader"><div class="spinner"></div> Redirecionando para pagamento…</div>';
-    try {
-      const priceId = 'price_1TnQPD5rKd9u6SOZGxlHgoLE';
-      const res = await fetch(`${API_URL}/criar-checkout`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenJWT}` },
-        body: JSON.stringify({ priceId }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        location.href = data.url;
-      } else {
-        status.innerHTML = `<div class="msg-erro">${data.erro || 'Erro ao iniciar pagamento.'}</div>`;
-      }
-    } catch (e) {
-      status.innerHTML = '<div class="msg-erro">Erro de conexão. Tente novamente.</div>';
-    }
-  }
-
-  async function fazerBusca() {
-    const nicho  = document.getElementById('sel-nicho').value;
-    const uf     = document.getElementById('sel-estado').value;
-    const cidade = document.getElementById('sel-cidade').value.trim();
-    const status = document.getElementById('busca-status');
-    const lista  = document.getElementById('lista-resultados');
-
-    // Bloquear se plano free sem buscas restantes
-    if (perfilUsuario?.plano === 'free' && perfilUsuario?.buscas_restantes <= 0) {
-      status.innerHTML = '<div class="msg-erro">⚡ Suas buscas gratuitas acabaram. <a href="#" onclick="assinarPlano(); return false;" style="color:var(--ouro)">Assine agora</a> para continuar.</div>';
-      return;
-    }
-
-    if (!cidade) {
-      status.innerHTML = '<div class="msg-erro">Selecione o estado e a cidade.</div>';
-      return;
-    }
-
-    document.getElementById('btn-buscar').disabled = true;
-    status.innerHTML = '<div class="loader"><div class="spinner"></div> Buscando no Google…</div>';
-    lista.innerHTML = '';
-
-    try {
-      const res = await fetch(`${API_URL}/buscar`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokenJWT}`,
-        },
-        body: JSON.stringify({ nicho, cidade }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        status.innerHTML = `<div class="msg-erro">❌ ${data.erro}</div>`;
-        return;
-      }
-
-      document.getElementById('nav-buscas').textContent =
-      document.getElementById('nav-buscas').textContent =
-        `${data.buscas_restantes} busca${data.buscas_restantes !== 1 ? 's' : ''} restante${data.buscas_restantes !== 1 ? 's' : ''}`;
-
-      if (data.total === 0) {
-        status.innerHTML = '<div class="msg-erro">Nenhum resultado encontrado.</div>';
-        return;
-      }
-
-      status.innerHTML = `<div class="msg-ok">✅ ${data.total} resultado${data.total !== 1 ? 's' : ''} encontrado${data.total !== 1 ? 's' : ''}</div>`;
-      renderizarResultados(data.resultados);
-
-    } catch (e) {
-      console.error('Erro na busca:', e);
-      status.innerHTML = '<div class="msg-erro">❌ Erro de conexão com o servidor.</div>';
-    } finally {
-      document.getElementById('btn-buscar').disabled = false;
-    }
-  }
-
-  // ── Renderizar resultados ────────────────────────────────────
-  function renderizarResultados(resultados) {
-    const lista = document.getElementById('lista-resultados');
-    lista.innerHTML = resultados.map(r => `
-      <div class="lead-card">
-        <div class="lead-info">
-          <div class="lead-nome">${r.nome}</div>
-          <div class="lead-detalhes">
-            ${r.telefone ? `📞 ${r.telefone}` : ''}
-            ${r.cidade ? ` · 📍 ${r.cidade}${r.estado ? ', ' + r.estado : ''}` : ''}
-            ${r.rating ? ` · ⭐ ${r.rating}` : ''}
-          </div>
-          <div class="lead-endereco">${r.endereco || ''}</div>
-        </div>
-        <div class="lead-acoes">
-          ${r.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${r.whatsapp}" target="_blank">WhatsApp</a>` : ''}
-          <button class="btn btn-secondary btn-sm" onclick="salvarLead(${JSON.stringify(r).replace(/"/g, '&quot;')}, this)">Salvar</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  // ── Salvar lead ──────────────────────────────────────────────
-  async function salvarLead(lead, btn) {
-    btn.disabled = true;
-    btn.textContent = '…';
-    try {
-      const res = await fetch(`${API_URL}/salvar-lead`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokenJWT}`,
-        },
-        body: JSON.stringify({ lead }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        btn.textContent = '✅';
-        btn.style.background = 'var(--verde)';
-      } else {
-        btn.disabled = false;
-        btn.textContent = data.erro === 'Lead já salvo.' ? '✅ Já salvo' : 'Erro';
-      }
-    } catch (e) {
-      btn.disabled = false;
-      btn.textContent = 'Erro';
-    }
-  }
-
-  // ── Carregar leads ───────────────────────────────────────────
-  async function   // ── Carregar leads ───────────────────────────────────────────
-  async function carregarLeads() {
-    const lista = document.getElementById('lista-leads');
-    lista.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando…</div>';
-    try {
-      const params = nichoFiltro ? `?nicho=${nichoFiltro}` : '';
-      const res = await fetch(`${API_URL}/meus-leads${params}`, {
-        headers: { 'Authorization': `Bearer ${tokenJWT}` },
-      });
-      if (!res.ok) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>'; return; }
-      const data = await res.json();
-      leadsCache = data.leads || [];
-      if (leadsCache.length === 0) {
-        lista.innerHTML = '<div class="msg-erro" style="text-align:center;padding:32px">Nenhum lead salvo ainda.</div>';
-        return;
-      }
-      lista.innerHTML = leadsCache.map(l => `
-        <div class="lead-card">
-          <div class="lead-info">
-            <div class="lead-nome">${l.nome}</div>
-            <div class="lead-detalhes">
-              ${l.telefone ? `📞 ${l.telefone}` : ''}
-              ${l.cidade ? ` · 📍 ${l.cidade}${l.estado ? ', ' + l.estado : ''}` : ''}
-              ${l.rating ? ` · ⭐ ${l.rating}` : ''}
-            </div>
-            <div class="lead-endereco">${l.endereco || ''}</div>
-          </div>
-          <div class="lead-acoes">
-            ${l.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${l.whatsapp}" target="_blank">WhatsApp</a>` : ''}
-          </div>
-        </div>
-      `).join('');
-    } catch (e) {
-      lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>';
-    }
-  }
-
-  // ── Filtrar leads ─────────────────────────────────────────────
-  function filtrarLeads(nicho, el) {
-    nichoFiltro = nicho;
-    document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('ativo'));
-    if (el) el.classList.add('ativo');
-    carregarLeads();
-  }
-
-  // ── Exportar CSV ──────────────────────────────────────────────
-  function exportarCSV() {
-    if (!leadsCache.length) { alert('Nenhum lead para exportar.'); return; }
-    const headers = ['Nome','Telefone','WhatsApp','Endereço','Cidade','Estado','Rating','Nicho'];
-    const rows = leadsCache.map(l => [
-      l.nome, l.telefone, l.whatsapp, l.endereco, l.cidade, l.estado, l.rating ?? '', l.nicho ?? ''
-    ].map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','));
-    const csv = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'garimpo_leads.csv'; a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  // ── Init ──────────────────────────────────────────────────────
-  if (tokenJWT) {
-    iniciarApp();
-  }
-</script>
-</body>
-</html>
+NB���ܚ\��؛�O���[��                                                                                                                                                                             

@@ -6,37 +6,52 @@
   <title>GarimpoApp — Encontre Clientes</title>
   <style>
     :root {
-      --laranja: #f97316;
-      --laranja-dark: #ea6c0a;
-      --azul: #1e40af;
-      --verde: #16a34a;
-      --vermelho: #dc2626;
-      --cinza-bg: #f8fafc;
-      --cinza-borda: #e2e8f0;
-      --cinza-texto: #64748b;
-      --preto: #0f172a;
-      --branco: #ffffff;
+      --ouro:        #f5a523;
+      --ouro-dark:   #c8870a;
+      --ouro-glow:   rgba(245,165,35,0.35);
+      --ouro-borda:  rgba(245,165,35,0.3);
+      --verde:       #22c55e;
+      --vermelho:    #ef4444;
+      --bg:          #060d1c;
+      --bg-card:     rgba(255,255,255,0.04);
+      --bg-card2:    rgba(255,255,255,0.07);
+      --borda:       rgba(255,255,255,0.1);
+      --texto:       #ffffff;
+      --texto-muted: rgba(255,255,255,0.55);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--cinza-bg); color: var(--preto); }
 
-    /* ── Auth Screen ── */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    /* ══════════════════════════════════════
+       TELA DE AUTH
+    ══════════════════════════════════════ */
     #tela-auth {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #f97316 100%);
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(245,165,35,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(245,165,35,0.08) 0%, transparent 50%),
+        var(--bg);
     }
 
     .auth-card {
-      background: var(--branco);
-      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--ouro-borda);
+      border-radius: 20px;
       padding: 40px;
       width: 100%;
-      max-width: 400px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      max-width: 420px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 60px rgba(245,165,35,0.1), 0 20px 60px rgba(0,0,0,0.5);
     }
 
     .auth-logo {
@@ -45,21 +60,25 @@
     }
 
     .auth-logo h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--laranja);
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -1px;
     }
 
+    .auth-logo h1 span.g { color: var(--texto); }
+    .auth-logo h1 span.a { color: var(--ouro); }
+
     .auth-logo p {
-      color: var(--cinza-texto);
-      font-size: 0.9rem;
-      margin-top: 4px;
+      color: var(--texto-muted);
+      font-size: 0.88rem;
+      margin-top: 6px;
+      letter-spacing: 0.5px;
     }
 
     .auth-tabs {
       display: flex;
-      border-bottom: 2px solid var(--cinza-borda);
-      margin-bottom: 24px;
+      border-bottom: 1px solid var(--borda);
+      margin-bottom: 28px;
     }
 
     .auth-tab {
@@ -68,198 +87,314 @@
       text-align: center;
       cursor: pointer;
       font-weight: 600;
-      color: var(--cinza-texto);
+      font-size: 0.9rem;
+      color: var(--texto-muted);
       border-bottom: 2px solid transparent;
-      margin-bottom: -2px;
+      margin-bottom: -1px;
       transition: all 0.2s;
     }
 
     .auth-tab.ativo {
-      color: var(--laranja);
-      border-color: var(--laranja);
+      color: var(--ouro);
+      border-color: var(--ouro);
     }
 
+    /* Form controls */
     .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--preto); }
 
-    .form-group input {
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--texto-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input,
+    .form-group select,
+    select {
       width: 100%;
       padding: 12px 14px;
-      border: 1.5px solid var(--cinza-borda);
-      border-radius: 8px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--borda);
+      border-radius: 10px;
       font-size: 0.95rem;
-      transition: border-color 0.2s;
+      color: var(--texto);
       outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .form-group input:focus { border-color: var(--laranja); }
+    .form-group input::placeholder { color: var(--texto-muted); }
 
+    .form-group input:focus,
+    .form-group select:focus,
+    select:focus {
+      border-color: var(--ouro);
+      box-shadow: 0 0 0 3px var(--ouro-glow);
+    }
+
+    select option { background: #0d1b30; color: #fff; }
+
+    /* Botões */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       padding: 12px 20px;
-      border-radius: 8px;
+      border-radius: 10px;
       border: none;
       font-size: 0.95rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
+      letter-spacing: 0.3px;
     }
 
-    .btn-primary { background: var(--laranja); color: #fff; width: 100%; }
-    .btn-primary:hover { background: var(--laranja-dark); transform: translateY(-1px); }
-    .btn-secondary { background: var(--cinza-bg); color: var(--preto); border: 1.5px solid var(--cinza-borda); }
-    .btn-secondary:hover { background: var(--cinza-borda); }
-    .btn-verde { background: var(--verde); color: #fff; }
-    .btn-verde:hover { opacity: 0.9; }
-    .btn-sm { padding: 8px 14px; font-size: 0.85rem; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--ouro), var(--ouro-dark));
+      color: #000;
+      width: 100%;
+      box-shadow: 0 4px 20px var(--ouro-glow);
+    }
 
-    .msg-erro { background: #fee2e2; color: var(--vermelho); border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-top: 12px; }
-    .msg-ok { background: #dcfce7; color: var(--verde); border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-top: 12px; }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(245,165,35,0.5);
+    }
 
-    /* ── App Principal ── */
-    #app { display: none; min-height: 100vh; }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      transform: none;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--bg-card2);
+      color: var(--texto);
+      border: 1px solid var(--borda);
+    }
+
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+
+    .btn-verde {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(22,163,74,0.3);
+    }
+
+    .btn-verde:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .btn-sm { padding: 8px 14px; font-size: 0.82rem; }
+
+    /* Mensagens */
+    .msg-erro {
+      background: rgba(239,68,68,0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      margin-top: 12px;
+    }
+
+    .msg-ok {
+      background: rgba(34,197,94,0.12);
+      color: #86efac;
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      margin-top: 12px;
+    }
+
+    /* ══════════════════════════════════════
+       LOADING
+    ══════════════════════════════════════ */
+    #tela-loading {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      background: var(--bg);
+    }
+
+    #tela-loading .logo-loading {
+      font-size: 2.2rem;
+      font-weight: 900;
+    }
+
+    #tela-loading .logo-loading span { color: var(--ouro); }
+
+    #tela-loading p { color: var(--texto-muted); font-size: 0.9rem; }
+
+    /* ══════════════════════════════════════
+       APP PRINCIPAL
+    ══════════════════════════════════════ */
+    #app {
+      display: none;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 0% 0%, rgba(245,165,35,0.06) 0%, transparent 50%),
+        var(--bg);
+    }
 
     /* Navbar */
     nav {
-      background: var(--branco);
-      border-bottom: 1.5px solid var(--cinza-borda);
+      background: rgba(6,13,28,0.9);
+      border-bottom: 1px solid var(--ouro-borda);
       padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 60px;
+      height: 62px;
       position: sticky;
       top: 0;
       z-index: 100;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 2px 20px rgba(245,165,35,0.08);
     }
 
-    .nav-logo { font-size: 1.3rem; font-weight: 800; color: var(--laranja); text-decoration: none; }
-    .nav-logo span { color: var(--preto); }
+    .nav-logo {
+      font-size: 1.35rem;
+      font-weight: 900;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
 
-    .nav-info { display: flex; align-items: center; gap: 16px; }
+    .nav-logo span.g { color: #fff; }
+    .nav-logo span.a { color: var(--ouro); }
+
+    .nav-info { display: flex; align-items: center; gap: 14px; }
 
     .plano-badge {
-      background: var(--laranja);
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 3px 10px;
+      background: linear-gradient(135deg, var(--ouro), var(--ouro-dark));
+      color: #000;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 12px;
       border-radius: 20px;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .buscas-badge {
       font-size: 0.82rem;
-      color: var(--cinza-texto);
+      color: var(--texto-muted);
     }
 
-    /* Tabs principais */
+    /* Tabs */
     .main-tabs {
-      background: var(--branco);
-      border-bottom: 1.5px solid var(--cinza-borda);
+      background: rgba(6,13,28,0.7);
+      border-bottom: 1px solid var(--borda);
       padding: 0 24px;
       display: flex;
       gap: 4px;
     }
 
     .main-tab {
-      padding: 14px 18px;
+      padding: 14px 20px;
       cursor: pointer;
       font-weight: 600;
-      color: var(--cinza-texto);
-      border-bottom: 3px solid transparent;
+      color: var(--texto-muted);
+      border-bottom: 2px solid transparent;
       font-size: 0.92rem;
       transition: all 0.2s;
+      margin-bottom: -1px;
     }
 
-    .main-tab.ativo { color: var(--laranja); border-color: var(--laranja); }
+    .main-tab.ativo { color: var(--ouro); border-color: var(--ouro); }
+    .main-tab:hover:not(.ativo) { color: var(--texto); }
 
     /* Container */
     .container { max-width: 900px; margin: 32px auto; padding: 0 24px; }
 
     /* Card */
     .card {
-      background: var(--branco);
-      border-radius: 12px;
-      border: 1.5px solid var(--cinza-borda);
+      background: var(--bg-card);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
       padding: 24px;
       margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+      transition: border-color 0.2s;
     }
 
-    .card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+    .card:hover { border-color: var(--ouro-borda); }
 
-    /* Formulário de busca */
+    .card h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: var(--texto);
+    }
+
+    /* Busca grid */
     .busca-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr auto;
+      grid-template-columns: 1.2fr 0.8fr 1fr auto;
       gap: 12px;
       align-items: end;
     }
 
-    select {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid var(--cinza-borda);
-      border-radius: 8px;
-      font-size: 0.95rem;
-      outline: none;
-      background: #fff;
-      cursor: pointer;
-    }
-
-    select:focus { border-color: var(--laranja); }
-
-    /* Lista de resultados */
+    /* Resultados */
     #lista-resultados { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
 
     .lead-card {
-      background: var(--branco);
-      border: 1.5px solid var(--cinza-borda);
-      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
       padding: 16px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
     }
 
-    .lead-card:hover { border-color: var(--laranja); }
-    .lead-card.salvo { opacity: 0.6; }
+    .lead-card:hover {
+      border-color: var(--ouro-borda);
+      box-shadow: 0 0 20px rgba(245,165,35,0.08);
+    }
 
-    .lead-info h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .lead-card.salvo { opacity: 0.5; }
+
+    .lead-info h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--texto);
+    }
 
     .lead-info p {
       font-size: 0.82rem;
-      color: var(--cinza-texto);
+      color: var(--texto-muted);
       margin-bottom: 2px;
     }
 
-    .lead-rating {
-      font-size: 0.8rem;
-      color: #b45309;
-      font-weight: 600;
-    }
+    .lead-rating { font-size: 0.8rem; color: var(--ouro); font-weight: 600; }
 
     .lead-acoes { display: flex; gap: 8px; flex-shrink: 0; }
 
-    /* Whatsapp btn */
+    /* WhatsApp btn */
     .btn-wa {
-      background: #25d366;
+      background: linear-gradient(135deg, #25d366, #128c4e);
       color: #fff;
       border: none;
       border-radius: 8px;
       padding: 8px 12px;
       font-size: 0.82rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 5px;
+      box-shadow: 0 2px 10px rgba(37,211,102,0.25);
     }
 
     /* Loader */
@@ -269,13 +404,13 @@
       justify-content: center;
       gap: 10px;
       padding: 40px;
-      color: var(--cinza-texto);
+      color: var(--texto-muted);
     }
 
     .spinner {
-      width: 20px; height: 20px;
-      border: 3px solid var(--cinza-borda);
-      border-top-color: var(--laranja);
+      width: 22px; height: 22px;
+      border: 3px solid rgba(245,165,35,0.2);
+      border-top-color: var(--ouro);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
@@ -284,50 +419,112 @@
 
     .empty-state {
       text-align: center;
-      padding: 40px;
-      color: var(--cinza-texto);
+      padding: 48px;
+      color: var(--texto-muted);
     }
 
     .empty-state .emoji { font-size: 3rem; display: block; margin-bottom: 12px; }
 
-    /* Leads salvos */
-    .leads-filtros { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    /* Filtros */
+    .leads-filtros { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
 
     .filtro-chip {
       padding: 6px 14px;
       border-radius: 20px;
-      border: 1.5px solid var(--cinza-borda);
-      font-size: 0.82rem;
+      border: 1px solid var(--borda);
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      background: #fff;
-      color: var(--cinza-texto);
+      background: transparent;
+      color: var(--texto-muted);
       transition: all 0.2s;
     }
 
-    .filtro-chip.ativo { background: var(--laranja); color: #fff; border-color: var(--laranja); }
+    .filtro-chip:hover { border-color: var(--ouro-borda); color: var(--texto); }
 
-    /* Exportar */
-    .acoes-topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .filtro-chip.ativo {
+      background: linear-gradient(135deg, var(--ouro), var(--ouro-dark));
+      color: #000;
+      border-color: transparent;
+    }
+
+    .acoes-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    /* Divider */
+    .auth-divider {
+      text-align: center;
+      color: var(--texto-muted);
+      font-size: 0.78rem;
+      margin: 8px 0;
+    }
 
     /* Responsivo */
     @media (max-width: 600px) {
       .busca-grid { grid-template-columns: 1fr; }
       .nav-info .buscas-badge { display: none; }
       .lead-card { flex-direction: column; align-items: flex-start; }
+      .auth-card { margin: 16px; padding: 28px 24px; }
     }
+
+    /* Modal de planos */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75); z-index: 500;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.ativo { display: flex; }
+    .modal-planos {
+      background: #0d1b30;
+      border: 1px solid rgba(245,165,35,0.3);
+      border-radius: 20px;
+      padding: 32px;
+      width: 100%; max-width: 780px;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 0 60px rgba(245,165,35,0.15);
+    }
+    .modal-planos h2 { text-align:center; font-size:1.4rem; font-weight:900; margin-bottom:8px; }
+    .modal-planos p.sub { text-align:center; color:var(--texto-muted); font-size:0.88rem; margin-bottom:28px; }
+    .planos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+    }
+    .plano-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 20px 14px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .plano-card:hover { border-color: var(--ouro-borda); box-shadow: 0 0 20px rgba(245,165,35,0.1); }
+    .plano-card.destaque { border-color: var(--ouro); background: rgba(245,165,35,0.08); }
+    .plano-card .nome { font-weight:800; font-size:0.95rem; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+    .plano-card .buscas { font-size:1.5rem; font-weight:900; color:var(--ouro); line-height:1.1; }
+    .plano-card .buscas span { font-size:0.7rem; font-weight:600; color:var(--texto-muted); display:block; }
+    .plano-card .preco { font-size:0.88rem; color:var(--texto-muted); margin:8px 0 14px; }
+    .plano-card .preco strong { color:var(--texto); font-size:1rem; }
+    .modal-fechar { display:block; text-align:center; margin-top:20px; color:var(--texto-muted); cursor:pointer; font-size:0.85rem; }
+    .modal-fechar:hover { color:var(--texto); }
   </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════
+<!-- ══════════════════════════════════════
      TELA DE LOGIN / CADASTRO
-════════════════════════════════════════ -->
+══════════════════════════════════════ -->
 <div id="tela-auth">
   <div class="auth-card">
     <div class="auth-logo">
-      <h1>⛏️ GarimpoApp</h1>
-      <p>Encontre clientes para seu negócio</p>
+      <h1>
+        <span class="g">GARIMPO</span><span class="a">APP</span>
+      </h1>
+      <p>ENCONTRE LEADS EM TODO O BRASIL</p>
     </div>
 
     <div class="auth-tabs">
@@ -369,45 +566,118 @@
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
+<!-- Loading -->
+<div id="tela-loading" style="display:none">
+  <div class="logo-loading">GARIMPO<span>APP</span></div>
+  <div class="spinner" style="width:36px;height:36px;border-width:4px"></div>
+  <p>Entrando na sua conta…</p>
+</div>
+
+<!-- ══════════════════════════════════════
      APP PRINCIPAL
-════════════════════════════════════════ -->
-<div id="app">
+══════════════════════════════════════ -->
+<div id="app" style="display:none">
   <nav>
-    <a class="nav-logo" href="#">⛏️ Garimpo<span>App</span></a>
+    <a class="nav-logo" href="#">
+      <span class="g">GARIMPO</span><span class="a">APP</span>
+    </a>
     <div class="nav-info">
       <span class="buscas-badge" id="nav-buscas">— buscas restantes</span>
       <span class="plano-badge" id="nav-plano">free</span>
+      <button class="btn btn-primary btn-sm" id="btn-assinar" onclick="abrirModal()" style="display:none">Assinar</button>
       <button class="btn btn-secondary btn-sm" onclick="sair()">Sair</button>
     </div>
   </nav>
 
+  <!-- Banner upgrade (visível apenas para plano free) -->
+  <div id="banner-upgrade" style="display:none; background:linear-gradient(90deg,#f5a523,#c8870a); color:#060d1c; text-align:center; padding:10px 16px; font-weight:600; font-size:0.9rem;">
+    Você está no plano gratuito — <a href="#" onclick="abrirModal(); return false;" style="color:#060d1c; text-decoration:underline;">Ver planos e precosês</a> e desbloqueie 5 buscas mensais.
+  </div>
+
   <div class="main-tabs">
-    <div class="main-tab ativo" onclick="mudarTab('buscar')">🔍 Garimpar</div>
-    <div class="main-tab" onclick="mudarTab('leads')">📋 Meus Leads</div>
+    <div class="main-tab ativo" onclick="mudarTab('buscar')">Garimpar</div>
+    <div class="main-tab" onclick="mudarTab('leads')">Meus Leads</div>
   </div>
 
   <!-- Tab: Garimpar -->
   <div id="tab-buscar" class="container">
     <div class="card">
-      <h2>🔍 Buscar negócios</h2>
+      <h2>Buscar negócios</h2>
       <div class="busca-grid">
         <div class="form-group" style="margin:0">
           <label>Nicho</label>
           <select id="sel-nicho">
-            <option value="clinicas">Clínicas de Estética</option>
-            <option value="odonto">Odontológicas</option>
-            <option value="petshops">Pet Shops</option>
-            <option value="advocacia">Advocacia</option>
-            <option value="academias">Academias</option>
-            <option value="contabilidade">Contabilidades</option>
-            <option value="imobiliarias">Imobiliárias</option>
-            <option value="restaurantes">Restaurantes</option>
+            <optgroup label="— Saúde e Bem-estar —">
+              <option value="clinicas">Clínicas de Estética</option>
+              <option value="clinicas_medicas">Clínicas Médicas</option>
+              <option value="odonto">Odontológicas</option>
+              <option value="psicologos">Psicólogos</option>
+              <option value="farmacias">Farmácias</option>
+              <option value="academias">Academias</option>
+            </optgroup>
+            <optgroup label="— Beleza —">
+              <option value="saloes">Salões de Beleza</option>
+              <option value="barbearias">Barbearias</option>
+            </optgroup>
+            <optgroup label="— Alimentação —">
+              <option value="restaurantes">Restaurantes</option>
+              <option value="padarias">Padarias e Lanchonetes</option>
+            </optgroup>
+            <optgroup label="— Serviços Profissionais —">
+              <option value="advocacia">Advocacia</option>
+              <option value="contabilidade">Contabilidades</option>
+              <option value="imobiliarias">Imobiliárias</option>
+              <option value="escolas">Escolas Particulares</option>
+              <option value="agencias_marketing">Agências de Marketing</option>
+            </optgroup>
+            <optgroup label="— Comércio e Serviços —">
+              <option value="petshops">Pet Shops</option>
+              <option value="mecanicas">Oficinas Mecânicas</option>
+              <option value="construtoras">Construtoras</option>
+              <option value="hoteis">Hotéis e Pousadas</option>
+              <option value="eletricistas">Eletricistas</option>
+              <option value="fotografos">Fotógrafos</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label>Estado</label>
+          <select id="sel-estado" onchange="preencherEstado()">
+            <option value="">Selecione</option>
+            <option value="AC">AC – Acre</option>
+            <option value="AL">AL – Alagoas</option>
+            <option value="AP">AP – Amapá</option>
+            <option value="AM">AM – Amazonas</option>
+            <option value="BA">BA – Bahia</option>
+            <option value="CE">CE – Ceará</option>
+            <option value="DF">DF – Distrito Federal</option>
+            <option value="ES">ES – Espírito Santo</option>
+            <option value="GO">GO – Goiás</option>
+            <option value="MA">MA – Maranhão</option>
+            <option value="MT">MT – Mato Grosso</option>
+            <option value="MS">MS – Mato Grosso do Sul</option>
+            <option value="MG">MG – Minas Gerais</option>
+            <option value="PA">PA – Pará</option>
+            <option value="PB">PB – Paraíba</option>
+            <option value="PR">PR – Paraná</option>
+            <option value="PE">PE – Pernambuco</option>
+            <option value="PI">PI – Piauí</option>
+            <option value="RJ">RJ – Rio de Janeiro</option>
+            <option value="RN">RN – Rio Grande do Norte</option>
+            <option value="RS">RS – Rio Grande do Sul</option>
+            <option value="RO">RO – Rondônia</option>
+            <option value="RR">RR – Roraima</option>
+            <option value="SC">SC – Santa Catarina</option>
+            <option value="SP">SP – São Paulo</option>
+            <option value="SE">SE – Sergipe</option>
+            <option value="TO">TO – Tocantins</option>
           </select>
         </div>
         <div class="form-group" style="margin:0">
           <label>Cidade</label>
-          <input type="text" id="inp-cidade" placeholder="Ex: São Paulo, SP" />
+          <select id="sel-cidade" disabled>
+            <option value="">Selecione o estado primeiro</option>
+          </select>
         </div>
         <button class="btn btn-primary" onclick="fazerBusca()" id="btn-buscar">Buscar</button>
       </div>
@@ -421,20 +691,31 @@
   <div id="tab-leads" class="container" style="display:none">
     <div class="card">
       <div class="acoes-topo">
-        <h2>📋 Leads Salvos</h2>
+        <h2>Leads Salvos</h2>
         <button class="btn btn-verde btn-sm" onclick="exportarCSV()">⬇ Exportar CSV</button>
       </div>
 
       <div class="leads-filtros" id="filtros-nicho">
         <div class="filtro-chip ativo" onclick="filtrarLeads(null, this)">Todos</div>
         <div class="filtro-chip" onclick="filtrarLeads('clinicas', this)">Estética</div>
+        <div class="filtro-chip" onclick="filtrarLeads('clinicas_medicas', this)">Clín. Médica</div>
         <div class="filtro-chip" onclick="filtrarLeads('odonto', this)">Odonto</div>
-        <div class="filtro-chip" onclick="filtrarLeads('petshops', this)">Pet</div>
-        <div class="filtro-chip" onclick="filtrarLeads('advocacia', this)">Advocacia</div>
+        <div class="filtro-chip" onclick="filtrarLeads('psicologos', this)">Psicólogo</div>
+        <div class="filtro-chip" onclick="filtrarLeads('farmacias', this)">Farmácia</div>
+        <div class="filtro-chip" onclick="filtrarLeads('saloes', this)">Salão</div>
+        <div class="filtro-chip" onclick="filtrarLeads('barbearias', this)">Barbearia</div>
         <div class="filtro-chip" onclick="filtrarLeads('academias', this)">Academia</div>
+        <div class="filtro-chip" onclick="filtrarLeads('restaurantes', this)">Restaurante</div>
+        <div class="filtro-chip" onclick="filtrarLeads('padarias', this)">Padaria</div>
+        <div class="filtro-chip" onclick="filtrarLeads('advocacia', this)">Advocacia</div>
         <div class="filtro-chip" onclick="filtrarLeads('contabilidade', this)">Contabilidade</div>
         <div class="filtro-chip" onclick="filtrarLeads('imobiliarias', this)">Imob.</div>
-        <div class="filtro-chip" onclick="filtrarLeads('restaurantes', this)">Restaurante</div>
+        <div class="filtro-chip" onclick="filtrarLeads('escolas', this)">Escolas</div>
+        <div class="filtro-chip" onclick="filtrarLeads('petshops', this)">Pet</div>
+        <div class="filtro-chip" onclick="filtrarLeads('mecanicas', this)">Mecânica</div>
+        <div class="filtro-chip" onclick="filtrarLeads('construtoras', this)">Construtora</div>
+        <div class="filtro-chip" onclick="filtrarLeads('hoteis', this)">Hotel</div>
+        <div class="filtro-chip" onclick="filtrarLeads('agencias_marketing', this)">Marketing</div>
       </div>
     </div>
 
@@ -443,30 +724,23 @@
 </div>
 
 <script>
-  // ════════════════════════════════════════
-  // CONFIGURAÇÃO — troque pela URL do seu backend no Railway
-  // ════════════════════════════════════════
-  const API_URL = 'https://garimpoapp-backend-production.up.railway.app';
-
-  // Supabase (para auth no frontend)
+  // ══════════════════════════════════════════════════════════════
+  // CONFIG
+  // ══════════════════════════════════════════════════════════════
+  const API_URL      = 'https://garimpoapp-backend-production.up.railway.app';
   const SUPABASE_URL = 'https://pupnynccxtdvqkoflhzc.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_2QU5GcePpzI2D30q_T7FyQ_Bp-Eee7F';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1cG55bmNjeHRkdnFrb2ZsaHpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MTE3MzQsImV4cCI6MjA5Nzk4NzczNH0.UUzv9HZkJQGJBm_nkQjPJgWYd_QOhTqVAc50LfzdqvI';
 
-  // ────────────────────────────────────────
-  // Auth via Supabase REST (sem biblioteca)
-  // ────────────────────────────────────────
   let tokenJWT = localStorage.getItem('garimpo_token') || null;
   let perfilUsuario = null;
   let leadsCache = [];
   let nichoFiltro = null;
 
+  // ── Auth ────────────────────────────────────────────────────
   async function supabaseAuth(endpoint, body) {
     const res = await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_ANON_KEY,
-      },
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
       body: JSON.stringify(body),
     });
     return res.json();
@@ -491,7 +765,7 @@
       localStorage.setItem('garimpo_token', tokenJWT);
       await iniciarApp();
     } else {
-      msgEl.innerHTML = `<div class="msg-erro">❌ ${data.error_description || 'E-mail ou senha incorretos.'}</div>`;
+      msgEl.innerHTML = `<div class="msg-erro">${data.error_description || 'E-mail ou senha incorretos.'}</div>`;
     }
   }
 
@@ -509,20 +783,16 @@
 
     msgEl.innerHTML = '<div class="loader"><div class="spinner"></div> Criando conta…</div>';
 
-    const data = await supabaseAuth('signup', {
-      email, password: senha,
-      data: { nome },
-    });
+    const data = await supabaseAuth('signup', { email, password: senha, data: { nome } });
 
     if (data.access_token) {
       tokenJWT = data.access_token;
       localStorage.setItem('garimpo_token', tokenJWT);
       await iniciarApp();
     } else if (data.id) {
-      // Confirmação de email habilitada no Supabase
-      msgEl.innerHTML = '<div class="msg-ok">✅ Conta criada! Verifique seu e-mail para confirmar.</div>';
+      msgEl.innerHTML = '<div class="msg-ok">Conta criada! Verifique seu e-mail para confirmar.</div>';
     } else {
-      msgEl.innerHTML = `<div class="msg-erro">❌ ${data.error_description || 'Erro ao criar conta.'}</div>`;
+      msgEl.innerHTML = `<div class="msg-erro">${data.error_description || 'Erro ao criar conta.'}</div>`;
     }
   }
 
@@ -535,64 +805,127 @@
   }
 
   function mudarAba(aba) {
-    document.getElementById('form-login').style.display = aba === 'login' ? '' : 'none';
+    document.getElementById('form-login').style.display    = aba === 'login'    ? '' : 'none';
     document.getElementById('form-cadastro').style.display = aba === 'cadastro' ? '' : 'none';
     document.querySelectorAll('.auth-tab').forEach((t, i) => {
       t.classList.toggle('ativo', (i === 0 && aba === 'login') || (i === 1 && aba === 'cadastro'));
     });
   }
 
-  // ────────────────────────────────────────
-  // Iniciar app após login
-  // ────────────────────────────────────────
+  // ── App ─────────────────────────────────────────────────────
   async function iniciarApp() {
     document.getElementById('tela-auth').style.display = 'none';
-    document.getElementById('app').style.display = '';
+    document.getElementById('app').style.display = 'block';
 
     try {
       const res = await fetch(`${API_URL}/perfil`, {
         headers: { 'Authorization': `Bearer ${tokenJWT}` },
       });
 
-      if (!res.ok) {
-        sair();
-        return;
-      }
+      if (!res.ok) { sair(); return; }
 
       perfilUsuario = await res.json();
       document.getElementById('nav-plano').textContent = (perfilUsuario.plano || 'free').toUpperCase();
       document.getElementById('nav-buscas').textContent =
         `${perfilUsuario.buscas_restantes} busca${perfilUsuario.buscas_restantes !== 1 ? 's' : ''} restante${perfilUsuario.buscas_restantes !== 1 ? 's' : ''}`;
+      // Mostrar banner e botão de upgrade para usuários free
+      const isFree = !perfilUsuario.ativo;
+      document.getElementById('banner-upgrade').style.display = isFree ? 'block' : 'none';
+      document.getElementById('btn-assinar').style.display   = isFree ? 'inline-flex' : 'none';
+      // Verificar retorno de pagamento
+      const params = new URLSearchParams(location.search);
+      if (params.get('pagamento') === 'sucesso') {
+        alert('Assinatura confirmada! Bem-vindo ao plano Básico.');
+        history.replaceState({}, '', location.pathname);
+      }
     } catch (e) {
       console.error('Erro ao carregar perfil', e);
       sair();
     }
   }
 
-  // ────────────────────────────────────────
-  // Tabs
-  // ────────────────────────────────────────
+  // ── Tabs ────────────────────────────────────────────────────
   function mudarTab(tab) {
     document.querySelectorAll('.main-tab').forEach((t, i) => {
       t.classList.toggle('ativo', (i === 0 && tab === 'buscar') || (i === 1 && tab === 'leads'));
     });
     document.getElementById('tab-buscar').style.display = tab === 'buscar' ? '' : 'none';
     document.getElementById('tab-leads').style.display  = tab === 'leads'  ? '' : 'none';
-
     if (tab === 'leads') carregarLeads();
   }
 
-  // ────────────────────────────────────────
-  // Busca
-  // ────────────────────────────────────────
+  // ── Cidades por estado (API IBGE) ───────────────────────────
+  const _cidadesCache = {};
+
+  async function preencherEstado() {
+    const uf = document.getElementById('sel-estado').value;
+    const cidadeSel = document.getElementById('sel-cidade');
+    cidadeSel.innerHTML = '<option value="">Carregando cidades…</option>';
+    cidadeSel.disabled = true;
+    if (!uf) {
+      cidadeSel.innerHTML = '<option value="">Selecione o estado primeiro</option>';
+      return;
+    }
+    try {
+      if (!_cidadesCache[uf]) {
+        const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`);
+        const data = await res.json();
+        _cidadesCache[uf] = data.map(m => m.nome);
+      }
+      cidadeSel.disabled = false;
+      cidadeSel.innerHTML = '<option value="">Selecione a cidade</option>' +
+        _cidadesCache[uf].map(c => `<option value="${c}, ${uf}">${c}</option>`).join('');
+      cidadeSel.focus();
+    } catch (e) {
+      cidadeSel.innerHTML = '<option value="">Erro ao carregar cidades</option>';
+      console.error('IBGE API error', e);
+    }
+  }
+
+  function abrirModal() {
+    document.getElementById('modal-planos').classList.add('ativo');
+  }
+
+  function fecharModal() {
+    document.getElementById('modal-planos').classList.remove('ativo');
+  }
+
+  async function assinarPlano(priceId) {
+    fecharModal();
+    const status = document.getElementById('busca-status');
+    status.innerHTML = '<div class="loader"><div class="spinner"></div> Redirecionando para pagamento…</div>';
+    try {
+      const res = await fetch(`${API_URL}/criar-checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenJWT}` },
+        body: JSON.stringify({ priceId }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        location.href = data.url;
+      } else {
+        status.innerHTML = `<div class="msg-erro">${data.erro || 'Erro ao iniciar pagamento.'}</div>`;
+      }
+    } catch (e) {
+      status.innerHTML = '<div class="msg-erro">Erro de conexão. Tente novamente.</div>';
+    }
+  }
+
   async function fazerBusca() {
     const nicho  = document.getElementById('sel-nicho').value;
-    const cidade = document.getElementById('inp-cidade').value.trim();
+    const uf     = document.getElementById('sel-estado').value;
+    const cidade = document.getElementById('sel-cidade').value.trim();
     const status = document.getElementById('busca-status');
     const lista  = document.getElementById('lista-resultados');
 
+    // Bloquear se plano free sem buscas restantes
+    if (perfilUsuario?.plano === 'free' && perfilUsuario?.buscas_restantes <= 0) {
+      status.innerHTML = '<div class="msg-erro">Suas buscas gratuitas acabaram. <a href="#" onclick="abrirModal(); return false;" style="color:var(--ouro)">Assine agora</a> para continuar.</div>';
+      return;
+    }
+
     if (!cidade) {
-      status.innerHTML = '<div class="msg-erro">Informe uma cidade.</div>';
+      status.innerHTML = '<div class="msg-erro">Selecione o estado e a cidade.</div>';
       return;
     }
 
@@ -613,55 +946,56 @@
       const data = await res.json();
 
       if (!res.ok) {
-        status.innerHTML = `<div class="msg-erro">❌ ${data.erro}</div>`;
+        status.innerHTML = `<div class="msg-erro">${data.erro}</div>`;
         return;
       }
 
-      // Atualizar contador de buscas
+      document.getElementById('nav-buscas').textContent =
       document.getElementById('nav-buscas').textContent =
         `${data.buscas_restantes} busca${data.buscas_restantes !== 1 ? 's' : ''} restante${data.buscas_restantes !== 1 ? 's' : ''}`;
 
-      status.innerHTML = `<div class="msg-ok">✅ ${data.total} resultado${data.total !== 1 ? 's' : ''} encontrado${data.total !== 1 ? 's' : ''} em <strong>${cidade}</strong></div>`;
-
       if (data.total === 0) {
-        lista.innerHTML = '<div class="empty-state"><span class="emoji">🔭</span>Nenhum resultado encontrado. Tente outra cidade ou nicho.</div>';
+        status.innerHTML = '<div class="msg-erro">Nenhum resultado encontrado.</div>';
         return;
       }
 
-      lista.innerHTML = data.resultados.map((l, i) => renderLeadBusca(l, i)).join('');
+      status.innerHTML = `<div class="msg-ok">${data.total} resultado${data.total !== 1 ? 's' : ''} encontrado${data.total !== 1 ? 's' : ''}</div>`;
+      renderizarResultados(data.resultados);
+
     } catch (e) {
-      status.innerHTML = '<div class="msg-erro">❌ Erro de conexão com o servidor.</div>';
-      console.error(e);
+      console.error('Erro na busca:', e);
+      status.innerHTML = '<div class="msg-erro">Erro de conexão com o servidor.</div>';
     } finally {
       document.getElementById('btn-buscar').disabled = false;
     }
   }
 
-  function renderLeadBusca(lead, idx) {
-    const wa = lead.whatsapp
-      ? `<a class="btn-wa" href="https://wa.me/${lead.whatsapp}" target="_blank">💬 WhatsApp</a>`
-      : '';
-    const estrelas = lead.rating ? `⭐ ${lead.rating}` : '';
-
-    return `
-      <div class="lead-card" id="lead-busca-${idx}">
+  // ── Renderizar resultados ────────────────────────────────────
+  function renderizarResultados(resultados) {
+    const lista = document.getElementById('lista-resultados');
+    lista.innerHTML = resultados.map(r => `
+      <div class="lead-card">
         <div class="lead-info">
-          <h3>${lead.nome}</h3>
-          <p>📍 ${lead.endereco || lead.cidade}</p>
-          ${lead.telefone ? `<p>📞 ${lead.telefone}</p>` : ''}
-          ${estrelas ? `<p class="lead-rating">${estrelas}</p>` : ''}
+          <div class="lead-nome">${r.nome}</div>
+          <div class="lead-detalhes">
+            ${r.telefone ? `Tel: ${r.telefone}` : ''}
+            ${r.cidade ? ` | ${r.cidade}${r.estado ? ', ' + r.estado : ''}` : ''}
+            ${r.rating ? ` | Nota: ${r.rating}` : ''}
+          </div>
+          <div class="lead-endereco">${r.endereco || ''}</div>
         </div>
         <div class="lead-acoes">
-          ${wa}
-          <button class="btn btn-verde btn-sm" onclick="salvarLead(${JSON.stringify(lead).replace(/"/g, '&quot;')}, ${idx})">
-            ＋ Salvar
-          </button>
+          ${r.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${r.whatsapp}" target="_blank">WhatsApp</a>` : ''}
+          <button class="btn btn-secondary btn-sm" onclick="salvarLead(${JSON.stringify(r).replace(/"/g, '&quot;')}, this)">Salvar</button>
         </div>
       </div>
-    `;
+    `).join('');
   }
 
-  async function salvarLead(lead, idx) {
+  // ── Salvar lead ──────────────────────────────────────────────
+  async function salvarLead(lead, btn) {
+    btn.disabled = true;
+    btn.textContent = '…';
     try {
       const res = await fetch(`${API_URL}/salvar-lead`, {
         method: 'POST',
@@ -671,108 +1005,133 @@
         },
         body: JSON.stringify({ lead }),
       });
-
       const data = await res.json();
-
-      const card = document.getElementById(`lead-busca-${idx}`);
       if (res.ok) {
-        card.classList.add('salvo');
-        card.querySelector('.btn-verde').textContent = '✅ Salvo';
-        card.querySelector('.btn-verde').disabled = true;
+        btn.textContent = 'Salvo';
+        btn.style.background = 'var(--verde)';
       } else {
-        alert(data.erro || 'Erro ao salvar.');
+        btn.disabled = false;
+        btn.textContent = data.erro === 'Lead já salvo.' ? 'Já salvo' : 'Erro';
       }
     } catch (e) {
-      alert('Erro de conexão.');
+      btn.disabled = false;
+      btn.textContent = 'Erro';
     }
   }
 
-  // ────────────────────────────────────────
-  // Leads salvos
-  // ────────────────────────────────────────
-  async function carregarLeads(nicho) {
+  // ── Carregar leads ───────────────────────────────────────────
+  async function carregarLeads() {
     const lista = document.getElementById('lista-leads');
-    lista.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando leads…</div>';
-
+    lista.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando…</div>';
     try {
-      const url = nicho ? `${API_URL}/meus-leads?nicho=${nicho}` : `${API_URL}/meus-leads`;
-      const res = await fetch(url, {
+      const params = nichoFiltro ? `?nicho=${nichoFiltro}` : '';
+      const res = await fetch(`${API_URL}/meus-leads${params}`, {
         headers: { 'Authorization': `Bearer ${tokenJWT}` },
       });
+      if (!res.ok) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>'; return; }
       const data = await res.json();
       leadsCache = data.leads || [];
-
       if (leadsCache.length === 0) {
-        lista.innerHTML = '<div class="empty-state"><span class="emoji">📭</span>Nenhum lead salvo ainda.<br>Use a aba Garimpar para encontrar clientes.</div>';
+        lista.innerHTML = '<div class="msg-erro" style="text-align:center;padding:32px">Nenhum lead salvo ainda.</div>';
         return;
       }
-
-      lista.innerHTML = leadsCache.map(renderLeadSalvo).join('');
+      lista.innerHTML = leadsCache.map(l => `
+        <div class="lead-card">
+          <div class="lead-info">
+            <div class="lead-nome">${l.nome}</div>
+            <div class="lead-detalhes">
+              ${l.telefone ? `Tel: ${l.telefone}` : ''}
+              ${l.cidade ? ` | ${l.cidade}${l.estado ? ', ' + l.estado : ''}` : ''}
+              ${l.rating ? ` | Nota: ${l.rating}` : ''}
+            </div>
+            <div class="lead-endereco">${l.endereco || ''}</div>
+          </div>
+          <div class="lead-acoes">
+            ${l.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${l.whatsapp}" target="_blank">WhatsApp</a>` : ''}
+          </div>
+        </div>
+      `).join('');
     } catch (e) {
       lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>';
     }
   }
 
-  function renderLeadSalvo(lead) {
-    const wa = lead.whatsapp
-      ? `<a class="btn-wa" href="https://wa.me/${lead.whatsapp}" target="_blank">💬 WhatsApp</a>`
-      : '';
-    const data = new Date(lead.salvo_em).toLocaleDateString('pt-BR');
-    const estrelas = lead.rating ? `⭐ ${lead.rating}` : '';
-
-    return `
-      <div class="lead-card">
-        <div class="lead-info">
-          <h3>${lead.nome}</h3>
-          <p>📍 ${lead.endereco || lead.cidade}</p>
-          ${lead.telefone ? `<p>📞 ${lead.telefone}</p>` : ''}
-          ${estrelas ? `<p class="lead-rating">${estrelas}</p>` : ''}
-          <p style="font-size:0.75rem;color:#94a3b8;margin-top:4px">Salvo em ${data}</p>
-        </div>
-        <div class="lead-acoes">${wa}</div>
-      </div>
-    `;
-  }
-
+  // ── Filtrar leads ─────────────────────────────────────────────
   function filtrarLeads(nicho, el) {
     nichoFiltro = nicho;
     document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('ativo'));
-    el.classList.add('ativo');
-    carregarLeads(nicho);
+    if (el) el.classList.add('ativo');
+    carregarLeads();
   }
 
-  // ────────────────────────────────────────
-  // Exportar CSV
-  // ────────────────────────────────────────
+  // ── Exportar CSV ──────────────────────────────────────────────
   function exportarCSV() {
     if (!leadsCache.length) { alert('Nenhum lead para exportar.'); return; }
-
-    const cabecalho = ['Nome', 'Telefone', 'WhatsApp', 'Endereço', 'Cidade', 'Estado', 'Nicho', 'Rating', 'Salvo em'];
-    const linhas = leadsCache.map(l => [
-      l.nome, l.telefone, l.whatsapp, l.endereco, l.cidade, l.estado, l.nicho, l.rating,
-      new Date(l.salvo_em).toLocaleDateString('pt-BR'),
-    ].map(v => `"${(v ?? '').toString().replace(/"/g, '""')}"`).join(','));
-
-    const csv = [cabecalho.join(','), ...linhas].join('\n');
+    const headers = ['Nome','Telefone','WhatsApp','Endereço','Cidade','Estado','Rating','Nicho'];
+    const rows = leadsCache.map(l => [
+      l.nome, l.telefone, l.whatsapp, l.endereco, l.cidade, l.estado, l.rating ?? '', l.nicho ?? ''
+    ].map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
     const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `garimpoapp_leads_${new Date().toISOString().slice(0,10)}.csv`;
-    link.click();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'garimpo_leads.csv'; a.click();
+    URL.revokeObjectURL(url);
   }
 
-  // ────────────────────────────────────────
-  // Auto-login se token salvo
-  // ────────────────────────────────────────
-  (async () => {
-    if (tokenJWT) {
-      try {
-        await iniciarApp();
-      } catch {
-        sair();
-      }
-    }
-  })();
+  // ── Init ──────────────────────────────────────────────────────
+  if (tokenJWT) {
+    iniciarApp();
+  }
 </script>
+
+<!-- Modal de planos -->
+<div id="modal-planos" class="modal-overlay" onclick="if(event.target===this)fecharModal()">
+  <div class="modal-planos">
+    <h2>Escolha seu plano</h2>
+    <p class="sub">Todos os planos com acesso a leads verificados do Google em todo o Brasil</p>
+    <div class="planos-grid">
+
+      <div class="plano-card">
+        <div class="nome">Free</div>
+        <div class="buscas">5<span>buscas/mês</span></div>
+        <div class="preco"><strong>Grátis</strong></div>
+        <button class="btn btn-secondary btn-sm" style="width:100%" disabled>Plano atual</button>
+      </div>
+
+      <div class="plano-card">
+        <div class="nome">Basico</div>
+        <div class="buscas">50<span>buscas/mês</span></div>
+        <div class="preco">por <strong>R$49/mês</strong></div>
+        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('price_1TnQPD5rKd9u6SOZGxlHgoLE')">Assinar</button>
+      </div>
+
+      <div class="plano-card destaque">
+        <div class="nome">Starter</div>
+        <div class="buscas">250<span>buscas/mês</span></div>
+        <div class="preco">por <strong>R$97/mês</strong></div>
+        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('price_1TnhWA5rKd9u6SOZ16QX1Gue')">Assinar</button>
+      </div>
+
+      <div class="plano-card">
+        <div class="nome">Profissional</div>
+        <div class="buscas">500<span>buscas/mês</span></div>
+        <div class="preco">por <strong>R$197/mês</strong></div>
+        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('price_1TnhWA5rKd9u6SOZC4D4ZlBt')">Assinar</button>
+      </div>
+
+      <div class="plano-card">
+        <div class="nome">Business</div>
+        <div class="buscas">1.000<span>buscas/mês</span></div>
+        <div class="preco">por <strong>R$397/mês</strong></div>
+        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('price_1TnhWB5rKd9u6SOZRbH0kzec')">Assinar</button>
+      </div>
+
+    </div>
+    <span class="modal-fechar" onclick="fecharModal()">Fechar</span>
+  </div>
+</div>
+
 </body>
 </html>
+                                                                                                                                                                              

@@ -864,7 +864,7 @@
     const status = document.getElementById('busca-status');
     status.innerHTML = '<div class="loader"><div class="spinner"></div> Redirecionando para pagamento…</div>';
     try {
-      const priceId = 'STRIPE_PRICE_ID_AQUI'; // substituir após criar produto no Stripe
+      const priceId = 'price_1TnQPD5rKd9u6SOZGxlHgoLE'; // substituir após criar produto no Stripe
       const res = await fetch(`${API_URL}/criar-checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenJWT}` },

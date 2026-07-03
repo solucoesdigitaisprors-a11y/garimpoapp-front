@@ -1,668 +1,479 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GarimpoApp — Plataforma de Inteligência Comercial</title>
 <meta name="description" content="Encontre e organize contatos qualificados de qualquer cidade do Brasil em segundos. A plataforma de inteligência comercial para expandir seus negócios.">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --gold: #f5a523;
-    --gold-dark: #c8870a;
-    --dark: #060d1c;
-    --dark2: #0b1628;
-    --dark3: #0f1e35;
-    --light: #f4f6fa;
-    --text: #b0bcd0;
-    --white: #ffffff;
-  }
-
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--dark); color: var(--white); line-height: 1.6; }
+  body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; background: #060d1c; -webkit-font-smoothing: antialiased; }
+  a { text-decoration: none; color: inherit; }
+  ul { list-style: none; }
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 5%; height: 72px;
-    background: rgba(6,13,28,0.96); backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(245,165,35,0.15);
-  }
-  .nav-logo { display: flex; align-items: center; text-decoration: none; }
-  .nav-logo img { height: 46px; width: auto; display: block; }
-  .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
-  .nav-links a { color: var(--text); text-decoration: none; font-size: .9rem; transition: color .2s; }
-  .nav-links a:hover { color: var(--gold); }
-  .btn-nav {
-    background: var(--gold); color: var(--dark);
-    padding: 9px 22px; border-radius: 8px; font-weight: 700; font-size: .88rem;
-    text-decoration: none; white-space: nowrap; transition: background .2s;
-  }
-  .btn-nav:hover { background: var(--gold-dark); }
-  .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
-  .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); margin: 5px 0; border-radius: 2px; }
+  @keyframes gp-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  @keyframes gp-pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
 
-  /* ── HERO ── */
-  #hero {
-    min-height: 100vh; padding: 130px 5% 80px;
-    display: flex; align-items: center;
-    background: radial-gradient(ellipse 70% 60% at 60% 40%, rgba(245,165,35,0.07) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 50% at 10% 80%, rgba(245,165,35,0.04) 0%, transparent 60%),
-                var(--dark);
-    gap: 60px;
-  }
-  .hero-content { flex: 1; max-width: 600px; }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(245,165,35,0.12); border: 1px solid rgba(245,165,35,0.3);
-    color: var(--gold); padding: 6px 16px; border-radius: 50px;
-    font-size: .8rem; font-weight: 700; margin-bottom: 28px; letter-spacing: .04em; text-transform: uppercase;
-  }
-  .hero-badge .dot { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; animation: pulse 2s infinite; flex-shrink: 0; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-  .hero-h1 { font-size: clamp(2rem, 5vw, 3.3rem); font-weight: 900; line-height: 1.13; margin-bottom: 22px; }
-  .hero-h1 .gold { color: var(--gold); }
-  .hero-sub { color: var(--text); font-size: 1.05rem; margin-bottom: 36px; max-width: 500px; line-height: 1.7; }
-  .hero-features {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 40px;
-  }
-  .hero-feat {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
-    border-left: 3px solid var(--gold);
-    padding: 14px 16px; border-radius: 10px; font-size: .85rem; color: var(--text);
-  }
-  .hero-feat strong { color: var(--white); display: block; font-size: .9rem; margin-bottom: 2px; }
-  .btn-hero {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-    color: var(--dark); font-weight: 800; font-size: 1.05rem;
-    padding: 17px 40px; border-radius: 10px; text-decoration: none;
-    letter-spacing: .04em; transition: transform .2s, box-shadow .2s;
-    box-shadow: 0 4px 24px rgba(245,165,35,0.35);
-  }
-  .btn-hero:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(245,165,35,0.45); }
-  .hero-trust { margin-top: 18px; color: rgba(176,188,208,.6); font-size: .82rem; display: flex; gap: 20px; }
-  .hero-trust span::before { content: '✓ '; color: var(--gold); }
-
-  .hero-visual { flex: 1; max-width: 520px; }
-  .mockup-shell {
-    background: var(--dark3); border: 1px solid rgba(245,165,35,0.18);
-    border-radius: 16px; overflow: hidden;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,165,35,0.08);
-  }
-  .mockup-bar {
-    background: var(--dark2); padding: 12px 16px;
-    display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .mockup-dot { width: 12px; height: 12px; border-radius: 50%; }
-  .mockup-bar-url {
-    flex: 1; background: rgba(255,255,255,0.06); border-radius: 6px;
-    padding: 4px 12px; font-size: .75rem; color: var(--text); margin-left: 8px;
-  }
-  .mockup-body { padding: 20px; }
-  .mock-search {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(245,165,35,0.2);
-    border-radius: 8px; padding: 12px 16px; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 10px; color: var(--text); font-size: .85rem;
-  }
-  .mock-results { display: flex; flex-direction: column; gap: 8px; }
-  .mock-card {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 8px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;
-  }
-  .mock-card-info strong { font-size: .88rem; color: var(--white); display: block; }
-  .mock-card-info span { font-size: .76rem; color: var(--text); }
-  .mock-badge-gold {
-    background: rgba(245,165,35,0.15); color: var(--gold);
-    padding: 3px 8px; border-radius: 4px; font-size: .72rem; font-weight: 600;
-  }
-  .mock-stats {
-    display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 16px;
-  }
-  .mock-stat {
-    background: rgba(245,165,35,0.08); border: 1px solid rgba(245,165,35,0.15);
-    border-radius: 8px; padding: 10px; text-align: center;
-  }
-  .mock-stat strong { display: block; color: var(--gold); font-size: 1.1rem; font-weight: 800; }
-  .mock-stat span { font-size: .7rem; color: var(--text); }
-
-  /* ── SECTION COMMON ── */
-  section { padding: 88px 5%; }
-  .section-label {
-    display: inline-block; color: var(--gold); font-size: .78rem; font-weight: 700;
-    letter-spacing: .14em; text-transform: uppercase; margin-bottom: 14px;
-  }
-  .section-title { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; margin-bottom: 16px; line-height: 1.25; }
-  .section-title .gold { color: var(--gold); }
-  .section-sub { color: var(--text); max-width: 540px; margin-bottom: 52px; line-height: 1.7; }
-
-  /* ── PARA QUEM É ── */
-  #para-quem { background: var(--light); }
-  #para-quem .section-title { color: #0b1628; }
-  #para-quem .section-label { color: var(--gold-dark); }
-  #para-quem .section-sub { color: #4a5568; }
-  .nicho-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
-  .nicho-card {
-    background: var(--white); border: 1px solid #e2e8f0; border-radius: 12px;
-    border-top: 3px solid var(--gold);
-    padding: 24px 18px; text-align: center; transition: border-color .2s, box-shadow .2s;
-  }
-  .nicho-card:hover { box-shadow: 0 4px 20px rgba(245,165,35,0.15); transform: translateY(-2px); }
-  .nicho-card span { font-size: .88rem; font-weight: 600; color: #2d3748; }
-
-  /* ── FEATURES ── */
-  #features { background: var(--dark2); }
-  .feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-  .feat-card {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px; padding: 32px 24px; transition: border-color .2s, transform .2s;
-    border-top: 2px solid rgba(245,165,35,0.3);
-  }
-  .feat-card:hover { border-color: rgba(245,165,35,0.5); transform: translateY(-4px); }
-  .feat-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; color: var(--white); }
-  .feat-card p { font-size: .84rem; color: var(--text); line-height: 1.6; }
-  .feat-number {
-    font-size: .72rem; font-weight: 800; color: var(--gold); letter-spacing: .1em;
-    text-transform: uppercase; margin-bottom: 14px; display: block;
-  }
-
-  /* ── PRICING ── */
-  #pricing { background: var(--light); }
-  #pricing .section-title { color: #0b1628; }
-  #pricing .section-label { color: var(--gold-dark); }
-  #pricing .section-sub { color: #4a5568; }
-  .plans-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
-  .plan-card {
-    background: var(--white); border: 2px solid #e2e8f0; border-radius: 16px;
-    padding: 36px 26px; position: relative; transition: transform .2s;
-  }
-  .plan-card:hover { transform: translateY(-4px); }
-  .plan-card.featured {
-    background: var(--dark); border-color: var(--gold);
-    box-shadow: 0 8px 40px rgba(245,165,35,0.2);
-  }
-  .plan-badge {
-    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
-    background: var(--gold); color: var(--dark); font-size: .72rem; font-weight: 800;
-    padding: 4px 16px; border-radius: 50px; letter-spacing: .06em; white-space: nowrap;
-  }
-  .plan-name { font-size: .75rem; font-weight: 800; letter-spacing: .14em; color: var(--gold); margin-bottom: 8px; }
-  .plan-price { font-size: 2.1rem; font-weight: 900; color: #0b1628; margin-bottom: 2px; }
-  .plan-card.featured .plan-price { color: var(--white); }
-  .plan-price span { font-size: .85rem; font-weight: 400; color: #718096; }
-  .plan-card.featured .plan-price span { color: var(--text); }
-  .plan-desc { font-size: .82rem; color: #718096; margin-bottom: 20px; }
-  .plan-card.featured .plan-desc { color: var(--text); }
-  .plan-divider { border: none; border-top: 1px solid #e2e8f0; margin: 18px 0; }
-  .plan-card.featured .plan-divider { border-color: rgba(255,255,255,.1); }
-  .plan-features { list-style: none; margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; }
-  .plan-features li { font-size: .84rem; color: #4a5568; display: flex; gap: 8px; align-items: flex-start; }
-  .plan-features li::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-  .plan-card.featured .plan-features li { color: var(--text); }
-  .btn-plan {
-    display: block; text-align: center; padding: 14px 20px;
-    border-radius: 9px; font-weight: 700; font-size: .9rem; text-decoration: none;
-    transition: background .2s, transform .15s;
-  }
-  .btn-plan-outline { border: 2px solid var(--gold); color: var(--gold); background: transparent; }
-  .btn-plan-outline:hover { background: var(--gold); color: var(--dark); }
-  .btn-plan-fill { background: var(--gold); color: var(--dark); }
-  .btn-plan-fill:hover { background: var(--gold-dark); transform: translateY(-1px); }
-
-  /* ── DEPOIMENTOS ── */
-  #depoimentos { background: var(--dark3); }
-  .test-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 20px; }
-  .test-card {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 14px; padding: 32px 26px;
-  }
-  .test-stars { color: var(--gold); font-size: 1rem; margin-bottom: 16px; letter-spacing: 2px; }
-  .test-text { font-size: .9rem; color: var(--text); line-height: 1.7; margin-bottom: 22px; font-style: italic; }
-  .test-author { display: flex; align-items: center; gap: 12px; }
-  .test-avatar {
-    width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; color: var(--dark);
-    flex-shrink: 0;
-  }
-  .test-name { font-weight: 700; font-size: .9rem; }
-  .test-role { font-size: .78rem; color: var(--text); }
-
-  /* ── FINAL CTA ── */
-  #cta-final {
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-    text-align: center; padding: 88px 5%;
-  }
-  #cta-final h2 { color: var(--dark); font-size: clamp(1.5rem, 3.5vw, 2.3rem); font-weight: 900; max-width: 640px; margin: 0 auto 18px; line-height: 1.2; }
-  #cta-final p { color: rgba(6,13,28,.65); font-size: 1rem; margin-bottom: 36px; }
-  .btn-cta-dark {
-    display: inline-block; background: var(--dark); color: var(--white);
-    padding: 17px 44px; border-radius: 10px; font-weight: 800; font-size: 1.05rem;
-    text-decoration: none; letter-spacing: .04em; transition: transform .2s;
-  }
-  .btn-cta-dark:hover { transform: translateY(-2px); }
-  .cta-trust { margin-top: 22px; color: rgba(6,13,28,.5); font-size: .82rem; display: flex; justify-content: center; gap: 24px; }
-  .cta-trust span::before { content: '✓ '; }
-
-  /* ── FOOTER ── */
-  footer {
-    background: var(--dark); border-top: 1px solid rgba(255,255,255,0.07);
-    padding: 52px 5% 28px;
-  }
-  .footer-top { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; margin-bottom: 40px; }
-  .footer-brand { max-width: 280px; }
-  .footer-brand .nav-logo { margin-bottom: 14px; }
-  .footer-brand p { color: var(--text); font-size: .83rem; line-height: 1.7; }
-  .footer-col h4 { font-size: .85rem; font-weight: 700; color: var(--white); margin-bottom: 14px; }
-  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
-  .footer-col ul a { color: var(--text); text-decoration: none; font-size: .83rem; transition: color .2s; }
-  .footer-col ul a:hover { color: var(--gold); }
-  .footer-bottom {
-    border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px;
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-    color: var(--text); font-size: .78rem;
-  }
-
-  /* ── STATS BAR ── */
-  #stats {
-    background: var(--dark2); border-top: 1px solid rgba(245,165,35,0.15);
-    border-bottom: 1px solid rgba(245,165,35,0.15); padding: 44px 5%;
-  }
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px; text-align: center; }
-  .stat-item strong { display: block; font-size: 2.2rem; font-weight: 900; color: var(--gold); }
-  .stat-item span { font-size: .82rem; color: var(--text); }
+  /* ── HOVER STYLES ── */
+  .gp-navlink:hover { color: #ffffff !important; }
+  .gp-btn-nav:hover { filter: brightness(1.06); }
+  .gp-seg-card:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(11,22,40,0.12) !important; }
+  .gp-feat-card:hover { background: #12233d !important; }
+  .gp-plan-btn-outline:hover { background: #0b1628; color: #ffffff !important; }
+  .gp-plan-btn-fill:hover { filter: brightness(1.07); }
+  .gp-free-btn:hover { filter: brightness(1.06); }
+  .gp-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 22px 44px rgba(6,13,28,0.4) !important; }
+  .gp-footer-link:hover { color: #ffffff !important; }
 
   /* ── RESPONSIVE ── */
+  #gp-hamburger { display: none; }
+  #gp-mobile-menu { display: none; }
+
+  @media (max-width: 980px) {
+    #gp-navlinks { display: none !important; }
+    #gp-hamburger { display: flex !important; }
+  }
   @media (max-width: 900px) {
-    #hero { flex-direction: column; padding-top: 110px; }
-    .hero-visual { display: none; }
-    .hero-features { grid-template-columns: 1fr; }
-    .nav-links { display: none; }
-    .hamburger { display: block; }
+    #gp-hero-grid { grid-template-columns: 1fr !important; gap: 44px !important; }
+    #gp-hero-mock { display: none !important; }
+    .gp-seg-grid { grid-template-columns: repeat(2,1fr) !important; }
+    .gp-feat-grid { grid-template-columns: repeat(2,1fr) !important; }
+    .gp-stats-grid { grid-template-columns: repeat(2,1fr) !important; row-gap: 32px !important; }
+    .gp-test-grid { grid-template-columns: 1fr !important; }
+    #gp-plans-grid { grid-template-columns: repeat(2,1fr) !important; }
   }
   @media (max-width: 600px) {
-    .plans-grid, .feat-grid, .nicho-grid { grid-template-columns: 1fr; }
-    .hero-trust { flex-direction: column; gap: 6px; }
-    .cta-trust { flex-direction: column; gap: 8px; }
+    #gp-plans-grid { grid-template-columns: 1fr !important; }
+    .gp-seg-grid { grid-template-columns: 1fr !important; }
+    .gp-feat-grid { grid-template-columns: 1fr !important; }
   }
 </style>
 </head>
 <body>
+<div style="background:#060d1c;color:#ffffff;overflow-x:hidden;">
 
-<!-- ═══ NAV ═══ -->
-<nav>
-  <a href="#" class="nav-logo">
-    <img src="logo.png" alt="GarimpoApp">
-  </a>
-  <ul class="nav-links">
-    <li><a href="#features">Recursos</a></li>
-    <li><a href="#para-quem">Segmentos</a></li>
-    <li><a href="#pricing">Planos</a></li>
-    <li><a href="#depoimentos">Depoimentos</a></li>
-    <li><a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/">Login</a></li>
-    <li><a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="btn-nav">Começar grátis</a></li>
-  </ul>
-  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+<!-- ══ NAV ══════════════════════════════════════════════════════════ -->
+<nav style="position:sticky;top:0;z-index:100;background:rgba(6,13,28,0.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(245,165,35,0.14);">
+  <div style="max-width:1200px;margin:0 auto;padding:15px 28px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="#top" style="display:flex;align-items:center;gap:11px;">
+      <img src="logo-mark.png" alt="GarimpoApp" style="height:46px;width:auto;display:block;">
+      <span style="font-size:1.3rem;font-weight:900;letter-spacing:0.01em;">GARIMPO<span style="color:#f5a523;">APP</span></span>
+    </a>
+    <div id="gp-navlinks" style="display:flex;align-items:center;gap:34px;">
+      <a href="#recursos" class="gp-navlink" style="font-size:0.98rem;color:#b0bcd0;font-weight:500;transition:color .18s;">Recursos</a>
+      <a href="#segmentos" class="gp-navlink" style="font-size:0.98rem;color:#b0bcd0;font-weight:500;transition:color .18s;">Segmentos</a>
+      <a href="#planos" class="gp-navlink" style="font-size:0.98rem;color:#b0bcd0;font-weight:500;transition:color .18s;">Planos</a>
+      <a href="#depoimentos" class="gp-navlink" style="font-size:0.98rem;color:#b0bcd0;font-weight:500;transition:color .18s;">Depoimentos</a>
+      <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="gp-navlink" style="font-size:0.98rem;color:#b0bcd0;font-weight:500;transition:color .18s;">Login</a>
+      <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="gp-btn-nav" style="background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;font-size:0.95rem;padding:11px 22px;border-radius:9px;box-shadow:0 6px 18px rgba(245,165,35,0.28);transition:filter .18s;">Começar Gratuitamente</a>
+    </div>
+    <button id="gp-hamburger" onclick="toggleMenu()" aria-label="Menu" style="width:44px;height:44px;background:rgba(245,165,35,0.12);border:1px solid rgba(245,165,35,0.3);border-radius:9px;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;">
+      <span style="width:20px;height:2px;background:#f5a523;border-radius:2px;display:block;"></span>
+      <span style="width:20px;height:2px;background:#f5a523;border-radius:2px;display:block;"></span>
+      <span style="width:20px;height:2px;background:#f5a523;border-radius:2px;display:block;"></span>
+    </button>
+  </div>
+  <div id="gp-mobile-menu" style="flex-direction:column;gap:2px;padding:6px 28px 22px;border-top:1px solid rgba(245,165,35,0.12);">
+    <a href="#recursos" onclick="closeMenu()" style="padding:12px 4px;color:#b0bcd0;font-weight:500;border-bottom:1px solid rgba(255,255,255,0.05);display:block;">Recursos</a>
+    <a href="#segmentos" onclick="closeMenu()" style="padding:12px 4px;color:#b0bcd0;font-weight:500;border-bottom:1px solid rgba(255,255,255,0.05);display:block;">Segmentos</a>
+    <a href="#planos" onclick="closeMenu()" style="padding:12px 4px;color:#b0bcd0;font-weight:500;border-bottom:1px solid rgba(255,255,255,0.05);display:block;">Planos</a>
+    <a href="#depoimentos" onclick="closeMenu()" style="padding:12px 4px;color:#b0bcd0;font-weight:500;border-bottom:1px solid rgba(255,255,255,0.05);display:block;">Depoimentos</a>
+    <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" onclick="closeMenu()" style="padding:12px 4px;color:#b0bcd0;font-weight:500;display:block;">Login</a>
+    <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" onclick="closeMenu()" style="margin-top:10px;text-align:center;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;padding:13px;border-radius:9px;display:block;">Começar Gratuitamente</a>
+  </div>
 </nav>
 
-<!-- ═══ HERO ═══ -->
-<section id="hero">
-  <div class="hero-content">
-    <div class="hero-badge"><div class="dot"></div> Inteligência Comercial para o Brasil</div>
-    <h1 class="hero-h1">
-      Expanda seus negócios com <span class="gold">Inteligência Comercial</span> em qualquer cidade do Brasil.
-    </h1>
-    <p class="hero-sub">
-      Encontre e organize contatos qualificados de qualquer segmento e região. Dados completos, atualizados e prontos para sua equipe comercial.
-    </p>
-    <div class="hero-features">
-      <div class="hero-feat">
-        <strong>Contatos segmentados</strong>por setor e cidade
-      </div>
-      <div class="hero-feat">
-        <strong>Dados completos</strong>nome, tel, e-mail, site
-      </div>
-      <div class="hero-feat">
-        <strong>Exportação fácil</strong>CSV, Excel, copiar lista
-      </div>
-      <div class="hero-feat">
-        <strong>Ganhe tempo</strong>prospecção automatizada
-      </div>
-    </div>
-    <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="btn-hero">COMEÇAR GRATUITAMENTE →</a>
-    <div class="hero-trust">
-      <span>Sem cartão de crédito</span>
-      <span>Plano gratuito permanente</span>
-      <span>Cancele quando quiser</span>
-    </div>
-  </div>
-
-  <div class="hero-visual">
-    <div class="mockup-shell">
-      <div class="mockup-bar">
-        <div class="mockup-dot" style="background:#ff5f57"></div>
-        <div class="mockup-dot" style="background:#febc2e"></div>
-        <div class="mockup-dot" style="background:#28c840"></div>
-        <div class="mockup-bar-url">garimpoapp.com.br/app</div>
-      </div>
-      <div class="mockup-body">
-        <div class="mock-search">
-          <span>Dentistas em São Paulo, SP</span>
-          <span style="margin-left:auto;background:var(--gold);color:var(--dark);padding:4px 12px;border-radius:6px;font-size:.75rem;font-weight:700;">Buscar</span>
+<!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+<header id="top" style="position:relative;background:radial-gradient(1100px 620px at 78% 6%,rgba(245,165,35,0.16),transparent 60%),radial-gradient(760px 480px at 6% 92%,rgba(245,165,35,0.06),transparent 55%),#060d1c;">
+  <div id="gp-hero-grid" style="max-width:1200px;margin:0 auto;padding:88px 28px 100px;display:grid;grid-template-columns:1.05fr 0.95fr;gap:58px;align-items:center;">
+    <div>
+      <span style="display:inline-flex;align-items:center;gap:9px;background:rgba(245,165,35,0.1);border:1px solid rgba(245,165,35,0.3);color:#f5a523;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;padding:8px 15px;border-radius:999px;">
+        <span style="width:6px;height:6px;background:#f5a523;border-radius:50%;animation:gp-pulse 2.4s ease-in-out infinite;"></span>Inteligência Comercial para o Brasil
+      </span>
+      <h1 style="margin-top:26px;font-size:clamp(2rem,5vw,3.3rem);font-weight:900;line-height:1.1;letter-spacing:-0.02em;color:#ffffff;">Expanda seus negócios com <span style="color:#f5a523;">Inteligência Comercial</span> em qualquer cidade do Brasil.</h1>
+      <p style="margin-top:22px;font-size:1.12rem;line-height:1.65;color:#b0bcd0;max-width:540px;">Encontre e organize contatos qualificados de qualquer segmento e região. Dados completos, atualizados e prontos para sua equipe comercial.</p>
+      <div style="margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:540px;">
+        <div style="border-left:3px solid #f5a523;background:rgba(255,255,255,0.03);padding:13px 16px;border-radius:0 9px 9px 0;">
+          <div style="font-weight:700;color:#ffffff;font-size:0.98rem;">Contatos segmentados</div>
+          <div style="font-size:0.86rem;color:#b0bcd0;margin-top:3px;">por setor e cidade</div>
         </div>
-        <div class="mock-results">
-          <div class="mock-card">
-            <div class="mock-card-info">
-              <strong>Clínica Dental Premium</strong>
-              <span>Av. Paulista, 1000 — (11) 9 9000-0000</span>
-            </div>
-            <span class="mock-badge-gold">Novo</span>
+        <div style="border-left:3px solid #f5a523;background:rgba(255,255,255,0.03);padding:13px 16px;border-radius:0 9px 9px 0;">
+          <div style="font-weight:700;color:#ffffff;font-size:0.98rem;">Dados completos</div>
+          <div style="font-size:0.86rem;color:#b0bcd0;margin-top:3px;">nome, tel, e-mail, site</div>
+        </div>
+        <div style="border-left:3px solid #f5a523;background:rgba(255,255,255,0.03);padding:13px 16px;border-radius:0 9px 9px 0;">
+          <div style="font-weight:700;color:#ffffff;font-size:0.98rem;">Exportação fácil</div>
+          <div style="font-size:0.86rem;color:#b0bcd0;margin-top:3px;">CSV, Excel, copiar lista</div>
+        </div>
+        <div style="border-left:3px solid #f5a523;background:rgba(255,255,255,0.03);padding:13px 16px;border-radius:0 9px 9px 0;">
+          <div style="font-weight:700;color:#ffffff;font-size:0.98rem;">Ganhe tempo</div>
+          <div style="font-size:0.86rem;color:#b0bcd0;margin-top:3px;">prospecção automatizada</div>
+        </div>
+      </div>
+      <div style="margin-top:32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="gp-btn-nav" style="background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;font-size:1rem;padding:15px 30px;border-radius:11px;box-shadow:0 12px 30px rgba(245,165,35,0.34);transition:filter .18s,transform .18s;">COMEÇAR GRATUITAMENTE →</a>
+      </div>
+      <p style="margin-top:18px;font-size:0.86rem;color:#8493ab;">Sem cartão de crédito · Plano gratuito permanente · Cancele quando quiser</p>
+    </div>
+
+    <!-- Mockup -->
+    <div id="gp-hero-mock" style="position:relative;">
+      <div style="position:absolute;inset:-30px -20px;background:radial-gradient(circle at 60% 40%,rgba(245,165,35,0.18),transparent 65%);filter:blur(10px);"></div>
+      <div style="position:relative;background:#0b1628;border:1px solid rgba(245,165,35,0.22);border-radius:18px;box-shadow:0 34px 80px rgba(0,0,0,0.6);overflow:hidden;animation:gp-float 6s ease-in-out infinite;">
+        <div style="display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.06);">
+          <span style="width:11px;height:11px;border-radius:50%;background:#f5a523;"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,0.15);"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,0.15);"></span>
+          <span style="margin-left:auto;font-size:0.72rem;color:#8493ab;letter-spacing:0.05em;">garimpoapp.com.br</span>
+        </div>
+        <div style="padding:20px;">
+          <div style="display:flex;align-items:center;gap:10px;background:#060d1c;border:1px solid rgba(245,165,35,0.25);border-radius:10px;padding:11px 14px;">
+            <span style="width:15px;height:15px;border:2px solid #f5a523;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:0.9rem;color:#ffffff;font-weight:600;">Clínicas · São Paulo, SP</span>
+            <span style="margin-left:auto;font-size:0.72rem;color:#060d1c;background:#f5a523;padding:4px 10px;border-radius:6px;font-weight:800;white-space:nowrap;">BUSCAR</span>
           </div>
-          <div class="mock-card">
-            <div class="mock-card-info">
-              <strong>Dr. Carlos Mendes</strong>
-              <span>Rua Augusta, 500 — (11) 9 8000-0001</span>
-            </div>
-            <span class="mock-badge-gold">Exportar</span>
+          <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:0.74rem;color:#8493ab;text-transform:uppercase;letter-spacing:0.1em;">248 empresas encontradas</span>
+            <span style="font-size:0.74rem;color:#f5a523;font-weight:700;">Exportar CSV</span>
           </div>
-          <div class="mock-card">
-            <div class="mock-card-info">
-              <strong>OdontoFácil Pinheiros</strong>
-              <span>R. dos Pinheiros, 200 — (11) 9 7000-0002</span>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px;">
+              <span style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">CE</span>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:0.9rem;font-weight:700;color:#ffffff;">Clínica Estética Vida</div>
+                <div style="font-size:0.76rem;color:#8493ab;">(11) 3xxx-xxxx · contato@vida.com.br</div>
+              </div>
+              <span style="font-size:0.68rem;color:#f5a523;border:1px solid rgba(245,165,35,0.3);padding:3px 8px;border-radius:6px;white-space:nowrap;">Saúde</span>
             </div>
-            <span class="mock-badge-gold">Exportar</span>
+            <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px;">
+              <span style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">DE</span>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:0.9rem;font-weight:700;color:#ffffff;">Derma Center Jardins</div>
+                <div style="font-size:0.76rem;color:#8493ab;">(11) 2xxx-xxxx · atende@derma.com.br</div>
+              </div>
+              <span style="font-size:0.68rem;color:#f5a523;border:1px solid rgba(245,165,35,0.3);padding:3px 8px;border-radius:6px;white-space:nowrap;">Saúde</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px;">
+              <span style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">BE</span>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:0.9rem;font-weight:700;color:#ffffff;">Bella Face Clinic</div>
+                <div style="font-size:0.76rem;color:#8493ab;">(11) 4xxx-xxxx · oi@bellaface.com.br</div>
+              </div>
+              <span style="font-size:0.68rem;color:#f5a523;border:1px solid rgba(245,165,35,0.3);padding:3px 8px;border-radius:6px;white-space:nowrap;">Saúde</span>
+            </div>
           </div>
         </div>
-        <div class="mock-stats">
-          <div class="mock-stat"><strong>2.847</strong><span>contatos encontrados</span></div>
-          <div class="mock-stat"><strong>98%</strong><span>dados válidos</span></div>
-          <div class="mock-stat"><strong>4s</strong><span>tempo de busca</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ STATS ══════════════════════════════════════════════════════════ -->
+<section style="background:#0b1628;border-top:1px solid rgba(245,165,35,0.2);border-bottom:1px solid rgba(245,165,35,0.2);">
+  <div class="gp-stats-grid" style="max-width:1200px;margin:0 auto;padding:42px 28px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;">
+    <div data-fade style="text-align:center;">
+      <div style="font-size:clamp(1.7rem,3vw,2.4rem);font-weight:900;color:#f5a523;">50M+</div>
+      <div style="margin-top:6px;font-size:0.9rem;color:#b0bcd0;">empresas mapeadas</div>
+    </div>
+    <div data-fade style="text-align:center;">
+      <div style="font-size:clamp(1.7rem,3vw,2.4rem);font-weight:900;color:#f5a523;">5.000+</div>
+      <div style="margin-top:6px;font-size:0.9rem;color:#b0bcd0;">usuários ativos</div>
+    </div>
+    <div data-fade style="text-align:center;">
+      <div style="font-size:clamp(1.7rem,3vw,2.4rem);font-weight:900;color:#f5a523;">2.000+</div>
+      <div style="margin-top:6px;font-size:0.9rem;color:#b0bcd0;">cidades</div>
+    </div>
+    <div data-fade style="text-align:center;">
+      <div style="font-size:clamp(1.7rem,3vw,2.4rem);font-weight:900;color:#f5a523;">99%</div>
+      <div style="margin-top:6px;font-size:0.9rem;color:#b0bcd0;">satisfação</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SEGMENTOS ══════════════════════════════════════════════════════ -->
+<section id="segmentos" style="background:#f4f6fa;">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 28px;">
+    <div style="text-align:center;max-width:720px;margin:0 auto;">
+      <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.14em;color:#c8870a;font-weight:700;">Segmentos</div>
+      <h2 style="margin-top:14px;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:#0b1628;line-height:1.15;">Para quem precisa de expansão comercial.</h2>
+      <p style="margin-top:16px;font-size:1.05rem;line-height:1.6;color:#4a5568;">Se você precisa encontrar novos clientes para crescer, o GarimpoApp foi feito para você.</p>
+    </div>
+    <div class="gp-seg-grid" style="margin-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">Agências de Marketing</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Monte listas de prospecção para seus clientes e entregue resultados mais rápido.</p>
+      </div>
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">Gestores de Tráfego</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Encontre empresas do nicho certo para campanhas de outbound e captação.</p>
+      </div>
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">SDRs e Pré-vendas</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Prospects qualificados com telefone válido para abastecer sua cadência diária.</p>
+      </div>
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">Representantes Comerciais</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Mapeie empresas por região e organize sua carteira de novos clientes.</p>
+      </div>
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">Freelancers B2B</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Encontre potenciais clientes para seus serviços sem depender de indicação.</p>
+      </div>
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">Equipes de Vendas</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Abasteça todo o time com contatos segmentados por setor, porte e cidade.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ RECURSOS ══════════════════════════════════════════════════════ -->
+<section id="recursos" style="background:#0b1628;">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 28px;">
+    <div style="text-align:center;max-width:760px;margin:0 auto;">
+      <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.14em;color:#f5a523;font-weight:700;">Recursos</div>
+      <h2 style="margin-top:14px;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:#ffffff;line-height:1.15;">Tudo que você precisa para prospectar melhor.</h2>
+      <p style="margin-top:16px;font-size:1.05rem;line-height:1.6;color:#b0bcd0;">Uma plataforma completa de expansão comercial, para times que querem resultados reais.</p>
+    </div>
+    <div class="gp-feat-grid" style="margin-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div data-fade class="gp-feat-card" style="background:#0f1e35;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:30px;transition:background .2s;">
+        <div style="font-size:0.9rem;font-weight:900;color:rgba(245,165,35,0.55);letter-spacing:0.1em;">01</div>
+        <div style="margin-top:12px;font-size:1.15rem;font-weight:800;color:#ffffff;">Busca Inteligente</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Encontre empresas por setor, cidade e estado com prospecção inteligente em segundos.</p>
+      </div>
+      <div data-fade class="gp-feat-card" style="background:#0f1e35;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:30px;transition:background .2s;">
+        <div style="font-size:0.9rem;font-weight:900;color:rgba(245,165,35,0.55);letter-spacing:0.1em;">02</div>
+        <div style="margin-top:12px;font-size:1.15rem;font-weight:800;color:#ffffff;">Dados Completos</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Nome, telefone válido, e-mail e site de cada empresa mapeada, prontos para uso.</p>
+      </div>
+      <div data-fade class="gp-feat-card" style="background:#0f1e35;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:30px;transition:background .2s;">
+        <div style="font-size:0.9rem;font-weight:900;color:rgba(245,165,35,0.55);letter-spacing:0.1em;">03</div>
+        <div style="margin-top:12px;font-size:1.15rem;font-weight:800;color:#ffffff;">Exportação Fácil</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Exporte sua lista comercial em CSV ou Excel, ou copie os contatos com um clique.</p>
+      </div>
+      <div data-fade class="gp-feat-card" style="background:#0f1e35;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:30px;transition:background .2s;">
+        <div style="font-size:0.9rem;font-weight:900;color:rgba(245,165,35,0.55);letter-spacing:0.1em;">04</div>
+        <div style="margin-top:12px;font-size:1.15rem;font-weight:800;color:#ffffff;">Filtros Avançados</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Refine por segmento, porte e localização para chegar exatamente no cliente ideal.</p>
+      </div>
+      <div data-fade class="gp-feat-card" style="background:#0f1e35;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:30px;transition:background .2s;">
+        <div style="font-size:0.9rem;font-weight:900;color:rgba(245,165,35,0.55);letter-spacing:0.1em;">05</div>
+        <div style="margin-top:12px;font-size:1.15rem;font-weight:800;color:#ffffff;">Dados Atualizados</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Base revisada constantemente para você prospectar com informação confiável.</p>
+      </div>
+      <div data-fade style="background:linear-gradient(135deg,rgba(245,165,35,0.16),rgba(245,165,35,0.04));border:1px solid rgba(245,165,35,0.3);border-radius:14px;padding:30px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:1.15rem;font-weight:800;color:#ffffff;">Acesso a todo o Brasil</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Todos os planos incluem todos os estados e cidades do país, sem custo extra.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PLANOS ══════════════════════════════════════════════════════════ -->
+<section id="planos" style="background:#f4f6fa;">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 28px;">
+    <div style="text-align:center;max-width:720px;margin:0 auto;">
+      <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.14em;color:#c8870a;font-weight:700;">Planos</div>
+      <h2 style="margin-top:14px;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:#0b1628;line-height:1.15;">Escolha o plano ideal para o seu negócio.</h2>
+      <p style="margin-top:16px;font-size:1.05rem;line-height:1.6;color:#4a5568;">Plano gratuito permanente. Sem cartão de crédito.</p>
+    </div>
+    <div id="gp-plans-grid" style="margin-top:52px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:stretch;">
+
+      <!-- BÁSICO -->
+      <div data-fade style="background:#ffffff;border:1px solid rgba(11,22,40,0.1);border-radius:16px;padding:30px 26px;display:flex;flex-direction:column;">
+        <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#c8870a;">Básico</div>
+        <div style="margin-top:14px;display:flex;align-items:baseline;gap:4px;"><span style="font-size:2.2rem;font-weight:900;color:#0b1628;">R$49</span><span style="font-size:0.9rem;color:#8493ab;">/mês</span></div>
+        <div style="margin-top:20px;height:1px;background:rgba(11,22,40,0.08);"></div>
+        <ul style="margin-top:20px;display:flex;flex-direction:column;gap:12px;flex:1;">
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>50 buscas por mês</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>1 setor</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Todos os estados e cidades</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Exportação de contatos</li>
+        </ul>
+        <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="gp-plan-btn-outline" style="margin-top:24px;text-align:center;border:1.5px solid #0b1628;color:#0b1628;font-weight:800;font-size:0.92rem;padding:13px;border-radius:10px;display:block;transition:background .18s,color .18s;">Assinar Básico</a>
+      </div>
+
+      <!-- STARTER (featured) -->
+      <div data-fade style="position:relative;background:#060d1c;border:2px solid #f5a523;border-radius:16px;padding:32px 26px;display:flex;flex-direction:column;box-shadow:0 24px 54px rgba(245,165,35,0.22);transform:translateY(-8px);">
+        <span style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-size:0.68rem;font-weight:900;letter-spacing:0.1em;padding:6px 16px;border-radius:999px;white-space:nowrap;">MAIS POPULAR</span>
+        <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#f5a523;">Starter</div>
+        <div style="margin-top:14px;display:flex;align-items:baseline;gap:4px;"><span style="font-size:2.4rem;font-weight:900;color:#ffffff;">R$97</span><span style="font-size:0.9rem;color:#b0bcd0;">/mês</span></div>
+        <div style="margin-top:20px;height:1px;background:rgba(255,255,255,0.1);"></div>
+        <ul style="margin-top:20px;display:flex;flex-direction:column;gap:12px;flex:1;">
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#d7deea;"><span style="color:#f5a523;font-weight:900;">✓</span>250 buscas por mês</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#d7deea;"><span style="color:#f5a523;font-weight:900;">✓</span>2 setores</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#d7deea;"><span style="color:#f5a523;font-weight:900;">✓</span>Todos os estados e cidades</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#d7deea;"><span style="color:#f5a523;font-weight:900;">✓</span>Exportação de contatos</li>
+        </ul>
+        <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="gp-plan-btn-fill" style="margin-top:24px;text-align:center;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;font-size:0.92rem;padding:14px;border-radius:10px;box-shadow:0 10px 24px rgba(245,165,35,0.35);display:block;transition:filter .18s;">Assinar Starter</a>
+      </div>
+
+      <!-- PROFISSIONAL -->
+      <div data-fade style="background:#ffffff;border:1px solid rgba(11,22,40,0.1);border-radius:16px;padding:30px 26px;display:flex;flex-direction:column;">
+        <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#c8870a;">Profissional</div>
+        <div style="margin-top:14px;display:flex;align-items:baseline;gap:4px;"><span style="font-size:2.2rem;font-weight:900;color:#0b1628;">R$197</span><span style="font-size:0.9rem;color:#8493ab;">/mês</span></div>
+        <div style="margin-top:20px;height:1px;background:rgba(11,22,40,0.08);"></div>
+        <ul style="margin-top:20px;display:flex;flex-direction:column;gap:12px;flex:1;">
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>500 buscas por mês</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>3 setores</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Todos os estados e cidades</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Exportação de contatos</li>
+        </ul>
+        <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="gp-plan-btn-outline" style="margin-top:24px;text-align:center;border:1.5px solid #0b1628;color:#0b1628;font-weight:800;font-size:0.92rem;padding:13px;border-radius:10px;display:block;transition:background .18s,color .18s;">Assinar Profissional</a>
+      </div>
+
+      <!-- BUSINESS -->
+      <div data-fade style="background:#ffffff;border:1px solid rgba(11,22,40,0.1);border-radius:16px;padding:30px 26px;display:flex;flex-direction:column;">
+        <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#c8870a;">Business</div>
+        <div style="margin-top:14px;display:flex;align-items:baseline;gap:4px;"><span style="font-size:2.2rem;font-weight:900;color:#0b1628;">R$397</span><span style="font-size:0.9rem;color:#8493ab;">/mês</span></div>
+        <div style="margin-top:20px;height:1px;background:rgba(11,22,40,0.08);"></div>
+        <ul style="margin-top:20px;display:flex;flex-direction:column;gap:12px;flex:1;">
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>1.000 buscas por mês</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>5 setores</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Todos os estados e cidades</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Exportação de contatos</li>
+        </ul>
+        <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="gp-plan-btn-outline" style="margin-top:24px;text-align:center;border:1.5px solid #0b1628;color:#0b1628;font-weight:800;font-size:0.92rem;padding:13px;border-radius:10px;display:block;transition:background .18s,color .18s;">Assinar Business</a>
+      </div>
+    </div>
+
+    <!-- Faixa plano gratuito -->
+    <div data-fade style="margin-top:24px;background:#ffffff;border:1px dashed rgba(245,165,35,0.55);border-radius:16px;padding:24px 30px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:1.1rem;font-weight:800;color:#0b1628;">Plano Gratuito — R$0, permanente</div>
+        <div style="margin-top:5px;font-size:0.95rem;color:#4a5568;">5 buscas por mês · 1 setor · acesso a todo o Brasil. Não é trial: o plano free é permanente.</div>
+      </div>
+      <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="gp-free-btn" style="background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;font-size:0.92rem;padding:13px 26px;border-radius:10px;white-space:nowrap;transition:filter .18s;">Começar sem cartão →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DEPOIMENTOS ══════════════════════════════════════════════════ -->
+<section id="depoimentos" style="background:#0f1e35;">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 28px;">
+    <div style="text-align:center;max-width:720px;margin:0 auto;">
+      <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.14em;color:#f5a523;font-weight:700;">Depoimentos</div>
+      <h2 style="margin-top:14px;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:#ffffff;line-height:1.15;">Quem usa, recomenda.</h2>
+    </div>
+    <div class="gp-test-grid" style="margin-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div data-fade style="background:#0b1628;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:30px;">
+        <div style="color:#f5a523;font-size:1.05rem;letter-spacing:3px;">★★★★★</div>
+        <p style="margin-top:16px;font-size:1rem;line-height:1.65;color:#d7deea;font-style:italic;">"Montei minha lista de contatos qualificados em uma tarde. A qualidade dos telefones fez a diferença nas nossas ligações."</p>
+        <div style="margin-top:22px;display:flex;align-items:center;gap:12px;">
+          <span style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">MR</span>
+          <div><div style="font-weight:700;color:#ffffff;font-size:0.95rem;">Marina Rocha</div><div style="font-size:0.82rem;color:#8493ab;">SDR · Agência Norte</div></div>
+        </div>
+      </div>
+      <div data-fade style="background:#0b1628;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:30px;">
+        <div style="color:#f5a523;font-size:1.05rem;letter-spacing:3px;">★★★★★</div>
+        <p style="margin-top:16px;font-size:1rem;line-height:1.65;color:#d7deea;font-style:italic;">"Uso para prospectar em cidades onde eu não tinha nenhum cliente. Em duas semanas fechei três contratos novos."</p>
+        <div style="margin-top:22px;display:flex;align-items:center;gap:12px;">
+          <span style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">TS</span>
+          <div><div style="font-weight:700;color:#ffffff;font-size:0.95rem;">Thiago Souza</div><div style="font-size:0.82rem;color:#8493ab;">Representante Comercial</div></div>
+        </div>
+      </div>
+      <div data-fade style="background:#0b1628;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:30px;">
+        <div style="color:#f5a523;font-size:1.05rem;letter-spacing:3px;">★★★★★</div>
+        <p style="margin-top:16px;font-size:1rem;line-height:1.65;color:#d7deea;font-style:italic;">"A exportação para CSV encaixa direto no nosso CRM. Ganhamos horas por semana que antes iam para busca manual."</p>
+        <div style="margin-top:22px;display:flex;align-items:center;gap:12px;">
+          <span style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">CL</span>
+          <div><div style="font-weight:700;color:#ffffff;font-size:0.95rem;">Camila Lima</div><div style="font-size:0.82rem;color:#8493ab;">Gestora de Tráfego</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ STATS ═══ -->
-<section id="stats">
-  <div class="stats-grid">
-    <div class="stat-item"><strong>50M+</strong><span>empresas mapeadas</span></div>
-    <div class="stat-item"><strong>5.000+</strong><span>usuários ativos</span></div>
-    <div class="stat-item"><strong>2.000+</strong><span>cidades disponíveis</span></div>
-    <div class="stat-item"><strong>99%</strong><span>satisfação dos clientes</span></div>
+<!-- ══ CTA FINAL ══════════════════════════════════════════════════════ -->
+<section style="background:linear-gradient(135deg,#f5a523,#c8870a);">
+  <div style="max-width:900px;margin:0 auto;padding:92px 28px;text-align:center;">
+    <h2 style="font-size:clamp(1.8rem,4vw,2.7rem);font-weight:900;color:#060d1c;line-height:1.12;letter-spacing:-0.01em;">Pronto para expandir seus negócios em todo o Brasil?</h2>
+    <p style="margin-top:18px;font-size:1.15rem;color:rgba(6,13,28,0.8);line-height:1.55;">Comece agora. Plano gratuito permanente, sem cartão de crédito.</p>
+    <div style="margin-top:32px;display:flex;justify-content:center;">
+      <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="gp-cta-btn" style="background:#060d1c;color:#ffffff;font-weight:800;font-size:1.02rem;padding:16px 36px;border-radius:12px;box-shadow:0 16px 36px rgba(6,13,28,0.3);transition:transform .18s,box-shadow .18s;">ACESSAR A PLATAFORMA →</a>
+    </div>
+    <p style="margin-top:20px;font-size:0.9rem;color:rgba(6,13,28,0.72);font-weight:600;">Sem cartão · Plano gratuito · Cancele quando quiser</p>
   </div>
 </section>
 
-<!-- ═══ PARA QUEM É ═══ -->
-<section id="para-quem">
-  <div style="text-align:center;margin-bottom:52px;">
-    <span class="section-label">Segmentos</span>
-    <h2 class="section-title" style="color:#0b1628;">Para quem precisa de <span class="gold">expansão comercial.</span></h2>
-    <p class="section-sub" style="color:#4a5568;margin:0 auto;">Se você precisa encontrar novos clientes para crescer, o GarimpoApp foi feito para você.</p>
-  </div>
-  <div class="nicho-grid">
-    <div class="nicho-card"><span>Agências de Marketing</span></div>
-    <div class="nicho-card"><span>Gestores de Tráfego</span></div>
-    <div class="nicho-card"><span>SDRs e Empresas B2B</span></div>
-    <div class="nicho-card"><span>Representantes Comerciais</span></div>
-    <div class="nicho-card"><span>Criação de Sites</span></div>
-    <div class="nicho-card"><span>Energia Solar</span></div>
-    <div class="nicho-card"><span>Imobiliárias e Corretores</span></div>
-    <div class="nicho-card"><span>E muito mais...</span></div>
-  </div>
-</section>
-
-<!-- ═══ FEATURES ═══ -->
-<section id="features">
-  <div style="text-align:center;margin-bottom:52px;">
-    <span class="section-label">Recursos</span>
-    <h2 class="section-title">Tudo o que você precisa para <span class="gold">prospectar melhor.</span></h2>
-    <p class="section-sub" style="margin:0 auto;">Uma plataforma completa de expansão comercial, projetada para times que querem resultados reais.</p>
-  </div>
-  <div class="feat-grid">
-    <div class="feat-card">
-      <span class="feat-number">01</span>
-      <h3>Busca Inteligente</h3>
-      <p>Encontre empresas por setor, cidade ou estado do Brasil. Resultados em segundos com dados reais e atualizados.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-number">02</span>
-      <h3>Dados Completos</h3>
-      <p>Nome da empresa, telefone, e-mail, endereço, site, avaliação e horário de funcionamento — tudo em um lugar.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-number">03</span>
-      <h3>Exportação Fácil</h3>
-      <p>Exporte seus contatos para CSV ou Excel com um clique. Compatível com CRMs e ferramentas de automação.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-number">04</span>
-      <h3>Filtros Avançados</h3>
-      <p>Filtre por avaliação, presença de site, e-mail ou telefone para focar nos melhores prospects do seu setor.</p>
-    </div>
-    <div class="feat-card">
-      <span class="feat-number">05</span>
-      <h3>Dados Atualizados</h3>
-      <p>Informações coletadas em tempo real. Sem listas desatualizadas ou contatos inativos.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ PRICING ═══ -->
-<section id="pricing">
-  <div style="text-align:center;margin-bottom:52px;">
-    <span class="section-label">Planos</span>
-    <h2 class="section-title" style="color:#0b1628;">Escolha o plano ideal para o <span class="gold">seu negócio.</span></h2>
-    <p class="section-sub" style="color:#4a5568;margin:0 auto;">Plano gratuito permanente. Sem cartão de crédito.</p>
-  </div>
-  <div class="plans-grid">
-
-    <!-- BÁSICO -->
-    <div class="plan-card">
-      <div class="plan-name">BÁSICO</div>
-      <div class="plan-price">R$49<span>/mês</span></div>
-      <div class="plan-desc">Para começar a prospectar</div>
-      <hr class="plan-divider">
-      <ul class="plan-features">
-        <li>50 buscas por mês</li>
-        <li>1 setor de mercado</li>
-        <li>Todos os estados e cidades</li>
-        <li>Contatos com telefone válido</li>
-        <li>Suporte por e-mail</li>
-      </ul>
-      <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="btn-plan btn-plan-outline">Assinar agora</a>
-    </div>
-
-    <!-- STARTER -->
-    <div class="plan-card featured">
-      <div class="plan-badge">MAIS POPULAR</div>
-      <div class="plan-name">STARTER</div>
-      <div class="plan-price">R$97<span>/mês</span></div>
-      <div class="plan-desc">Para vendedores ativos</div>
-      <hr class="plan-divider">
-      <ul class="plan-features">
-        <li>250 buscas por mês</li>
-        <li>2 setores de mercado</li>
-        <li>Todos os estados e cidades</li>
-        <li>Contatos com telefone válido</li>
-        <li>Suporte prioritário</li>
-      </ul>
-      <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="btn-plan btn-plan-fill">Assinar agora</a>
-    </div>
-
-    <!-- PROFISSIONAL -->
-    <div class="plan-card">
-      <div class="plan-name">PROFISSIONAL</div>
-      <div class="plan-price">R$197<span>/mês</span></div>
-      <div class="plan-desc">Para agências e times</div>
-      <hr class="plan-divider">
-      <ul class="plan-features">
-        <li>500 buscas por mês</li>
-        <li>3 setores de mercado</li>
-        <li>Todos os estados e cidades</li>
-        <li>Contatos com telefone válido</li>
-        <li>Suporte prioritário</li>
-      </ul>
-      <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="btn-plan btn-plan-outline">Assinar agora</a>
-    </div>
-
-    <!-- BUSINESS -->
-    <div class="plan-card">
-      <div class="plan-name">BUSINESS</div>
-      <div class="plan-price">R$397<span>/mês</span></div>
-      <div class="plan-desc">Para operações de alto volume</div>
-      <hr class="plan-divider">
-      <ul class="plan-features">
-        <li>1.000 buscas por mês</li>
-        <li>5 setores de mercado</li>
-        <li>Todos os estados e cidades</li>
-        <li>Contatos com telefone válido</li>
-        <li>Suporte VIP</li>
-      </ul>
-      <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="btn-plan btn-plan-outline">Assinar agora</a>
-    </div>
-
-  </div>
-</section>
-
-<!-- ═══ DEPOIMENTOS ═══ -->
-<section id="depoimentos">
-  <div style="text-align:center;margin-bottom:52px;">
-    <span class="section-label">Depoimentos</span>
-    <h2 class="section-title">Histórias reais de quem cresce com o <span class="gold">GarimpoApp.</span></h2>
-  </div>
-  <div class="test-grid">
-    <div class="test-card">
-      <div class="test-stars">★★★★★</div>
-      <p class="test-text">"Consegui 300 contatos de clínicas odontológicas em São Paulo em menos de 5 minutos. Fechei 8 contratos na primeira semana. A plataforma se pagou no primeiro dia."</p>
-      <div class="test-author">
-        <div class="test-avatar">RS</div>
-        <div>
-          <div class="test-name">Rafael Silva</div>
-          <div class="test-role">Gestor de Tráfego, SP</div>
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════ -->
+<footer style="background:#060d1c;border-top:1px solid rgba(245,165,35,0.14);">
+  <div style="max-width:1200px;margin:0 auto;padding:64px 28px 30px;">
+    <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;flex-wrap:wrap;">
+      <div>
+        <a href="#top" style="display:flex;align-items:center;gap:10px;">
+          <img src="logo-mark.png" alt="GarimpoApp" style="height:40px;width:auto;display:block;">
+          <span style="font-size:1.15rem;font-weight:900;letter-spacing:0.01em;">GARIMPO<span style="color:#f5a523;">APP</span></span>
+        </a>
+        <p style="margin-top:16px;font-size:0.95rem;line-height:1.6;color:#b0bcd0;max-width:300px;">A plataforma de inteligência comercial mais completa do Brasil.</p>
+      </div>
+      <div>
+        <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;color:#f5a523;font-weight:700;">Produto</div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px;">
+          <a href="#recursos" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Recursos</a>
+          <a href="#planos" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Planos</a>
+          <a href="#segmentos" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Segmentos</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;color:#f5a523;font-weight:700;">Empresa</div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px;">
+          <a href="#" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Sobre</a>
+          <a href="#depoimentos" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Depoimentos</a>
+          <a href="mailto:contato@garimpoapp.com.br" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Contato</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;color:#f5a523;font-weight:700;">Legal</div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px;">
+          <a href="#" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Termos de Uso</a>
+          <a href="#" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Privacidade</a>
+          <a href="#" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">LGPD</a>
         </div>
       </div>
     </div>
-    <div class="test-card">
-      <div class="test-stars">★★★★★</div>
-      <p class="test-text">"Antes usávamos planilhas e passávamos horas procurando contatos no Google. Com o GarimpoApp, nossa equipe comercial quadruplicou a produtividade. Essencial para B2B."</p>
-      <div class="test-author">
-        <div class="test-avatar">AM</div>
-        <div>
-          <div class="test-name">Ana Martins</div>
-          <div class="test-role">Head de Vendas, Agência Digital</div>
-        </div>
-      </div>
-    </div>
-    <div class="test-card">
-      <div class="test-stars">★★★★★</div>
-      <p class="test-text">"Represento produtos para lojas de material de construção em todo o Nordeste. Antes levava semanas para mapear novas praças. Agora faço em horas. Indico para todo mundo."</p>
-      <div class="test-author">
-        <div class="test-avatar">JO</div>
-        <div>
-          <div class="test-name">João Oliveira</div>
-          <div class="test-role">Representante Comercial, CE</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ FINAL CTA ═══ -->
-<section id="cta-final">
-  <h2>Pronto para expandir seus negócios em todo o Brasil?</h2>
-  <p>Comece agora. Plano gratuito permanente, sem cartão de crédito.</p>
-  <a href="https://solucoesdigitaisprors-a11y.github.io/garimpoapp-front/" class="btn-cta-dark">ACESSAR A PLATAFORMA →</a>
-  <div class="cta-trust">
-    <span>Sem cartão de crédito</span>
-    <span>Plano gratuito permanente</span>
-    <span>Cancele a qualquer momento</span>
-  </div>
-</section>
-
-<!-- ═══ FOOTER ═══ -->
-<footer>
-  <div class="footer-top">
-    <div class="footer-brand">
-      <a href="#" class="nav-logo">
-        <img src="logo.png" alt="GarimpoApp">
-      </a>
-      <p>A plataforma de inteligência comercial mais completa do Brasil. Encontre seus próximos clientes agora.</p>
-    </div>
-    <div class="footer-col">
-      <h4>Produto</h4>
-      <ul>
-        <li><a href="#features">Recursos</a></li>
-        <li><a href="#pricing">Planos e Preços</a></li>
-        <li><a href="#para-quem">Segmentos</a></li>
-        <li><a href="#depoimentos">Depoimentos</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Empresa</h4>
-      <ul>
-        <li><a href="#">Sobre nós</a></li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">Afiliados</a></li>
-        <li><a href="mailto:contato@garimpoapp.com.br">Contato</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Legal</h4>
-      <ul>
-        <li><a href="#">Termos de Uso</a></li>
-        <li><a href="#">Política de Privacidade</a></li>
-        <li><a href="#">Política de Cookies</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2025 GarimpoApp. Todos os direitos reservados.</span>
-    <span>Plataforma de Inteligência Comercial · Brasil</span>
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.07);text-align:center;font-size:0.86rem;color:#8493ab;">© 2025 GarimpoApp · Plataforma de Inteligência Comercial · Brasil</div>
   </div>
 </footer>
 
+</div>
+
 <script>
+  var menuOpen = false;
   function toggleMenu() {
-    const links = document.querySelector('.nav-links');
-    const isOpen = links.style.display === 'flex';
-    links.style.display = isOpen ? 'none' : 'flex';
-    if (!isOpen) {
-      links.style.flexDirection = 'column';
-      links.style.position = 'absolute';
-      links.style.top = '72px';
-      links.style.left = '0';
-      links.style.right = '0';
-      links.style.background = 'rgba(6,13,28,0.98)';
-      links.style.padding = '20px 5%';
-      links.style.gap = '16px';
-      links.style.borderBottom = '1px solid rgba(245,165,35,0.15)';
-    }
+    menuOpen = !menuOpen;
+    document.getElementById('gp-mobile-menu').style.display = menuOpen ? 'flex' : 'none';
+  }
+  function closeMenu() {
+    menuOpen = false;
+    document.getElementById('gp-mobile-menu').style.display = 'none';
   }
 
-  window.addEventListener('scroll', () => {
-    document.querySelector('nav').style.boxShadow =
-      window.scrollY > 10 ? '0 4px 24px rgba(0,0,0,0.4)' : 'none';
-  });
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.feat-card, .nicho-card, .plan-card, .test-card').forEach(el => {
+  // Fade-up on scroll
+  var els = Array.from(document.querySelectorAll('[data-fade]'));
+  els.forEach(function(el) {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity .5s ease, transform .5s ease';
-    observer.observe(el);
+    el.style.transform = 'translateY(22px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
   });
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.style.opacity='1'; el.style.transform='none'; });
+  } else {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'none';
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function(el, i) {
+      el.style.transitionDelay = (Math.min(i % 4, 3) * 0.06) + 's';
+      io.observe(el);
+    });
+  }
 </script>
 </body>
 </html>

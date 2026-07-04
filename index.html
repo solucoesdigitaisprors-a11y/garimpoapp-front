@@ -890,15 +890,15 @@
     document.getElementById('modal-planos').classList.remove('ativo');
   }
 
-  async function assinarPlano(priceId) {
+  async function assinarPlano(plano) {
     fecharModal();
     const status = document.getElementById('busca-status');
     status.innerHTML = '<div class="loader"><div class="spinner"></div> Redirecionando para pagamento…</div>';
     try {
-      const res = await fetch(`${API_URL}/criar-checkout`, {
+      const res = await fetch(`${API_URL}/mp-checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenJWT}` },
-        body: JSON.stringify({ priceId }),
+        body: JSON.stringify({ plano }),
       });
       const data = await res.json();
       if (data.url) {
@@ -1103,28 +1103,28 @@
         <div class="nome">Basico</div>
         <div class="buscas">50<span>buscas/mês</span></div>
         <div class="preco">por <strong>R$49/mês</strong></div>
-        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('price_1TnQPD5rKd9u6SOZGxlHgoLE')">Assinar</button>
+        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('basico')">Assinar</button>
       </div>
 
       <div class="plano-card destaque">
         <div class="nome">Starter</div>
         <div class="buscas">250<span>buscas/mês</span></div>
         <div class="preco">por <strong>R$97/mês</strong></div>
-        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('price_1TnhWA5rKd9u6SOZ16QX1Gue')">Assinar</button>
+        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('starter')">Assinar</button>
       </div>
 
       <div class="plano-card">
         <div class="nome">Profissional</div>
         <div class="buscas">500<span>buscas/mês</span></div>
         <div class="preco">por <strong>R$197/mês</strong></div>
-        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('price_1TnhWA5rKd9u6SOZC4D4ZlBt')">Assinar</button>
+        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('profissional')">Assinar</button>
       </div>
 
       <div class="plano-card">
         <div class="nome">Business</div>
         <div class="buscas">1.000<span>buscas/mês</span></div>
         <div class="preco">por <strong>R$397/mês</strong></div>
-        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('price_1TnhWB5rKd9u6SOZRbH0kzec')">Assinar</button>
+        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('business')">Assinar</button>
       </div>
 
     </div>
@@ -1134,4 +1134,4 @@
 
 </body>
 </html>
-                                                                                                                                                                              
+                                                                                                                                                                                                                                    

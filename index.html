@@ -744,6 +744,46 @@
   let leadsCache = [];
   let nichoFiltro = null;
 
+  // ── Processar token do magic link / reset de senha ────────────
+  (function processarHashToken() {
+    const hash = window.location.hash.substring(1);
+    if (!hash) return;
+    const params = new URLSearchParams(hash);
+    const accessToken = params.get('access_token');
+    const type = params.get('type');
+    if (!accessToken) return;
+    history.replaceState({}, '', window.location.pathname);
+    if (type === 'recovery') {
+      // Mostrar formulário de nova senha
+      document.addEventListener('DOMContentLoaded', () => {
+        const nova = prompt('Digite sua nova senha (mínimo 6 caracteres):');
+        if (!nova || nova.length < 6) { alert('Senha muito curta.'); return; }
+        fetch(`${SUPABASE_URL}/auth/v1/user`, {
+          method: 'PUT',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ password: nova }),
+        }).then(r => r.json()).then(d => {
+          if (d.id) {
+            tokenJWT = accessToken;
+            localStorage.setItem('garimpo_token', tokenJWT);
+            alert('Senha alterada com sucesso! Entrando...');
+            iniciarApp();
+          } else {
+            alert('Erro ao alterar senha: ' + (d.message || JSON.stringify(d)));
+          }
+        }).catch(() => alert('Erro de conexão.'));
+      });
+    } else if (type === 'magiclink' || type === 'signup') {
+      // Login via magic link
+      tokenJWT = accessToken;
+      localStorage.setItem('garimpo_token', tokenJWT);
+    }
+  })();
+
   // ── Auth ────────────────────────────────────────────────────
   async function supabaseAuth(endpoint, body) {
     const res = await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`, {

@@ -19,491 +19,131 @@
       --texto:       #ffffff;
       --texto-muted: rgba(255,255,255,0.55);
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--texto);
-      min-height: 100vh;
-    }
-
-    /* ══════════════════════════════════════
-       TELA DE AUTH
-    ══════════════════════════════════════ */
-    #tela-auth {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        radial-gradient(ellipse at 20% 50%, rgba(245,165,35,0.12) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 20%, rgba(245,165,35,0.08) 0%, transparent 50%),
-        var(--bg);
-    }
-
-    .auth-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--ouro-borda);
-      border-radius: 20px;
-      padding: 40px;
-      width: 100%;
-      max-width: 420px;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 0 60px rgba(245,165,35,0.1), 0 20px 60px rgba(0,0,0,0.5);
-    }
-
-    .auth-logo {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    .auth-logo h1 {
-      font-size: 2.2rem;
-      font-weight: 900;
-      letter-spacing: -1px;
-    }
-
-    .auth-logo h1 span.g { color: var(--texto); }
-    .auth-logo h1 span.a { color: var(--ouro); }
-
-    .auth-logo p {
-      color: var(--texto-muted);
-      font-size: 0.88rem;
-      margin-top: 6px;
-      letter-spacing: 0.5px;
-    }
-
-    .auth-tabs {
-      display: flex;
-      border-bottom: 1px solid var(--borda);
-      margin-bottom: 28px;
-    }
-
-    .auth-tab {
-      flex: 1;
-      padding: 10px;
-      text-align: center;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--texto-muted);
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
-      transition: all 0.2s;
-    }
-
-    .auth-tab.ativo {
-      color: var(--ouro);
-      border-color: var(--ouro);
-    }
-
-    /* Form controls */
-    .form-group { margin-bottom: 16px; }
-
-    .form-group label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: var(--texto-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .form-group input,
-    .form-group select,
-    select {
-      width: 100%;
-      padding: 12px 14px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid var(--borda);
-      border-radius: 10px;
-      font-size: 0.95rem;
-      color: var(--texto);
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .form-group input::placeholder { color: var(--texto-muted); }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    select:focus {
-      border-color: var(--ouro);
-      box-shadow: 0 0 0 3px var(--ouro-glow);
-    }
-
-    select option { background: #0d1b30; color: #fff; }
-
-    /* Botões */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 20px;
-      border-radius: 10px;
-      border: none;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      letter-spacing: 0.3px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--ouro), var(--ouro-dark));
-      color: #000;
-      width: 100%;
-      box-shadow: 0 4px 20px var(--ouro-glow);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(245,165,35,0.5);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.6;
-      transform: none;
-      cursor: not-allowed;
-    }
-
-    .btn-secondary {
-      background: var(--bg-card2);
-      color: var(--texto);
-      border: 1px solid var(--borda);
-    }
-
-    .btn-secondary:hover { background: rgba(255,255,255,0.12); }
-
-    .btn-verde {
-      background: linear-gradient(135deg, #16a34a, #15803d);
-      color: #fff;
-      box-shadow: 0 4px 14px rgba(22,163,74,0.3);
-    }
-
-    .btn-verde:hover { opacity: 0.9; transform: translateY(-1px); }
-
-    .btn-sm { padding: 8px 14px; font-size: 0.82rem; }
-
-    /* Mensagens */
-    .msg-erro {
-      background: rgba(239,68,68,0.15);
-      color: #fca5a5;
-      border: 1px solid rgba(239,68,68,0.3);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.85rem;
-      margin-top: 12px;
-    }
-
-    .msg-ok {
-      background: rgba(34,197,94,0.12);
-      color: #86efac;
-      border: 1px solid rgba(34,197,94,0.3);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.85rem;
-      margin-top: 12px;
-    }
-
-    /* ══════════════════════════════════════
-       LOADING
-    ══════════════════════════════════════ */
-    #tela-loading {
-      display: none;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 20px;
-      background: var(--bg);
-    }
-
-    #tela-loading .logo-loading {
-      font-size: 2.2rem;
-      font-weight: 900;
-    }
-
-    #tela-loading .logo-loading span { color: var(--ouro); }
-
-    #tela-loading p { color: var(--texto-muted); font-size: 0.9rem; }
-
-    /* ══════════════════════════════════════
-       APP PRINCIPAL
-    ══════════════════════════════════════ */
-    #app {
-      display: none;
-      min-height: 100vh;
-      background:
-        radial-gradient(ellipse at 0% 0%, rgba(245,165,35,0.06) 0%, transparent 50%),
-        var(--bg);
-    }
-
-    /* Navbar */
-    nav {
-      background: rgba(6,13,28,0.9);
-      border-bottom: 1px solid var(--ouro-borda);
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 62px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 2px 20px rgba(245,165,35,0.08);
-    }
-
-    .nav-logo {
-      font-size: 1.35rem;
-      font-weight: 900;
-      text-decoration: none;
-      letter-spacing: -0.5px;
-    }
-
-    .nav-logo span.g { color: #fff; }
-    .nav-logo span.a { color: var(--ouro); }
-
-    .nav-info { display: flex; align-items: center; gap: 14px; }
-
-    .plano-badge {
-      background: linear-gradient(135deg, var(--ouro), var(--ouro-dark));
-      color: #000;
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 4px 12px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .buscas-badge {
-      font-size: 0.82rem;
-      color: var(--texto-muted);
-    }
-
-    /* Tabs */
-    .main-tabs {
-      background: rgba(6,13,28,0.7);
-      border-bottom: 1px solid var(--borda);
-      padding: 0 24px;
-      display: flex;
-      gap: 4px;
-    }
-
-    .main-tab {
-      padding: 14px 20px;
-      cursor: pointer;
-      font-weight: 600;
-      color: var(--texto-muted);
-      border-bottom: 2px solid transparent;
-      font-size: 0.92rem;
-      transition: all 0.2s;
-      margin-bottom: -1px;
-    }
-
-    .main-tab.ativo { color: var(--ouro); border-color: var(--ouro); }
-    .main-tab:hover:not(.ativo) { color: var(--texto); }
-
-    /* Container */
-    .container { max-width: 900px; margin: 32px auto; padding: 0 24px; }
-
-    /* Card */
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--borda);
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 20px;
-      backdrop-filter: blur(10px);
-      transition: border-color 0.2s;
-    }
-
-    .card:hover { border-color: var(--ouro-borda); }
-
-    .card h2 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: 18px;
-      color: var(--texto);
-    }
-
-    /* Busca grid */
-    .busca-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr 1fr auto;
-      gap: 12px;
-      align-items: end;
-    }
-
-    /* Resultados */
-    #lista-resultados { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-
-    .lead-card {
-      background: var(--bg-card);
-      border: 1px solid var(--borda);
-      border-radius: 12px;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      transition: all 0.2s;
-    }
-
-    .lead-card:hover {
-      border-color: var(--ouro-borda);
-      box-shadow: 0 0 20px rgba(245,165,35,0.08);
-    }
-
-    .lead-card.salvo { opacity: 0.5; }
-
-    .lead-info h3 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-      color: var(--texto);
-    }
-
-    .lead-info p {
-      font-size: 0.82rem;
-      color: var(--texto-muted);
-      margin-bottom: 2px;
-    }
-
-    .lead-rating { font-size: 0.8rem; color: var(--ouro); font-weight: 600; }
-
-    .lead-acoes { display: flex; gap: 8px; flex-shrink: 0; }
-
-    /* WhatsApp btn */
-    .btn-wa {
-      background: linear-gradient(135deg, #25d366, #128c4e);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      box-shadow: 0 2px 10px rgba(37,211,102,0.25);
-    }
-
-    /* Loader */
-    .loader {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 40px;
-      color: var(--texto-muted);
-    }
-
-    .spinner {
-      width: 22px; height: 22px;
-      border: 3px solid rgba(245,165,35,0.2);
-      border-top-color: var(--ouro);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .empty-state {
-      text-align: center;
-      padding: 48px;
-      color: var(--texto-muted);
-    }
-
-    .empty-state .emoji { font-size: 3rem; display: block; margin-bottom: 12px; }
-
-    /* Filtros */
-    .leads-filtros { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-
-    .filtro-chip {
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: 1px solid var(--borda);
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      background: transparent;
-      color: var(--texto-muted);
-      transition: all 0.2s;
-    }
-
-    .filtro-chip:hover { border-color: var(--ouro-borda); color: var(--texto); }
-
-    .filtro-chip.ativo {
-      background: linear-gradient(135deg, var(--ouro), var(--ouro-dark));
-      color: #000;
-      border-color: transparent;
-    }
-
-    .acoes-topo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    /* Divider */
-    .auth-divider {
-      text-align: center;
-      color: var(--texto-muted);
-      font-size: 0.78rem;
-      margin: 8px 0;
-    }
-
-    /* Responsivo */
-    @media (max-width: 600px) {
-      .busca-grid { grid-template-columns: 1fr; }
-      .nav-info .buscas-badge { display: none; }
-      .lead-card { flex-direction: column; align-items: flex-start; }
-      .auth-card { margin: 16px; padding: 28px 24px; }
-    }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--texto); min-height: 100vh; }
+
+    /* AUTH */
+    #tela-auth { min-height:100vh; display:flex; align-items:center; justify-content:center;
+      background: radial-gradient(ellipse at 20% 50%, rgba(245,165,35,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, rgba(245,165,35,0.08) 0%, transparent 50%),
+                  var(--bg); }
+    .auth-card { background:rgba(255,255,255,0.05); border:1px solid var(--ouro-borda); border-radius:20px;
+      padding:40px; width:100%; max-width:420px; backdrop-filter:blur(20px);
+      box-shadow:0 0 60px rgba(245,165,35,0.1), 0 20px 60px rgba(0,0,0,0.5); }
+    .auth-logo { text-align:center; margin-bottom:32px; }
+    .auth-logo h1 { font-size:2.2rem; font-weight:900; letter-spacing:-1px; }
+    .auth-logo h1 span.g { color:var(--texto); }
+    .auth-logo h1 span.a { color:var(--ouro); }
+    .auth-logo p { color:var(--texto-muted); font-size:0.88rem; margin-top:6px; letter-spacing:0.5px; }
+    .auth-tabs { display:flex; border-bottom:1px solid var(--borda); margin-bottom:28px; }
+    .auth-tab { flex:1; padding:10px; text-align:center; cursor:pointer; font-weight:600; font-size:0.9rem;
+      color:var(--texto-muted); border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.2s; }
+    .auth-tab.ativo { color:var(--ouro); border-color:var(--ouro); }
+    .form-group { margin-bottom:16px; }
+    .form-group label { display:block; font-size:0.82rem; font-weight:600; margin-bottom:6px;
+      color:var(--texto-muted); text-transform:uppercase; letter-spacing:0.5px; }
+    .form-group input, .form-group select, select {
+      width:100%; padding:12px 14px; background:rgba(255,255,255,0.07); border:1px solid var(--borda);
+      border-radius:10px; font-size:0.95rem; color:var(--texto); outline:none; transition:border-color 0.2s, box-shadow 0.2s; }
+    .form-group input::placeholder { color:var(--texto-muted); }
+    .form-group input:focus, .form-group select:focus, select:focus {
+      border-color:var(--ouro); box-shadow:0 0 0 3px var(--ouro-glow); }
+    select option { background:#0d1b30; color:#fff; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:12px 20px; border-radius:10px; border:none; font-size:0.95rem; font-weight:700;
+      cursor:pointer; transition:all 0.2s; letter-spacing:0.3px; }
+    .btn-primary { background:linear-gradient(135deg, var(--ouro), var(--ouro-dark)); color:#000;
+      width:100%; box-shadow:0 4px 20px var(--ouro-glow); }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(245,165,35,0.5); }
+    .btn-primary:disabled { opacity:0.6; transform:none; cursor:not-allowed; }
+    .btn-secondary { background:var(--bg-card2); color:var(--texto); border:1px solid var(--borda); }
+    .btn-secondary:hover { background:rgba(255,255,255,0.12); }
+    .btn-verde { background:linear-gradient(135deg, #16a34a, #15803d); color:#fff; box-shadow:0 4px 14px rgba(22,163,74,0.3); }
+    .btn-verde:hover { opacity:0.9; transform:translateY(-1px); }
+    .btn-sm { padding:8px 14px; font-size:0.82rem; }
+    .msg-erro { background:rgba(239,68,68,0.15); color:#fca5a5; border:1px solid rgba(239,68,68,0.3);
+      border-radius:8px; padding:10px 14px; font-size:0.85rem; margin-top:12px; }
+    .msg-ok { background:rgba(34,197,94,0.12); color:#86efac; border:1px solid rgba(34,197,94,0.3);
+      border-radius:8px; padding:10px 14px; font-size:0.85rem; margin-top:12px; }
+    .auth-divider { text-align:center; color:var(--texto-muted); font-size:0.78rem; margin:8px 0; }
+
+    /* LOADING */
+    #tela-loading { display:none; min-height:100vh; align-items:center; justify-content:center;
+      flex-direction:column; gap:20px; background:var(--bg); }
+    #tela-loading .logo-loading { font-size:2.2rem; font-weight:900; }
+    #tela-loading .logo-loading span { color:var(--ouro); }
+    #tela-loading p { color:var(--texto-muted); font-size:0.9rem; }
+
+    /* APP */
+    #app { display:none; min-height:100vh;
+      background: radial-gradient(ellipse at 0% 0%, rgba(245,165,35,0.06) 0%, transparent 50%), var(--bg); }
+    nav { background:rgba(6,13,28,0.9); border-bottom:1px solid var(--ouro-borda); padding:0 24px;
+      display:flex; align-items:center; justify-content:space-between; height:62px;
+      position:sticky; top:0; z-index:100; backdrop-filter:blur(20px); box-shadow:0 2px 20px rgba(245,165,35,0.08); }
+    .nav-logo { font-size:1.35rem; font-weight:900; text-decoration:none; letter-spacing:-0.5px; }
+    .nav-logo span.g { color:#fff; }
+    .nav-logo span.a { color:var(--ouro); }
+    .nav-info { display:flex; align-items:center; gap:14px; }
+    .plano-badge { background:linear-gradient(135deg, var(--ouro), var(--ouro-dark)); color:#000;
+      font-size:0.72rem; font-weight:800; padding:4px 12px; border-radius:20px;
+      text-transform:uppercase; letter-spacing:0.5px; }
+    .buscas-badge { font-size:0.82rem; color:var(--texto-muted); }
+    .main-tabs { background:rgba(6,13,28,0.7); border-bottom:1px solid var(--borda);
+      padding:0 24px; display:flex; gap:4px; overflow-x:auto; }
+    .main-tab { padding:14px 16px; cursor:pointer; font-weight:600; color:var(--texto-muted);
+      border-bottom:2px solid transparent; font-size:0.88rem; transition:all 0.2s;
+      margin-bottom:-1px; white-space:nowrap; }
+    .main-tab.ativo { color:var(--ouro); border-color:var(--ouro); }
+    .main-tab:hover:not(.ativo) { color:var(--texto); }
+    .container { max-width:960px; margin:32px auto; padding:0 24px; }
+    .card { background:var(--bg-card); border:1px solid var(--borda); border-radius:14px;
+      padding:24px; margin-bottom:20px; backdrop-filter:blur(10px); transition:border-color 0.2s; }
+    .card:hover { border-color:var(--ouro-borda); }
+    .card h2 { font-size:1.05rem; font-weight:700; margin-bottom:18px; color:var(--texto); }
+    .busca-grid { display:grid; grid-template-columns:1.2fr 0.8fr 1fr auto; gap:12px; align-items:end; }
+    #lista-resultados { display:flex; flex-direction:column; gap:12px; margin-top:20px; }
+    .lead-card { background:var(--bg-card); border:1px solid var(--borda); border-radius:12px;
+      padding:16px 20px; display:flex; align-items:flex-start; justify-content:space-between;
+      gap:16px; transition:all 0.2s; }
+    .lead-card:hover { border-color:var(--ouro-borda); box-shadow:0 0 20px rgba(245,165,35,0.08); }
+    .lead-info { flex:1; }
+    .lead-nome { font-size:0.95rem; font-weight:700; margin-bottom:3px; color:var(--texto); }
+    .lead-detalhes { font-size:0.82rem; color:var(--texto-muted); margin-bottom:2px; }
+    .lead-endereco { font-size:0.78rem; color:rgba(255,255,255,0.35); }
+    .lead-acoes { display:flex; gap:8px; flex-shrink:0; flex-direction:column; align-items:flex-end; }
+    .btn-wa { background:linear-gradient(135deg, #25d366, #128c4e); color:#fff; border:none;
+      border-radius:8px; padding:8px 12px; font-size:0.82rem; font-weight:700; cursor:pointer;
+      text-decoration:none; display:inline-flex; align-items:center; gap:5px;
+      box-shadow:0 2px 10px rgba(37,211,102,0.25); }
+    .loader { display:flex; align-items:center; justify-content:center; gap:10px;
+      padding:40px; color:var(--texto-muted); }
+    .spinner { width:22px; height:22px; border:3px solid rgba(245,165,35,0.2);
+      border-top-color:var(--ouro); border-radius:50%; animation:spin 0.8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .empty-state { text-align:center; padding:48px; color:var(--texto-muted); }
+    .empty-state .emoji { font-size:3rem; display:block; margin-bottom:12px; }
+    .leads-filtros { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+    .filtro-chip { padding:6px 14px; border-radius:20px; border:1px solid var(--borda);
+      font-size:0.8rem; font-weight:600; cursor:pointer; background:transparent;
+      color:var(--texto-muted); transition:all 0.2s; }
+    .filtro-chip:hover { border-color:var(--ouro-borda); color:var(--texto); }
+    .filtro-chip.ativo { background:linear-gradient(135deg, var(--ouro), var(--ouro-dark)); color:#000; border-color:transparent; }
+    .acoes-topo { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
 
     /* Modal de planos */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.75); z-index: 500;
-      align-items: center; justify-content: center;
-    }
-    .modal-overlay.ativo { display: flex; }
-    .modal-planos {
-      background: #0d1b30;
-      border: 1px solid rgba(245,165,35,0.3);
-      border-radius: 20px;
-      padding: 32px;
-      width: 100%; max-width: 780px;
-      max-height: 90vh; overflow-y: auto;
-      box-shadow: 0 0 60px rgba(245,165,35,0.15);
-    }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75);
+      z-index:500; align-items:center; justify-content:center; }
+    .modal-overlay.ativo { display:flex; }
+    .modal-planos { background:#0d1b30; border:1px solid rgba(245,165,35,0.3); border-radius:20px;
+      padding:32px; width:100%; max-width:780px; max-height:90vh; overflow-y:auto;
+      box-shadow:0 0 60px rgba(245,165,35,0.15); }
     .modal-planos h2 { text-align:center; font-size:1.4rem; font-weight:900; margin-bottom:8px; }
     .modal-planos p.sub { text-align:center; color:var(--texto-muted); font-size:0.88rem; margin-bottom:28px; }
-    .planos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 14px;
-    }
-    .plano-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px;
-      padding: 20px 14px;
-      text-align: center;
-      transition: all 0.2s;
-    }
-    .plano-card:hover { border-color: var(--ouro-borda); box-shadow: 0 0 20px rgba(245,165,35,0.1); }
-    .plano-card.destaque { border-color: var(--ouro); background: rgba(245,165,35,0.08); }
+    .planos-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:14px; }
+    .plano-card { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+      border-radius:14px; padding:20px 14px; text-align:center; transition:all 0.2s; }
+    .plano-card:hover { border-color:var(--ouro-borda); box-shadow:0 0 20px rgba(245,165,35,0.1); }
+    .plano-card.destaque { border-color:var(--ouro); background:rgba(245,165,35,0.08); }
     .plano-card .nome { font-weight:800; font-size:0.95rem; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
     .plano-card .buscas { font-size:1.5rem; font-weight:900; color:var(--ouro); line-height:1.1; }
     .plano-card .buscas span { font-size:0.7rem; font-weight:600; color:var(--texto-muted); display:block; }
@@ -511,83 +151,184 @@
     .plano-card .preco strong { color:var(--texto); font-size:1rem; }
     .modal-fechar { display:block; text-align:center; margin-top:20px; color:var(--texto-muted); cursor:pointer; font-size:0.85rem; }
     .modal-fechar:hover { color:var(--texto); }
+
     /* Modal de nichos */
     .modal-nichos { max-width:600px; }
     .nichos-grid { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
-    .nicho-chip { padding:8px 14px; border-radius:20px; border:2px solid var(--borda); cursor:pointer; font-size:0.82rem; font-weight:600; transition:all 0.2s; user-select:none; }
+    .nicho-chip { padding:8px 14px; border-radius:20px; border:2px solid var(--borda); cursor:pointer;
+      font-size:0.82rem; font-weight:600; transition:all 0.2s; user-select:none; }
     .nicho-chip.selecionado { border-color:var(--ouro); background:rgba(245,165,35,0.15); color:var(--ouro); }
     .nicho-chip:hover { border-color:var(--ouro-borda); }
     .nichos-limite-msg { text-align:center; color:var(--texto-muted); font-size:0.85rem; margin-bottom:4px; }
+
+    /* Score badge */
+    .score-badge { display:inline-block; padding:1px 7px; border-radius:20px; font-size:0.68rem;
+      font-weight:700; margin-left:5px; vertical-align:middle; }
+    .score-quente { background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.25); }
+    .score-morno  { background:rgba(245,165,35,0.15); color:var(--ouro); border:1px solid var(--ouro-borda); }
+    .score-frio   { background:rgba(255,255,255,0.05); color:var(--texto-muted); border:1px solid var(--borda); }
+
+    /* Alerta 20% buscas */
+    .alert-buscas { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25);
+      border-radius:10px; padding:10px 16px; font-size:0.84rem; color:#fca5a5;
+      margin-bottom:16px; text-align:center; display:none; }
+
+    /* Rating filter */
+    .rating-filter { display:flex; align-items:center; gap:10px; margin-top:12px;
+      padding-top:12px; border-top:1px solid var(--borda); font-size:0.82rem; color:var(--texto-muted); }
+    .rating-filter input[type=range] { accent-color:var(--ouro); flex:1; cursor:pointer; }
+    .rating-val { color:var(--ouro); font-size:0.85rem; min-width:80px; }
+
+    /* Histórico de buscas */
+    .historico-wrap { margin-top:12px; padding-top:12px; border-top:1px solid var(--borda); }
+    .historico-wrap h4 { font-size:0.72rem; color:var(--texto-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+    .historico-chips { display:flex; gap:6px; flex-wrap:wrap; }
+    .hist-chip { padding:4px 12px; border-radius:20px; border:1px solid var(--borda); font-size:0.78rem;
+      color:var(--texto-muted); cursor:pointer; background:transparent; transition:all 0.2s; }
+    .hist-chip:hover { border-color:var(--ouro-borda); color:var(--ouro); }
+
+    /* Status do lead */
+    .lead-status-sel { padding:3px 8px; border-radius:20px; border:1px solid var(--borda);
+      background:rgba(255,255,255,0.04); color:var(--texto-muted); font-size:0.72rem;
+      cursor:pointer; margin-top:6px; }
+    .status-novo       { border-color:rgba(148,163,184,0.4); color:#94a3b8; }
+    .status-contatado  { border-color:rgba(96,165,250,0.4); color:#60a5fa; background:rgba(96,165,250,0.07); }
+    .status-interessado{ border-color:var(--ouro-borda); color:var(--ouro); background:rgba(245,165,35,0.07); }
+    .status-fechado    { border-color:rgba(34,197,94,0.4); color:var(--verde); background:rgba(34,197,94,0.07); }
+
+    /* Nota do lead */
+    .lead-nota { width:100%; margin-top:6px; padding:6px 10px; background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.07); border-radius:8px; color:var(--texto-muted);
+      font-size:0.78rem; resize:none; font-family:inherit; height:28px; transition:all 0.25s; }
+    .lead-nota:focus { outline:none; border-color:var(--ouro-borda); color:var(--texto); height:70px; background:rgba(255,255,255,0.06); }
+    .lead-nota::placeholder { color:rgba(255,255,255,0.2); }
+
+    /* Kanban */
+    .kanban-board { display:flex; gap:14px; overflow-x:auto; padding:4px 0 16px; min-height:400px; }
+    .kanban-col { flex:0 0 230px; background:var(--bg-card); border:1px solid var(--borda);
+      border-radius:14px; padding:14px; display:flex; flex-direction:column; }
+    .kanban-col-header { display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--borda); }
+    .kanban-col-header h3 { font-size:0.8rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; }
+    .col-novo       .kanban-col-header h3 { color:var(--texto-muted); }
+    .col-contatado  .kanban-col-header h3 { color:#60a5fa; }
+    .col-interessado .kanban-col-header h3 { color:var(--ouro); }
+    .col-fechado    .kanban-col-header h3 { color:var(--verde); }
+    .col-count { background:rgba(255,255,255,0.08); border-radius:10px; padding:1px 8px;
+      font-size:0.7rem; font-weight:700; color:var(--texto-muted); }
+    .kanban-card { background:var(--bg-card2); border:1px solid var(--borda); border-radius:10px;
+      padding:10px 12px; margin-bottom:8px; transition:all 0.2s; }
+    .kanban-card:hover { border-color:var(--ouro-borda); }
+    .k-nome { font-size:0.82rem; font-weight:700; margin-bottom:3px; }
+    .k-info { font-size:0.72rem; color:var(--texto-muted); }
+    .k-actions { display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
+    .k-btn { padding:3px 8px; font-size:0.68rem; border-radius:5px; border:1px solid var(--borda);
+      background:transparent; color:var(--texto-muted); cursor:pointer; transition:all 0.15s; white-space:nowrap; }
+    .k-btn:hover { border-color:var(--ouro-borda); color:var(--ouro); }
+    .k-btn.wa { background:rgba(37,211,102,0.1); border-color:rgba(37,211,102,0.25); color:#4ade80; text-decoration:none; display:inline-block; }
+    .k-btn.wa:hover { background:rgba(37,211,102,0.2); }
+    .kanban-empty { text-align:center; padding:24px 8px; color:rgba(255,255,255,0.2); font-size:0.78rem; }
+
+    /* Templates */
+    .template-section { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px,1fr)); gap:16px; }
+    .template-card { background:var(--bg-card); border:1px solid var(--borda); border-radius:14px; padding:20px; }
+    .template-card h3 { font-size:0.88rem; font-weight:700; color:var(--ouro); margin-bottom:10px; }
+    .template-textarea { width:100%; min-height:100px; background:rgba(255,255,255,0.04);
+      border:1px solid var(--borda); border-radius:10px; padding:10px 12px; color:var(--texto);
+      font-size:0.84rem; resize:vertical; font-family:inherit; transition:border-color 0.2s; }
+    .template-textarea:focus { outline:none; border-color:var(--ouro-borda); }
+    .template-vars { font-size:0.72rem; color:var(--texto-muted); margin:6px 0 8px; }
+    .var-btn { background:rgba(245,165,35,0.12); color:var(--ouro); border:1px solid var(--ouro-borda);
+      padding:2px 7px; border-radius:4px; font-size:0.7rem; cursor:pointer; margin:0 2px 2px 0; }
+    .var-btn:hover { background:rgba(245,165,35,0.2); }
+    .template-link { width:100%; padding:7px 10px; background:rgba(255,255,255,0.04);
+      border:1px solid var(--borda); border-radius:8px; color:var(--texto-muted); font-size:0.78rem; margin:6px 0; }
+    .template-link:focus { outline:none; border-color:var(--ouro-borda); color:var(--texto); }
+    .template-preview-box { background:rgba(37,211,102,0.06); border:1px solid rgba(37,211,102,0.15);
+      border-radius:8px; padding:10px; font-size:0.8rem; color:var(--texto); margin:8px 0;
+      white-space:pre-wrap; word-break:break-word; min-height:40px; }
+    .template-actions { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+    .preview-lead-sel { width:100%; padding:8px 10px; background:rgba(255,255,255,0.04);
+      border:1px solid var(--borda); border-radius:8px; color:var(--texto); font-size:0.82rem; margin-bottom:16px; }
+    .preview-lead-sel:focus { outline:none; border-color:var(--ouro-borda); }
+
+    /* Dashboard */
+    .dash-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(155px,1fr)); gap:14px; margin-bottom:24px; }
+    .dash-stat { background:var(--bg-card); border:1px solid var(--borda); border-radius:14px; padding:18px 16px; text-align:center; }
+    .dash-stat .val { font-size:2rem; font-weight:900; color:var(--ouro); line-height:1.1; }
+    .dash-stat .lbl { font-size:0.72rem; color:var(--texto-muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:4px; }
+    .dash-stat .sub { font-size:0.75rem; color:var(--texto-muted); margin-top:6px; }
+    .prog-bar { background:rgba(255,255,255,0.08); border-radius:6px; height:6px; overflow:hidden; margin-top:8px; }
+    .prog-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,var(--ouro),var(--ouro-dark)); transition:width 0.6s; }
+    .prog-fill.red { background:linear-gradient(90deg,#ef4444,#dc2626); }
+    .nicho-row { display:flex; align-items:center; gap:8px; margin-bottom:7px; }
+    .nicho-row-label { font-size:0.78rem; color:var(--texto-muted); width:130px; flex-shrink:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .nicho-row-bar { flex:1; background:rgba(255,255,255,0.07); border-radius:4px; height:5px; }
+    .nicho-row-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--ouro),var(--ouro-dark)); }
+    .nicho-row-count { font-size:0.75rem; color:var(--texto-muted); min-width:20px; text-align:right; }
+    .dash-section-title { font-size:0.78rem; font-weight:700; color:var(--texto-muted);
+      text-transform:uppercase; letter-spacing:0.5px; margin:20px 0 10px; }
+    .kanban-summary { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+    .ks-item { background:var(--bg-card); border:1px solid var(--borda); border-radius:10px;
+      padding:12px 16px; text-align:center; flex:1; min-width:80px; }
+    .ks-item .ks-val { font-size:1.5rem; font-weight:900; }
+    .ks-item .ks-lbl { font-size:0.68rem; color:var(--texto-muted); text-transform:uppercase; margin-top:3px; }
+    .ks-novo .ks-val { color:#94a3b8; }
+    .ks-contatado .ks-val { color:#60a5fa; }
+    .ks-interessado .ks-val { color:var(--ouro); }
+    .ks-fechado .ks-val { color:var(--verde); }
+
+    /* Responsive */
+    @media (max-width:600px) {
+      .busca-grid { grid-template-columns:1fr; }
+      .nav-info .buscas-badge { display:none; }
+      .lead-card { flex-direction:column; align-items:flex-start; }
+      .auth-card { margin:16px; padding:28px 24px; }
+      .kanban-board { gap:10px; }
+      .kanban-col { flex:0 0 200px; }
+      .template-section { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════
-     TELA DE LOGIN / CADASTRO
-══════════════════════════════════════ -->
+<!-- TELA LOGIN / CADASTRO -->
 <div id="tela-auth">
   <div class="auth-card">
     <div class="auth-logo">
-      <h1>
-        <span class="g">GARIMPO</span><span class="a">APP</span>
-      </h1>
+      <h1><span class="g">GARIMPO</span><span class="a">APP</span></h1>
       <p>ENCONTRE LEADS EM TODO O BRASIL</p>
     </div>
-
     <div class="auth-tabs">
       <div class="auth-tab ativo" onclick="mudarAba('login')">Entrar</div>
       <div class="auth-tab" onclick="mudarAba('cadastro')">Criar conta</div>
     </div>
-
-    <!-- Login -->
     <div id="form-login">
-      <div class="form-group">
-        <label>E-mail</label>
-        <input type="email" id="login-email" placeholder="seu@email.com" />
-      </div>
-      <div class="form-group">
-        <label>Senha</label>
-        <input type="password" id="login-senha" placeholder="••••••••" />
-      </div>
+      <div class="form-group"><label>E-mail</label><input type="email" id="login-email" placeholder="seu@email.com" /></div>
+      <div class="form-group"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" /></div>
       <button class="btn btn-primary" onclick="fazerLogin()">Entrar</button>
       <div id="login-msg"></div>
     </div>
-
-    <!-- Cadastro -->
     <div id="form-cadastro" style="display:none">
-      <div class="form-group">
-        <label>Nome</label>
-        <input type="text" id="cad-nome" placeholder="Seu nome completo" />
-      </div>
-      <div class="form-group">
-        <label>E-mail</label>
-        <input type="email" id="cad-email" placeholder="seu@email.com" />
-      </div>
-      <div class="form-group">
-        <label>Senha (mín. 6 caracteres)</label>
-        <input type="password" id="cad-senha" placeholder="••••••••" />
-      </div>
+      <div class="form-group"><label>Nome</label><input type="text" id="cad-nome" placeholder="Seu nome completo" /></div>
+      <div class="form-group"><label>E-mail</label><input type="email" id="cad-email" placeholder="seu@email.com" /></div>
+      <div class="form-group"><label>Senha (mín. 6 caracteres)</label><input type="password" id="cad-senha" placeholder="••••••••" /></div>
       <button class="btn btn-primary" onclick="fazerCadastro()">Criar conta grátis</button>
       <div id="cad-msg"></div>
     </div>
   </div>
 </div>
 
-<!-- Loading -->
 <div id="tela-loading" style="display:none">
   <div class="logo-loading">GARIMPO<span>APP</span></div>
   <div class="spinner" style="width:36px;height:36px;border-width:4px"></div>
   <p>Entrando na sua conta…</p>
 </div>
 
-<!-- ══════════════════════════════════════
-     APP PRINCIPAL
-══════════════════════════════════════ -->
+<!-- APP PRINCIPAL -->
 <div id="app" style="display:none">
   <nav>
-    <a class="nav-logo" href="#">
-      <span class="g">GARIMPO</span><span class="a">APP</span>
-    </a>
+    <a class="nav-logo" href="#"><span class="g">GARIMPO</span><span class="a">APP</span></a>
     <div class="nav-info">
       <span class="buscas-badge" id="nav-buscas">— buscas restantes</span>
       <span class="plano-badge" id="nav-plano">free</span>
@@ -597,18 +338,21 @@
     </div>
   </nav>
 
-  <!-- Banner upgrade (visível apenas para plano free) -->
   <div id="banner-upgrade" style="display:none; background:linear-gradient(90deg,#f5a523,#c8870a); color:#060d1c; text-align:center; padding:10px 16px; font-weight:600; font-size:0.9rem;">
-    Você está no plano gratuito — <a href="#" onclick="abrirModal(); return false;" style="color:#060d1c; text-decoration:underline;">Ver planos e precosês</a> e desbloqueie 5 buscas mensais.
+    Você está no plano gratuito — <a href="#" onclick="abrirModal(); return false;" style="color:#060d1c;text-decoration:underline;">Ver planos</a> e desbloqueie mais buscas mensais.
   </div>
 
   <div class="main-tabs">
-    <div class="main-tab ativo" onclick="mudarTab('buscar')">Garimpar</div>
-    <div class="main-tab" onclick="mudarTab('leads')">Meus Leads</div>
+    <div class="main-tab ativo" onclick="mudarTab('buscar')">🔍 Garimpar</div>
+    <div class="main-tab" onclick="mudarTab('leads')">💾 Meus Leads</div>
+    <div class="main-tab" onclick="mudarTab('kanban')">📋 Kanban</div>
+    <div class="main-tab" onclick="mudarTab('templates')">💬 Templates</div>
+    <div class="main-tab" onclick="mudarTab('dashboard')">📊 Dashboard</div>
   </div>
 
-  <!-- Tab: Garimpar -->
+  <!-- TAB: GARIMPAR -->
   <div id="tab-buscar" class="container">
+    <div id="alert-buscas" class="alert-buscas"></div>
     <div class="card">
       <h2>Buscar negócios</h2>
       <div class="busca-grid">
@@ -622,6 +366,8 @@
               <option value="psicologos">Psicólogos</option>
               <option value="farmacias">Farmácias</option>
               <option value="academias">Academias</option>
+              <option value="hospitais">Hospitais</option>
+              <option value="laboratorios">Laboratórios</option>
             </optgroup>
             <optgroup label="— Beleza —">
               <option value="saloes">Salões de Beleza</option>
@@ -637,21 +383,17 @@
               <option value="imobiliarias">Imobiliárias</option>
               <option value="escolas">Escolas Particulares</option>
               <option value="agencias_marketing">Agências de Marketing</option>
+              <option value="arquitetos">Arquitetos</option>
+              <option value="engenheiros">Engenheiros</option>
             </optgroup>
             <optgroup label="— Comércio e Serviços —">
               <option value="petshops">Pet Shops</option>
+              <option value="veterinarios">Veterinários</option>
               <option value="mecanicas">Oficinas Mecânicas</option>
               <option value="construtoras">Construtoras</option>
               <option value="hoteis">Hotéis e Pousadas</option>
               <option value="eletricistas">Eletricistas</option>
               <option value="fotografos">Fotógrafos</option>
-            </optgroup>
-            <optgroup label="— Saúde e Técnico —">
-              <option value="hospitais">Hospitais</option>
-              <option value="laboratorios">Laboratórios</option>
-              <option value="veterinarios">Veterinários</option>
-              <option value="arquitetos">Arquitetos</option>
-              <option value="engenheiros">Engenheiros</option>
             </optgroup>
           </select>
         </div>
@@ -659,32 +401,19 @@
           <label>Estado</label>
           <select id="sel-estado" onchange="preencherEstado()">
             <option value="">Selecione</option>
-            <option value="AC">AC – Acre</option>
-            <option value="AL">AL – Alagoas</option>
-            <option value="AP">AP – Amapá</option>
-            <option value="AM">AM – Amazonas</option>
-            <option value="BA">BA – Bahia</option>
-            <option value="CE">CE – Ceará</option>
-            <option value="DF">DF – Distrito Federal</option>
-            <option value="ES">ES – Espírito Santo</option>
-            <option value="GO">GO – Goiás</option>
-            <option value="MA">MA – Maranhão</option>
-            <option value="MT">MT – Mato Grosso</option>
-            <option value="MS">MS – Mato Grosso do Sul</option>
-            <option value="MG">MG – Minas Gerais</option>
-            <option value="PA">PA – Pará</option>
-            <option value="PB">PB – Paraíba</option>
-            <option value="PR">PR – Paraná</option>
-            <option value="PE">PE – Pernambuco</option>
-            <option value="PI">PI – Piauí</option>
-            <option value="RJ">RJ – Rio de Janeiro</option>
-            <option value="RN">RN – Rio Grande do Norte</option>
-            <option value="RS">RS – Rio Grande do Sul</option>
-            <option value="RO">RO – Rondônia</option>
-            <option value="RR">RR – Roraima</option>
-            <option value="SC">SC – Santa Catarina</option>
-            <option value="SP">SP – São Paulo</option>
-            <option value="SE">SE – Sergipe</option>
+            <option value="AC">AC – Acre</option><option value="AL">AL – Alagoas</option>
+            <option value="AP">AP – Amapá</option><option value="AM">AM – Amazonas</option>
+            <option value="BA">BA – Bahia</option><option value="CE">CE – Ceará</option>
+            <option value="DF">DF – Distrito Federal</option><option value="ES">ES – Espírito Santo</option>
+            <option value="GO">GO – Goiás</option><option value="MA">MA – Maranhão</option>
+            <option value="MT">MT – Mato Grosso</option><option value="MS">MS – Mato Grosso do Sul</option>
+            <option value="MG">MG – Minas Gerais</option><option value="PA">PA – Pará</option>
+            <option value="PB">PB – Paraíba</option><option value="PR">PR – Paraná</option>
+            <option value="PE">PE – Pernambuco</option><option value="PI">PI – Piauí</option>
+            <option value="RJ">RJ – Rio de Janeiro</option><option value="RN">RN – Rio Grande do Norte</option>
+            <option value="RS">RS – Rio Grande do Sul</option><option value="RO">RO – Rondônia</option>
+            <option value="RR">RR – Roraima</option><option value="SC">SC – Santa Catarina</option>
+            <option value="SP">SP – São Paulo</option><option value="SE">SE – Sergipe</option>
             <option value="TO">TO – Tocantins</option>
           </select>
         </div>
@@ -696,20 +425,27 @@
         </div>
         <button class="btn btn-primary" onclick="fazerBusca()" id="btn-buscar">Buscar</button>
       </div>
+      <div class="rating-filter">
+        <span>Nota mínima:</span>
+        <input type="range" id="rating-range" min="0" max="5" step="0.5" value="0" oninput="atualizarRatingFilter(this.value)">
+        <span class="rating-val" id="rating-val">Todas ⭐</span>
+      </div>
+      <div class="historico-wrap" id="historico-wrap" style="display:none">
+        <h4>Buscas recentes</h4>
+        <div class="historico-chips" id="historico-chips"></div>
+      </div>
     </div>
-
     <div id="busca-status"></div>
     <div id="lista-resultados"></div>
   </div>
 
-  <!-- Tab: Leads -->
+  <!-- TAB: MEUS LEADS -->
   <div id="tab-leads" class="container" style="display:none">
     <div class="card">
       <div class="acoes-topo">
         <h2>Leads Salvos</h2>
         <button class="btn btn-verde btn-sm" onclick="exportarCSV()">⬇ Exportar CSV</button>
       </div>
-
       <div class="leads-filtros" id="filtros-nicho">
         <div class="filtro-chip ativo" onclick="filtrarLeads(null, this)">Todos</div>
         <div class="filtro-chip" onclick="filtrarLeads('clinicas', this)">Estética</div>
@@ -728,20 +464,56 @@
         <div class="filtro-chip" onclick="filtrarLeads('escolas', this)">Escolas</div>
         <div class="filtro-chip" onclick="filtrarLeads('petshops', this)">Pet</div>
         <div class="filtro-chip" onclick="filtrarLeads('mecanicas', this)">Mecânica</div>
-        <div class="filtro-chip" onclick="filtrarLeads('construtoras', this)">Construtora</div>
-        <div class="filtro-chip" onclick="filtrarLeads('hoteis', this)">Hotel</div>
-        <div class="filtro-chip" onclick="filtrarLeads('agencias_marketing', this)">Marketing</div>
+        <div class="filtro-chip" onclick="filtrarLeads('hospitais', this)">Hospital</div>
+        <div class="filtro-chip" onclick="filtrarLeads('veterinarios', this)">Veterinário</div>
+        <div class="filtro-chip" onclick="filtrarLeads('arquitetos', this)">Arquiteto</div>
+        <div class="filtro-chip" onclick="filtrarLeads('engenheiros', this)">Engenheiro</div>
       </div>
     </div>
-
     <div id="lista-leads"></div>
+  </div>
+
+  <!-- TAB: KANBAN -->
+  <div id="tab-kanban" class="container" style="display:none">
+    <div class="card">
+      <div class="acoes-topo">
+        <h2>📋 Kanban — Funil de Vendas</h2>
+        <button class="btn btn-secondary btn-sm" onclick="carregarKanban()">↺ Atualizar</button>
+      </div>
+      <p style="font-size:0.82rem;color:var(--texto-muted)">Organize leads por etapa. Use os botões em cada card para mover entre colunas.</p>
+    </div>
+    <div class="kanban-board" id="kanban-board">
+      <div class="loader"><div class="spinner"></div> Carregando…</div>
+    </div>
+  </div>
+
+  <!-- TAB: TEMPLATES -->
+  <div id="tab-templates" class="container" style="display:none">
+    <div class="card">
+      <h2>💬 Templates de Mensagem WhatsApp</h2>
+      <p style="font-size:0.82rem;color:var(--texto-muted);margin-bottom:14px">
+        Crie até 4 mensagens personalizadas. Use variáveis que serão substituídas automaticamente pelo nome, cidade e telefone do lead.
+      </p>
+      <label style="font-size:0.78rem;color:var(--texto-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Lead para preview</label>
+      <select class="preview-lead-sel" id="preview-lead-sel" onchange="atualizarPreviewLead()">
+        <option value="">Selecione um lead para ver o preview…</option>
+      </select>
+    </div>
+    <div class="template-section" id="templates-section"></div>
+  </div>
+
+  <!-- TAB: DASHBOARD -->
+  <div id="tab-dashboard" class="container" style="display:none">
+    <div id="dashboard-content">
+      <div class="loader"><div class="spinner"></div> Carregando…</div>
+    </div>
   </div>
 </div>
 
 <script>
-  // ══════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════
   // CONFIG
-  // ══════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════
   const API_URL      = 'https://garimpoapp-backend-production.up.railway.app';
   const SUPABASE_URL = 'https://pupnynccxtdvqkoflhzc.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1cG55bmNjeHRkdnFrb2ZsaHpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MTE3MzQsImV4cCI6MjA5Nzk4NzczNH0.UUzv9HZkJQGJBm_nkQjPJgWYd_QOhTqVAc50LfzdqvI';
@@ -750,8 +522,28 @@
   let perfilUsuario = null;
   let leadsCache = [];
   let nichoFiltro = null;
+  let poolResultados = [];
+  let totalBuscaAtual = 0;
+  let ratingMinimo = 0;
 
-  // ── Processar token do magic link / reset de senha ────────────
+  const TODOS_NICHOS = {
+    clinicas:'Clínicas de Estética', clinicas_medicas:'Clínicas Médicas',
+    odonto:'Odontológicas', psicologos:'Psicólogos', farmacias:'Farmácias',
+    academias:'Academias', saloes:'Salões de Beleza', barbearias:'Barbearias',
+    restaurantes:'Restaurantes', padarias:'Padarias/Lanchonetes',
+    petshops:'Pet Shops', advocacia:'Advocacia', contabilidade:'Contabilidade',
+    imobiliarias:'Imobiliárias', escolas:'Escolas Particulares',
+    agencias_marketing:'Agências de Marketing', mecanicas:'Oficinas Mecânicas',
+    construtoras:'Construtoras', hoteis:'Hotéis e Pousadas',
+    eletricistas:'Eletricistas', fotografos:'Fotógrafos',
+    arquitetos:'Arquitetos', engenheiros:'Engenheiros',
+    hospitais:'Hospitais', laboratorios:'Laboratórios', veterinarios:'Veterinários',
+  };
+  const PLANOS_NICHOS = { free:1, basico:1, starter:2, profissional:3, business:5 };
+  let nichosSelecionados = [];
+  let limiteNichos = 1;
+
+  // ── Token de magic link / reset ──────────────────────────
   (function processarHashToken() {
     const hash = window.location.hash.substring(1);
     if (!hash) return;
@@ -761,41 +553,28 @@
     if (!accessToken) return;
     history.replaceState({}, '', window.location.pathname);
     if (type === 'recovery') {
-      // Mostrar formulário de nova senha
       document.addEventListener('DOMContentLoaded', () => {
         const nova = prompt('Digite sua nova senha (mínimo 6 caracteres):');
         if (!nova || nova.length < 6) { alert('Senha muito curta.'); return; }
         fetch(`${SUPABASE_URL}/auth/v1/user`, {
           method: 'PUT',
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
+          headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ password: nova }),
         }).then(r => r.json()).then(d => {
-          if (d.id) {
-            tokenJWT = accessToken;
-            localStorage.setItem('garimpo_token', tokenJWT);
-            alert('Senha alterada com sucesso! Entrando...');
-            iniciarApp();
-          } else {
-            alert('Erro ao alterar senha: ' + (d.message || JSON.stringify(d)));
-          }
-        }).catch(() => alert('Erro de conexão.'));
+          if (d.id) { tokenJWT = accessToken; localStorage.setItem('garimpo_token', tokenJWT); alert('Senha alterada! Entrando...'); iniciarApp(); }
+          else alert('Erro: ' + (d.message || JSON.stringify(d)));
+        });
       });
     } else if (type === 'magiclink' || type === 'signup') {
-      // Login via magic link
-      tokenJWT = accessToken;
-      localStorage.setItem('garimpo_token', tokenJWT);
+      tokenJWT = accessToken; localStorage.setItem('garimpo_token', tokenJWT);
     }
   })();
 
-  // ── Auth ────────────────────────────────────────────────────
+  // ── Auth ─────────────────────────────────────────────────
   async function supabaseAuth(endpoint, body) {
     const res = await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+      headers: { 'Content-Type':'application/json', 'apikey':SUPABASE_ANON_KEY, 'Authorization':`Bearer ${SUPABASE_ANON_KEY}` },
       body: JSON.stringify(body),
     });
     return res.json();
@@ -806,19 +585,11 @@
     const senha = document.getElementById('login-senha').value;
     const msgEl = document.getElementById('login-msg');
     msgEl.innerHTML = '';
-
-    if (!email || !senha) {
-      msgEl.innerHTML = '<div class="msg-erro">Preencha e-mail e senha.</div>';
-      return;
-    }
-
+    if (!email || !senha) { msgEl.innerHTML = '<div class="msg-erro">Preencha e-mail e senha.</div>'; return; }
     msgEl.innerHTML = '<div class="loader"><div class="spinner"></div> Entrando…</div>';
-
     const data = await supabaseAuth('token?grant_type=password', { email, password: senha });
     if (data.access_token) {
-      tokenJWT = data.access_token;
-      localStorage.setItem('garimpo_token', tokenJWT);
-      await iniciarApp();
+      tokenJWT = data.access_token; localStorage.setItem('garimpo_token', tokenJWT); await iniciarApp();
     } else {
       msgEl.innerHTML = `<div class="msg-erro">${data.error_description || 'E-mail ou senha incorretos.'}</div>`;
     }
@@ -830,20 +601,11 @@
     const senha = document.getElementById('cad-senha').value;
     const msgEl = document.getElementById('cad-msg');
     msgEl.innerHTML = '';
-
-    if (!nome || !email || !senha) {
-      msgEl.innerHTML = '<div class="msg-erro">Preencha todos os campos.</div>';
-      return;
-    }
-
+    if (!nome || !email || !senha) { msgEl.innerHTML = '<div class="msg-erro">Preencha todos os campos.</div>'; return; }
     msgEl.innerHTML = '<div class="loader"><div class="spinner"></div> Criando conta…</div>';
-
     const data = await supabaseAuth('signup', { email, password: senha, data: { nome } });
-
     if (data.access_token) {
-      tokenJWT = data.access_token;
-      localStorage.setItem('garimpo_token', tokenJWT);
-      await iniciarApp();
+      tokenJWT = data.access_token; localStorage.setItem('garimpo_token', tokenJWT); await iniciarApp();
     } else if (data.id) {
       msgEl.innerHTML = '<div class="msg-ok">Conta criada! Verifique seu e-mail para confirmar.</div>';
     } else {
@@ -852,9 +614,7 @@
   }
 
   function sair() {
-    localStorage.removeItem('garimpo_token');
-    tokenJWT = null;
-    perfilUsuario = null;
+    localStorage.removeItem('garimpo_token'); tokenJWT = null; perfilUsuario = null;
     document.getElementById('app').style.display = 'none';
     document.getElementById('tela-auth').style.display = 'flex';
   }
@@ -863,69 +623,75 @@
     document.getElementById('form-login').style.display    = aba === 'login'    ? '' : 'none';
     document.getElementById('form-cadastro').style.display = aba === 'cadastro' ? '' : 'none';
     document.querySelectorAll('.auth-tab').forEach((t, i) => {
-      t.classList.toggle('ativo', (i === 0 && aba === 'login') || (i === 1 && aba === 'cadastro'));
+      t.classList.toggle('ativo', (i===0 && aba==='login') || (i===1 && aba==='cadastro'));
     });
   }
 
-  // ── App ─────────────────────────────────────────────────────
+  // ── App init ─────────────────────────────────────────────
   async function iniciarApp() {
     document.getElementById('tela-auth').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-
     try {
-      const res = await fetch(`${API_URL}/perfil`, {
-        headers: { 'Authorization': `Bearer ${tokenJWT}` },
-      });
-
+      const res = await fetch(`${API_URL}/perfil`, { headers: { 'Authorization': `Bearer ${tokenJWT}` } });
       if (!res.ok) { sair(); return; }
-
       perfilUsuario = await res.json();
       document.getElementById('nav-plano').textContent = (perfilUsuario.plano || 'free').toUpperCase();
       document.getElementById('nav-buscas').textContent =
         `${perfilUsuario.buscas_restantes} busca${perfilUsuario.buscas_restantes !== 1 ? 's' : ''} restante${perfilUsuario.buscas_restantes !== 1 ? 's' : ''}`;
-      // Mostrar banner e botão de upgrade para usuários free
       const isFree = !perfilUsuario.ativo;
       document.getElementById('banner-upgrade').style.display = isFree ? 'block' : 'none';
       document.getElementById('btn-assinar').style.display   = isFree ? 'inline-flex' : 'none';
       document.getElementById('btn-nichos').style.display    = 'inline-flex';
-      // Abrir seleção de nicho automaticamente se ainda não foi escolhido
+      // Popular select de nicho com nichos liberados
+      popularNichoSelect();
+      // Render histórico de buscas
+      renderizarHistorico();
+      // Verificar alerta de buscas
+      verificarAlertaBuscas();
+      // Abrir seleção de nicho se vazio
       if (!perfilUsuario.nichos_liberados || perfilUsuario.nichos_liberados.length === 0) {
         setTimeout(abrirModalNichos, 600);
       }
       // Verificar retorno de pagamento
       const params = new URLSearchParams(location.search);
       if (params.get('pagamento') === 'sucesso') {
-        alert('Assinatura confirmada! Bem-vindo ao plano Básico.');
+        alert('Assinatura confirmada! Bem-vindo ao novo plano.');
         history.replaceState({}, '', location.pathname);
       }
-    } catch (e) {
-      console.error('Erro ao carregar perfil', e);
-      sair();
-    }
+    } catch(e) { console.error('Erro ao carregar perfil', e); sair(); }
   }
 
-  // ── Tabs ────────────────────────────────────────────────────
+  // ── Popular select de nicho (apenas nichos do plano) ─────
+  function popularNichoSelect() {
+    const select = document.getElementById('sel-nicho');
+    const nichos = perfilUsuario?.nichos_liberados || [];
+    if (nichos.length === 0) return;
+    select.innerHTML = nichos.map(n => `<option value="${n}">${TODOS_NICHOS[n] || n}</option>`).join('');
+    select.value = nichos[0];
+  }
+
+  // ── Tabs ─────────────────────────────────────────────────
+  const TABS = ['buscar', 'leads', 'kanban', 'templates', 'dashboard'];
   function mudarTab(tab) {
-    document.querySelectorAll('.main-tab').forEach((t, i) => {
-      t.classList.toggle('ativo', (i === 0 && tab === 'buscar') || (i === 1 && tab === 'leads'));
+    document.querySelectorAll('.main-tab').forEach((t, i) => t.classList.toggle('ativo', TABS[i] === tab));
+    TABS.forEach(t => {
+      const el = document.getElementById(`tab-${t}`);
+      if (el) el.style.display = t === tab ? '' : 'none';
     });
-    document.getElementById('tab-buscar').style.display = tab === 'buscar' ? '' : 'none';
-    document.getElementById('tab-leads').style.display  = tab === 'leads'  ? '' : 'none';
-    if (tab === 'leads') carregarLeads();
+    if (tab === 'leads')      carregarLeads();
+    if (tab === 'kanban')     carregarKanban();
+    if (tab === 'templates')  { preencherPreviewLeads(); renderizarTemplates(); }
+    if (tab === 'dashboard')  carregarDashboard();
   }
 
-  // ── Cidades por estado (API IBGE) ───────────────────────────
+  // ── Cidades IBGE ─────────────────────────────────────────
   const _cidadesCache = {};
-
   async function preencherEstado() {
     const uf = document.getElementById('sel-estado').value;
     const cidadeSel = document.getElementById('sel-cidade');
     cidadeSel.innerHTML = '<option value="">Carregando cidades…</option>';
     cidadeSel.disabled = true;
-    if (!uf) {
-      cidadeSel.innerHTML = '<option value="">Selecione o estado primeiro</option>';
-      return;
-    }
+    if (!uf) { cidadeSel.innerHTML = '<option value="">Selecione o estado primeiro</option>'; return; }
     try {
       if (!_cidadesCache[uf]) {
         const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`);
@@ -936,19 +702,14 @@
       cidadeSel.innerHTML = '<option value="">Selecione a cidade</option>' +
         _cidadesCache[uf].map(c => `<option value="${c}, ${uf}">${c}</option>`).join('');
       cidadeSel.focus();
-    } catch (e) {
+    } catch(e) {
       cidadeSel.innerHTML = '<option value="">Erro ao carregar cidades</option>';
-      console.error('IBGE API error', e);
     }
   }
 
-  function abrirModal() {
-    document.getElementById('modal-planos').classList.add('ativo');
-  }
-
-  function fecharModal() {
-    document.getElementById('modal-planos').classList.remove('ativo');
-  }
+  // ── Modal planos ──────────────────────────────────────────
+  function abrirModal()  { document.getElementById('modal-planos').classList.add('ativo'); }
+  function fecharModal() { document.getElementById('modal-planos').classList.remove('ativo'); }
 
   async function assinarPlano(plano) {
     fecharModal();
@@ -956,38 +717,110 @@
     status.innerHTML = '<div class="loader"><div class="spinner"></div> Redirecionando para pagamento…</div>';
     try {
       const res = await fetch(`${API_URL}/mp-checkout`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenJWT}` },
+        method: 'POST', headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${tokenJWT}` },
         body: JSON.stringify({ plano }),
       });
       const data = await res.json();
-      if (data.url) {
-        location.href = data.url;
-      } else {
-        status.innerHTML = `<div class="msg-erro">${data.erro || 'Erro ao iniciar pagamento.'}</div>`;
-      }
-    } catch (e) {
-      status.innerHTML = '<div class="msg-erro">Erro de conexão. Tente novamente.</div>';
+      if (data.url) location.href = data.url;
+      else status.innerHTML = `<div class="msg-erro">${data.erro || 'Erro ao iniciar pagamento.'}</div>`;
+    } catch(e) { status.innerHTML = '<div class="msg-erro">Erro de conexão.</div>'; }
+  }
+
+  // ── Alerta de buscas ──────────────────────────────────────
+  function verificarAlertaBuscas() {
+    const alertEl = document.getElementById('alert-buscas');
+    if (!alertEl || !perfilUsuario) return;
+    const restantes = perfilUsuario.buscas_restantes;
+    const limite    = perfilUsuario.buscas_limite;
+    if (restantes === 0) {
+      alertEl.innerHTML = '🚫 Suas buscas deste mês acabaram. <a href="#" onclick="abrirModal();return false;" style="color:#fca5a5;font-weight:700">Faça upgrade para continuar.</a>';
+      alertEl.style.display = 'block';
+    } else if (restantes <= limite * 0.2) {
+      alertEl.innerHTML = `⚠️ Atenção: apenas <strong>${restantes}</strong> busca${restantes!==1?'s':''} restante${restantes!==1?'s':''} este mês. <a href="#" onclick="abrirModal();return false;" style="color:#fca5a5;font-weight:700">Ver planos</a>`;
+      alertEl.style.display = 'block';
+    } else {
+      alertEl.style.display = 'none';
     }
   }
 
+  // ── Score de qualidade ────────────────────────────────────
+  function scoreQualidade(lead) {
+    const temTel = lead.telefone && lead.telefone.trim().length >= 8;
+    const nota   = parseFloat(lead.rating) || 0;
+    if (nota >= 4.0 && temTel) return 'quente';
+    if (nota >= 3.0 || temTel) return 'morno';
+    return 'frio';
+  }
+  function scoreBadgeHtml(lead) {
+    const s = scoreQualidade(lead);
+    const icons = { quente:'🔥', morno:'⚡', frio:'❄️' };
+    return `<span class="score-badge score-${s}">${icons[s]} ${s.charAt(0).toUpperCase()+s.slice(1)}</span>`;
+  }
+
+  // ── Rating filter ─────────────────────────────────────────
+  function atualizarRatingFilter(val) {
+    ratingMinimo = parseFloat(val);
+    const stars = val == 0 ? 'Todas ⭐' : '⭐'.repeat(Math.floor(val)) + (val%1 ? '½' : '') + ` (${val}+)`;
+    document.getElementById('rating-val').textContent = stars;
+    if (poolResultados.length > 0) aplicarFiltroRating();
+  }
+
+  function aplicarFiltroRating() {
+    const filtered = ratingMinimo > 0
+      ? poolResultados.filter(r => r.rating && r.rating >= ratingMinimo)
+      : poolResultados;
+    renderizarResultadosFiltrados(filtered);
+  }
+
+  // ── Histórico de buscas ───────────────────────────────────
+  function salvarHistoricoBusca(nicho, cidade) {
+    let hist = JSON.parse(localStorage.getItem('garimpo_historico') || '[]');
+    hist = hist.filter(h => !(h.nicho === nicho && h.cidade === cidade));
+    hist.unshift({ nicho, cidade, label: TODOS_NICHOS[nicho] || nicho });
+    hist = hist.slice(0, 5);
+    localStorage.setItem('garimpo_historico', JSON.stringify(hist));
+    renderizarHistorico();
+  }
+
+  function renderizarHistorico() {
+    const wrap = document.getElementById('historico-wrap');
+    if (!wrap) return;
+    const hist = JSON.parse(localStorage.getItem('garimpo_historico') || '[]');
+    if (hist.length === 0) { wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    document.getElementById('historico-chips').innerHTML = hist.map(h =>
+      `<button class="hist-chip" onclick="repetirBusca('${h.nicho}','${encodeURIComponent(h.cidade)}')">${h.label} em ${h.cidade}</button>`
+    ).join('');
+  }
+
+  async function repetirBusca(nicho, cidadeEnc) {
+    const cidade = decodeURIComponent(cidadeEnc);
+    const parts = cidade.split(', ');
+    const uf = parts[parts.length - 1];
+    // Set nicho if available in select
+    const sel = document.getElementById('sel-nicho');
+    const opt = Array.from(sel.options).find(o => o.value === nicho);
+    if (opt) sel.value = nicho;
+    // Set estado and load cidades
+    document.getElementById('sel-estado').value = uf;
+    await preencherEstado();
+    const selCidade = document.getElementById('sel-cidade');
+    const cidadeOpt = Array.from(selCidade.options).find(o => o.value === cidade);
+    if (cidadeOpt) { selCidade.value = cidade; fazerBusca(); }
+  }
+
+  // ── Buscar ────────────────────────────────────────────────
   async function fazerBusca() {
     const nicho  = document.getElementById('sel-nicho').value;
-    const uf     = document.getElementById('sel-estado').value;
     const cidade = document.getElementById('sel-cidade').value.trim();
     const status = document.getElementById('busca-status');
     const lista  = document.getElementById('lista-resultados');
 
-    // Bloquear se plano free sem buscas restantes
     if (perfilUsuario?.plano === 'free' && perfilUsuario?.buscas_restantes <= 0) {
-      status.innerHTML = '<div class="msg-erro">Suas buscas gratuitas acabaram. <a href="#" onclick="abrirModal(); return false;" style="color:var(--ouro)">Assine agora</a> para continuar.</div>';
+      status.innerHTML = '<div class="msg-erro">Suas buscas gratuitas acabaram. <a href="#" onclick="abrirModal();return false;" style="color:var(--ouro)">Assine agora</a> para continuar.</div>';
       return;
     }
-
-    if (!cidade) {
-      status.innerHTML = '<div class="msg-erro">Selecione o estado e a cidade.</div>';
-      return;
-    }
+    if (!cidade) { status.innerHTML = '<div class="msg-erro">Selecione o estado e a cidade.</div>'; return; }
 
     document.getElementById('btn-buscar').disabled = true;
     status.innerHTML = '<div class="loader"><div class="spinner"></div> Buscando no Google…</div>';
@@ -996,63 +829,51 @@
     try {
       const res = await fetch(`${API_URL}/buscar`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokenJWT}`,
-        },
+        headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${tokenJWT}` },
         body: JSON.stringify({ nicho, cidade }),
       });
-
       const data = await res.json();
+      if (!res.ok) { status.innerHTML = `<div class="msg-erro">${data.erro}</div>`; return; }
 
-      if (!res.ok) {
-        status.innerHTML = `<div class="msg-erro">${data.erro}</div>`;
-        return;
-      }
-
+      // Atualizar contador na navbar
+      const restantes = data.buscas_restantes;
       document.getElementById('nav-buscas').textContent =
-      document.getElementById('nav-buscas').textContent =
-        `${data.buscas_restantes} busca${data.buscas_restantes !== 1 ? 's' : ''} restante${data.buscas_restantes !== 1 ? 's' : ''}`;
+        `${restantes} busca${restantes !== 1 ? 's' : ''} restante${restantes !== 1 ? 's' : ''}`;
+      if (perfilUsuario) { perfilUsuario.buscas_restantes = restantes; verificarAlertaBuscas(); }
 
       if (data.total === 0) {
-        status.innerHTML = '<div class="msg-erro">Nenhum resultado encontrado.</div>';
+        status.innerHTML = '<div class="msg-ok">Nenhum resultado encontrado (ou todos já foram salvos).</div>';
         return;
       }
 
-      status.innerHTML = `<div class="msg-ok">${data.total} resultado${data.total !== 1 ? 's' : ''} encontrado${data.total !== 1 ? 's' : ''}</div>`;
-      renderizarResultados(data.resultados);
-
-    } catch (e) {
-      console.error('Erro na busca:', e);
+      status.innerHTML = `<div class="msg-ok">${data.total} resultado${data.total!==1?'s':''} encontrado${data.total!==1?'s':''} (leads já salvos foram removidos)</div>`;
+      poolResultados = data.resultados;
+      totalBuscaAtual = data.resultados.length;
+      aplicarFiltroRating();
+      salvarHistoricoBusca(nicho, cidade);
+    } catch(e) {
       status.innerHTML = '<div class="msg-erro">Erro de conexão com o servidor.</div>';
     } finally {
       document.getElementById('btn-buscar').disabled = false;
     }
   }
 
-  // ── Pool de resultados (para remover ao salvar) ───────────────
-  let poolResultados = [];
-  let totalBuscaAtual = 0;
-
-  // ── Renderizar resultados ────────────────────────────────────
-  function renderizarResultados(resultados) {
-    poolResultados = resultados;
-    totalBuscaAtual = resultados.length;
+  function renderizarResultadosFiltrados(resultados) {
     const lista = document.getElementById('lista-resultados');
-    lista.innerHTML = resultados.map((r, idx) => `
-      <div class="lead-card" id="card-${idx}" style="transition:opacity 0.3s,max-height 0.4s;overflow:hidden">
+    lista.innerHTML = resultados.map(r => `
+      <div class="lead-card" id="card-${r.place_id}" style="transition:opacity 0.3s,max-height 0.4s;overflow:hidden">
         <div class="lead-info">
-          <div class="lead-nome">${r.nome}</div>
+          <div class="lead-nome">${escapeHtml(r.nome)} ${scoreBadgeHtml(r)}</div>
           <div class="lead-detalhes">
             ${r.telefone ? `Tel: ${r.telefone}` : ''}
             ${r.cidade ? ` | ${r.cidade}${r.estado ? ', ' + r.estado : ''}` : ''}
-            ${r.rating ? ` | Nota: ${r.rating}` : ''}
+            ${r.rating ? ` | ⭐ ${r.rating}` : ''}
           </div>
-          <div class="lead-endereco">${r.endereco || ''}</div>
+          <div class="lead-endereco">${escapeHtml(r.endereco || '')}</div>
         </div>
         <div class="lead-acoes">
           ${r.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${r.whatsapp}" target="_blank">WhatsApp</a>` : ''}
-          <button class="btn btn-secondary btn-sm" onclick="salvarLead(${JSON.stringify(r).replace(/"/g, '&quot;')}, this, 'card-${idx}')">Salvar</button>
+          <button class="btn btn-secondary btn-sm" onclick="salvarLead(${JSON.stringify(r).replace(/"/g, '&quot;')}, this, 'card-${r.place_id}')">Salvar</button>
         </div>
       </div>
     `).join('');
@@ -1064,57 +885,43 @@
     if (visiveis === 0) {
       status.innerHTML = '<div class="msg-ok">Todos os contatos desta busca foram salvos!</div>';
     } else {
-      status.innerHTML = `<div class="msg-ok">${visiveis} contato${visiveis !== 1 ? 's' : ''} restante${visiveis !== 1 ? 's' : ''} — ${totalBuscaAtual - visiveis} salvo${totalBuscaAtual - visiveis !== 1 ? 's' : ''}</div>`;
+      status.innerHTML = `<div class="msg-ok">${visiveis} contato${visiveis!==1?'s':''} restante${visiveis!==1?'s':''} — ${totalBuscaAtual - visiveis} salvo${totalBuscaAtual-visiveis!==1?'s':''}</div>`;
     }
   }
 
-  // ── Salvar lead ──────────────────────────────────────────────
+  // ── Salvar lead ───────────────────────────────────────────
   async function salvarLead(lead, btn, cardId) {
-    btn.disabled = true;
-    btn.textContent = '…';
+    btn.disabled = true; btn.textContent = '…';
     try {
       const res = await fetch(`${API_URL}/salvar-lead`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokenJWT}`,
-        },
+        headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${tokenJWT}` },
         body: JSON.stringify({ lead }),
       });
       const data = await res.json();
       if (res.ok) {
-        // Remover card com animação
         const card = document.getElementById(cardId);
         if (card) {
           card.dataset.removido = '1';
           card.style.opacity = '0';
           card.style.maxHeight = card.offsetHeight + 'px';
-          setTimeout(() => {
-            card.style.maxHeight = '0';
-            card.style.marginBottom = '0';
-            card.style.padding = '0';
-          }, 300);
+          setTimeout(() => { card.style.maxHeight = '0'; card.style.marginBottom = '0'; card.style.padding = '0'; }, 300);
           setTimeout(() => { card.remove(); atualizarContadorResultados(); }, 700);
         }
       } else {
         btn.disabled = false;
         btn.textContent = data.erro === 'Lead já salvo.' ? 'Já salvo' : 'Erro';
       }
-    } catch (e) {
-      btn.disabled = false;
-      btn.textContent = 'Erro';
-    }
+    } catch(e) { btn.disabled = false; btn.textContent = 'Erro'; }
   }
 
-  // ── Carregar leads ───────────────────────────────────────────
+  // ── Carregar leads ────────────────────────────────────────
   async function carregarLeads() {
     const lista = document.getElementById('lista-leads');
     lista.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando…</div>';
     try {
       const params = nichoFiltro ? `?nicho=${nichoFiltro}` : '';
-      const res = await fetch(`${API_URL}/meus-leads${params}`, {
-        headers: { 'Authorization': `Bearer ${tokenJWT}` },
-      });
+      const res = await fetch(`${API_URL}/meus-leads${params}`, { headers: { 'Authorization':`Bearer ${tokenJWT}` } });
       if (!res.ok) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>'; return; }
       const data = await res.json();
       leadsCache = data.leads || [];
@@ -1122,28 +929,49 @@
         lista.innerHTML = '<div class="msg-erro" style="text-align:center;padding:32px">Nenhum lead salvo ainda.</div>';
         return;
       }
-      lista.innerHTML = leadsCache.map(l => `
-        <div class="lead-card">
-          <div class="lead-info">
-            <div class="lead-nome">${l.nome}</div>
-            <div class="lead-detalhes">
-              ${l.telefone ? `Tel: ${l.telefone}` : ''}
-              ${l.cidade ? ` | ${l.cidade}${l.estado ? ', ' + l.estado : ''}` : ''}
-              ${l.rating ? ` | Nota: ${l.rating}` : ''}
+      lista.innerHTML = leadsCache.map(l => {
+        const status = getLeadStatus(l.id);
+        const nota   = getLeadNota(l.id);
+        return `
+          <div class="lead-card">
+            <div class="lead-info">
+              <div class="lead-nome">${escapeHtml(l.nome)} ${scoreBadgeHtml(l)}</div>
+              <div class="lead-detalhes">
+                ${l.telefone ? `Tel: ${l.telefone}` : ''}
+                ${l.cidade ? ` | ${l.cidade}${l.estado ? ', ' + l.estado : ''}` : ''}
+                ${l.rating ? ` | ⭐ ${l.rating}` : ''}
+              </div>
+              <div class="lead-endereco">${escapeHtml(l.endereco || '')}</div>
+              <select class="lead-status-sel status-${status}" onchange="salvarStatusLead('${l.id}', this)">
+                <option value="novo"        ${status==='novo'        ?'selected':''}>📋 Novo</option>
+                <option value="contatado"   ${status==='contatado'   ?'selected':''}>📞 Contatado</option>
+                <option value="interessado" ${status==='interessado' ?'selected':''}>⚡ Interessado</option>
+                <option value="fechado"     ${status==='fechado'     ?'selected':''}>✅ Fechado</option>
+              </select>
+              <textarea class="lead-nota" placeholder="Anotações sobre este lead…" onblur="salvarNotaLead('${l.id}', this.value)">${escapeHtml(nota)}</textarea>
             </div>
-            <div class="lead-endereco">${l.endereco || ''}</div>
-          </div>
-          <div class="lead-acoes">
-            ${l.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${l.whatsapp}" target="_blank">WhatsApp</a>` : ''}
-          </div>
-        </div>
-      `).join('');
-    } catch (e) {
-      lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>';
-    }
+            <div class="lead-acoes">
+              ${l.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${l.whatsapp}" target="_blank">WhatsApp</a>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+    } catch(e) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>'; }
   }
 
-  // ── Filtrar leads ─────────────────────────────────────────────
+  // ── Status e notas (localStorage) ────────────────────────
+  function getLeadStatus(id) { return localStorage.getItem(`ks_${id}`) || 'novo'; }
+  function setLeadStatus(id, s) { localStorage.setItem(`ks_${id}`, s); }
+  function getLeadNota(id)   { return localStorage.getItem(`kn_${id}`) || ''; }
+  function setLeadNota(id, n) { localStorage.setItem(`kn_${id}`, n); }
+
+  function salvarStatusLead(leadId, selectEl) {
+    const s = selectEl.value;
+    selectEl.className = `lead-status-sel status-${s}`;
+    setLeadStatus(leadId, s);
+  }
+  function salvarNotaLead(leadId, nota) { setLeadNota(leadId, nota); }
+
+  // ── Filtrar leads ─────────────────────────────────────────
   function filtrarLeads(nicho, el) {
     nichoFiltro = nicho;
     document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('ativo'));
@@ -1151,54 +979,297 @@
     carregarLeads();
   }
 
-  // ── Exportar CSV ──────────────────────────────────────────────
+  // ── Exportar CSV ──────────────────────────────────────────
   function exportarCSV() {
     if (!leadsCache.length) { alert('Nenhum lead para exportar.'); return; }
-    const headers = ['Nome','Telefone','WhatsApp','Endereço','Cidade','Estado','Rating','Nicho'];
+    const headers = ['Nome','Telefone','WhatsApp','Endereço','Cidade','Estado','Rating','Nicho','Status','Nota'];
     const rows = leadsCache.map(l => [
-      l.nome, l.telefone, l.whatsapp, l.endereco, l.cidade, l.estado, l.rating ?? '', l.nicho ?? ''
-    ].map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','));
+      l.nome, l.telefone, l.whatsapp, l.endereco, l.cidade, l.estado,
+      l.rating ?? '', l.nicho ?? '',
+      getLeadStatus(l.id), getLeadNota(l.id),
+    ].map(v => `"${String(v ?? '').replace(/"/g,'""')}"`).join(','));
     const csv = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['﻿' + csv], { type:'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url; a.download = 'garimpo_leads.csv'; a.click();
     URL.revokeObjectURL(url);
   }
 
-  // ── Seleção de Nichos ─────────────────────────────────────────
-  const TODOS_NICHOS = {
-    clinicas:           'Clínicas de Estética',
-    clinicas_medicas:   'Clínicas Médicas',
-    odonto:             'Odontológicas',
-    psicologos:         'Psicólogos',
-    farmacias:          'Farmácias',
-    academias:          'Academias',
-    saloes:             'Salões de Beleza',
-    barbearias:         'Barbearias',
-    restaurantes:       'Restaurantes',
-    padarias:           'Padarias/Lanchonetes',
-    petshops:           'Pet Shops',
-    advocacia:          'Advocacia',
-    contabilidade:      'Contabilidade',
-    imobiliarias:       'Imobiliárias',
-    escolas:            'Escolas Particulares',
-    agencias_marketing: 'Agências de Marketing',
-    mecanicas:          'Oficinas Mecânicas',
-    construtoras:       'Construtoras',
-    hoteis:             'Hotéis e Pousadas',
-    eletricistas:       'Eletricistas',
-    fotografos:         'Fotógrafos',
-    arquitetos:         'Arquitetos',
-    engenheiros:        'Engenheiros',
-    hospitais:          'Hospitais',
-    laboratorios:       'Laboratórios',
-    veterinarios:       'Veterinários',
-  };
-  const PLANOS_NICHOS = { free: 1, basico: 1, starter: 2, profissional: 3, business: 5 };
-  let nichosSelecionados = [];
-  let limiteNichos = 1;
+  // ══════════════════════════════════════════════════════════
+  // KANBAN
+  // ══════════════════════════════════════════════════════════
+  const KANBAN_STATUS = ['novo', 'contatado', 'interessado', 'fechado'];
+  const KANBAN_LABELS = { novo:'Novo', contatado:'Contatado', interessado:'Interessado', fechado:'Fechado' };
 
+  async function carregarKanban() {
+    const board = document.getElementById('kanban-board');
+    board.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando…</div>';
+    try {
+      const res = await fetch(`${API_URL}/meus-leads`, { headers: { 'Authorization':`Bearer ${tokenJWT}` } });
+      if (!res.ok) { board.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>'; return; }
+      const data = await res.json();
+      const leads = data.leads || [];
+      const cols = {};
+      KANBAN_STATUS.forEach(s => cols[s] = []);
+      leads.forEach(l => { const s = getLeadStatus(l.id); cols[s].push(l); });
+      board.innerHTML = KANBAN_STATUS.map(status => `
+        <div class="kanban-col col-${status}">
+          <div class="kanban-col-header">
+            <h3>${KANBAN_LABELS[status]}</h3>
+            <span class="col-count">${cols[status].length}</span>
+          </div>
+          <div id="kcol-${status}">
+            ${cols[status].length === 0
+              ? '<div class="kanban-empty">Vazio</div>'
+              : cols[status].map(l => renderKanbanCard(l, status)).join('')}
+          </div>
+        </div>
+      `).join('');
+    } catch(e) { board.innerHTML = '<div class="msg-erro">Erro ao carregar.</div>'; }
+  }
+
+  function renderKanbanCard(lead, currentStatus) {
+    const sc = scoreQualidade(lead);
+    const icons = { quente:'🔥', morno:'⚡', frio:'❄️' };
+    const idx = KANBAN_STATUS.indexOf(currentStatus);
+    const prev = idx > 0 ? KANBAN_STATUS[idx - 1] : null;
+    const next = idx < KANBAN_STATUS.length-1 ? KANBAN_STATUS[idx + 1] : null;
+    return `
+      <div class="kanban-card">
+        <div class="k-nome">${escapeHtml(lead.nome)} <span style="font-size:0.7rem">${icons[sc]}</span></div>
+        <div class="k-info">${lead.telefone || ''} ${lead.cidade ? '· ' + lead.cidade : ''}</div>
+        <div class="k-actions">
+          ${lead.whatsapp ? `<a class="k-btn wa" href="https://wa.me/${lead.whatsapp}" target="_blank">WhatsApp</a>` : ''}
+          ${prev ? `<button class="k-btn" onclick="moverKanban('${lead.id}','${prev}')">← ${KANBAN_LABELS[prev]}</button>` : ''}
+          ${next ? `<button class="k-btn" onclick="moverKanban('${lead.id}','${next}')">${KANBAN_LABELS[next]} →</button>` : ''}
+        </div>
+      </div>`;
+  }
+
+  function moverKanban(leadId, novoStatus) {
+    setLeadStatus(leadId, novoStatus);
+    carregarKanban();
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // TEMPLATES
+  // ══════════════════════════════════════════════════════════
+  const TEMPLATES_DEFAULT = [
+    'Olá {nome}! Vi que sua empresa em {cidade} pode se beneficiar do que oferecemos. Podemos conversar? 😊',
+    'Boa tarde, {nome}! Estou entrando em contato para apresentar uma proposta especial para o seu negócio em {cidade}. Tem um minutinho?',
+    'Oi {nome}! Encontrei o contato {telefone} e gostaria de apresentar uma solução que pode ajudar muito o seu negócio em {cidade}. Aceita uma consultoria gratuita?',
+    'Olá! Estou prospectando empresas em {cidade} e acredito que {nome} seria um ótimo parceiro. Posso enviar mais detalhes?',
+  ];
+
+  function carregarTemplatesStorage() {
+    return JSON.parse(localStorage.getItem('garimpo_templates') || 'null') || [...TEMPLATES_DEFAULT];
+  }
+  function salvarTemplatesStorage(t) { localStorage.setItem('garimpo_templates', JSON.stringify(t)); }
+
+  function renderizarTemplates() {
+    const templates = carregarTemplatesStorage();
+    const links = JSON.parse(localStorage.getItem('garimpo_template_links') || '[]');
+    const section = document.getElementById('templates-section');
+    if (!section) return;
+    section.innerHTML = templates.map((t, i) => `
+      <div class="template-card">
+        <h3>📝 Template ${i + 1}</h3>
+        <textarea class="template-textarea" id="template-${i}"
+          placeholder="Digite sua mensagem…"
+          oninput="salvarTemplate(${i});atualizarPreview(${i})">${escapeHtml(t)}</textarea>
+        <div class="template-vars">
+          Inserir variável:
+          <button class="var-btn" onclick="inserirVar(${i},'{nome}')">{nome}</button>
+          <button class="var-btn" onclick="inserirVar(${i},'{cidade}')">{cidade}</button>
+          <button class="var-btn" onclick="inserirVar(${i},'{telefone}')">{telefone}</button>
+        </div>
+        <input class="template-link" id="link-${i}" type="url"
+          placeholder="🔗 Link de imagem ou arquivo para enviar junto (opcional)"
+          value="${escapeHtml(links[i] || '')}"
+          oninput="salvarLink(${i});atualizarPreview(${i})" />
+        <div class="template-preview-box" id="preview-${i}">—</div>
+        <div class="template-actions">
+          <button class="btn btn-secondary btn-sm" id="btn-copiar-${i}" onclick="copiarTemplate(${i})">📋 Copiar</button>
+          <button class="btn btn-verde btn-sm" onclick="abrirWaTemplate(${i})">📲 Abrir no WhatsApp</button>
+        </div>
+      </div>
+    `).join('');
+    for (let i = 0; i < 4; i++) atualizarPreview(i);
+  }
+
+  function salvarTemplate(i) {
+    const templates = carregarTemplatesStorage();
+    templates[i] = document.getElementById(`template-${i}`).value;
+    salvarTemplatesStorage(templates);
+  }
+
+  function salvarLink(i) {
+    const links = JSON.parse(localStorage.getItem('garimpo_template_links') || '[]');
+    links[i] = document.getElementById(`link-${i}`).value;
+    localStorage.setItem('garimpo_template_links', JSON.stringify(links));
+  }
+
+  function inserirVar(i, varName) {
+    const ta = document.getElementById(`template-${i}`);
+    const pos = ta.selectionStart;
+    ta.value = ta.value.substring(0, pos) + varName + ta.value.substring(ta.selectionEnd);
+    ta.focus(); ta.selectionStart = ta.selectionEnd = pos + varName.length;
+    salvarTemplate(i); atualizarPreview(i);
+  }
+
+  function getPreviewLead() {
+    const sel = document.getElementById('preview-lead-sel');
+    if (!sel || !sel.value) return null;
+    return leadsCache.find(l => l.id === sel.value) || null;
+  }
+
+  function atualizarPreviewLead() {
+    for (let i = 0; i < 4; i++) atualizarPreview(i);
+  }
+
+  function atualizarPreview(i) {
+    const ta = document.getElementById(`template-${i}`);
+    const preview = document.getElementById(`preview-${i}`);
+    if (!ta || !preview) return;
+    let text = ta.value;
+    const lead = getPreviewLead();
+    if (lead) {
+      text = text.replace(/{nome}/g, lead.nome || '').replace(/{cidade}/g, lead.cidade || '').replace(/{telefone}/g, lead.telefone || '');
+    }
+    const linkEl = document.getElementById(`link-${i}`);
+    if (linkEl && linkEl.value.trim()) text += '\n\n🔗 ' + linkEl.value.trim();
+    preview.textContent = text || '—';
+  }
+
+  function copiarTemplate(i) {
+    const preview = document.getElementById(`preview-${i}`);
+    navigator.clipboard.writeText(preview ? preview.textContent : '').then(() => {
+      const btn = document.getElementById(`btn-copiar-${i}`);
+      if (btn) { btn.textContent = '✅ Copiado!'; setTimeout(() => btn.textContent = '📋 Copiar', 2000); }
+    });
+  }
+
+  function abrirWaTemplate(i) {
+    const lead = getPreviewLead();
+    if (!lead) { alert('Selecione um lead no topo para usar o template.'); return; }
+    const preview = document.getElementById(`preview-${i}`);
+    const text = preview ? preview.textContent : '';
+    const num = lead.whatsapp || lead.telefone?.replace(/\D/g,'');
+    if (!num) { alert('Lead sem número de WhatsApp.'); return; }
+    window.open(`https://wa.me/${num}?text=${encodeURIComponent(text)}`, '_blank');
+  }
+
+  async function preencherPreviewLeads() {
+    if (leadsCache.length === 0) {
+      try {
+        const res = await fetch(`${API_URL}/meus-leads`, { headers: { 'Authorization':`Bearer ${tokenJWT}` } });
+        if (res.ok) { const d = await res.json(); leadsCache = d.leads || []; }
+      } catch(e) {}
+    }
+    const sel = document.getElementById('preview-lead-sel');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">Selecione um lead para ver o preview…</option>' +
+      leadsCache.map(l => `<option value="${l.id}">${escapeHtml(l.nome)} — ${escapeHtml(l.cidade||'')}</option>`).join('');
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // DASHBOARD
+  // ══════════════════════════════════════════════════════════
+  async function carregarDashboard() {
+    const dash = document.getElementById('dashboard-content');
+    dash.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando…</div>';
+    try {
+      const res = await fetch(`${API_URL}/meus-leads`, { headers: { 'Authorization':`Bearer ${tokenJWT}` } });
+      if (!res.ok) { dash.innerHTML = '<div class="msg-erro">Erro ao carregar dados.</div>'; return; }
+      const data = await res.json();
+      const leads = data.leads || [];
+
+      // Por nicho
+      const porNicho = {};
+      leads.forEach(l => { if (l.nicho) porNicho[l.nicho] = (porNicho[l.nicho]||0) + 1; });
+
+      // Por status kanban
+      const porStatus = { novo:0, contatado:0, interessado:0, fechado:0 };
+      leads.forEach(l => { const s = getLeadStatus(l.id); porStatus[s] = (porStatus[s]||0) + 1; });
+
+      // Scores
+      const hotLeads  = leads.filter(l => scoreQualidade(l) === 'quente').length;
+      const warmLeads = leads.filter(l => scoreQualidade(l) === 'morno').length;
+
+      // Buscas
+      const perfil = perfilUsuario || {};
+      const buscasUsadas = perfil.buscas_mes || 0;
+      const buscasLimite = perfil.buscas_limite || 10;
+      const buscasPct   = Math.min(100, Math.round(buscasUsadas / buscasLimite * 100));
+      const buscasRest  = Math.max(0, buscasLimite - buscasUsadas);
+
+      // Top nichos
+      const topNichos = Object.entries(porNicho).sort((a,b) => b[1]-a[1]).slice(0,6);
+      const maxN = topNichos[0]?.[1] || 1;
+
+      // Histórico
+      const hist = JSON.parse(localStorage.getItem('garimpo_historico') || '[]');
+
+      dash.innerHTML = `
+        <div class="dash-grid">
+          <div class="dash-stat">
+            <div class="val">${leads.length}</div>
+            <div class="lbl">Total de Leads</div>
+            <div class="sub">🔥 ${hotLeads} quentes · ⚡ ${warmLeads} mornos</div>
+          </div>
+          <div class="dash-stat">
+            <div class="val">${porStatus.fechado}</div>
+            <div class="lbl">Leads Fechados</div>
+            <div class="sub">${leads.length ? Math.round(porStatus.fechado/leads.length*100) : 0}% taxa conversão</div>
+          </div>
+          <div class="dash-stat">
+            <div class="val">${buscasUsadas}</div>
+            <div class="lbl">Buscas usadas</div>
+            <div class="sub">de ${buscasLimite} este mês</div>
+            <div class="prog-bar"><div class="prog-fill ${buscasPct > 80 ? 'red':''}" style="width:${buscasPct}%"></div></div>
+          </div>
+          <div class="dash-stat">
+            <div class="val">${buscasRest}</div>
+            <div class="lbl">Buscas restantes</div>
+            <div class="sub">Plano ${(perfil.plano||'free').toUpperCase()}</div>
+          </div>
+        </div>
+
+        <div class="dash-section-title">Funil de Vendas (Kanban)</div>
+        <div class="kanban-summary">
+          <div class="ks-item ks-novo"><div class="ks-val">${porStatus.novo}</div><div class="ks-lbl">Novos</div></div>
+          <div class="ks-item ks-contatado"><div class="ks-val">${porStatus.contatado}</div><div class="ks-lbl">Contatados</div></div>
+          <div class="ks-item ks-interessado"><div class="ks-val">${porStatus.interessado}</div><div class="ks-lbl">Interessados</div></div>
+          <div class="ks-item ks-fechado"><div class="ks-val">${porStatus.fechado}</div><div class="ks-lbl">Fechados</div></div>
+        </div>
+
+        ${topNichos.length > 0 ? `
+          <div class="dash-section-title">Leads por Nicho</div>
+          <div class="card">
+            ${topNichos.map(([nicho, count]) => `
+              <div class="nicho-row">
+                <div class="nicho-row-label">${TODOS_NICHOS[nicho] || nicho}</div>
+                <div class="nicho-row-bar"><div class="nicho-row-fill" style="width:${Math.round(count/maxN*100)}%"></div></div>
+                <div class="nicho-row-count">${count}</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        ${hist.length > 0 ? `
+          <div class="dash-section-title">Últimas Buscas</div>
+          <div class="card" style="display:flex;flex-wrap:wrap;gap:8px;padding:16px">
+            ${hist.map(h => `<button class="filtro-chip" onclick="mudarTab('buscar');setTimeout(()=>repetirBusca('${h.nicho}','${encodeURIComponent(h.cidade)}'),100)">${h.label} em ${h.cidade}</button>`).join('')}
+          </div>
+        ` : ''}
+      `;
+    } catch(e) { dash.innerHTML = '<div class="msg-erro">Erro ao carregar dashboard.</div>'; }
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // NICHOS MODAL
+  // ══════════════════════════════════════════════════════════
   function abrirModalNichos() {
     const plano = perfilUsuario?.plano || 'free';
     limiteNichos = PLANOS_NICHOS[plano] || 1;
@@ -1213,9 +1284,7 @@
     document.getElementById('modal-nichos').classList.add('ativo');
   }
 
-  function fecharModalNichos() {
-    document.getElementById('modal-nichos').classList.remove('ativo');
-  }
+  function fecharModalNichos() { document.getElementById('modal-nichos').classList.remove('ativo'); }
 
   function toggleNicho(el) {
     const nicho = el.dataset.nicho;
@@ -1237,27 +1306,31 @@
     try {
       const res = await fetch(`${API_URL}/selecionar-nicho`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenJWT}` },
+        headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${tokenJWT}` },
         body: JSON.stringify({ nichos: nichosSelecionados }),
       });
       const data = await res.json();
       if (data.ok) {
         perfilUsuario.nichos_liberados = nichosSelecionados;
+        popularNichoSelect();
         fecharModalNichos();
         alert(`Nichos salvos: ${nichosSelecionados.map(n => TODOS_NICHOS[n]).join(', ')}`);
       } else {
         alert(data.erro || 'Erro ao salvar nichos.');
       }
-    } catch (e) { alert('Erro de conexão.'); }
+    } catch(e) { alert('Erro de conexão.'); }
   }
 
-  // ── Init ──────────────────────────────────────────────────────
-  if (tokenJWT) {
-    iniciarApp();
+  // ── Utilitários ───────────────────────────────────────────
+  function escapeHtml(text) {
+    return String(text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
+
+  // ── Init ──────────────────────────────────────────────────
+  if (tokenJWT) iniciarApp();
 </script>
 
-<!-- Modal de seleção de nichos -->
+<!-- Modal de nichos -->
 <div id="modal-nichos" class="modal-overlay" onclick="if(event.target===this)fecharModalNichos()">
   <div class="modal-planos modal-nichos">
     <h2>Escolha seu(s) Nicho(s)</h2>
@@ -1273,44 +1346,38 @@
 <div id="modal-planos" class="modal-overlay" onclick="if(event.target===this)fecharModal()">
   <div class="modal-planos">
     <h2>Escolha seu plano</h2>
-    <p class="sub">Todos os planos com acesso a leads verificados do Google em todo o Brasil</p>
+    <p class="sub">Leads verificados do Google em todo o Brasil</p>
     <div class="planos-grid">
-
       <div class="plano-card">
         <div class="nome">Free</div>
         <div class="buscas">5<span>buscas/mês</span></div>
         <div class="preco"><strong>Grátis</strong></div>
         <button class="btn btn-secondary btn-sm" style="width:100%" disabled>Plano atual</button>
       </div>
-
       <div class="plano-card">
-        <div class="nome">Basico</div>
+        <div class="nome">Básico</div>
         <div class="buscas">50<span>buscas/mês</span></div>
         <div class="preco">por <strong>R$49/mês</strong></div>
         <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('basico')">Assinar</button>
       </div>
-
       <div class="plano-card destaque">
         <div class="nome">Starter</div>
         <div class="buscas">250<span>buscas/mês</span></div>
         <div class="preco">por <strong>R$97/mês</strong></div>
         <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('starter')">Assinar</button>
       </div>
-
       <div class="plano-card">
         <div class="nome">Profissional</div>
         <div class="buscas">500<span>buscas/mês</span></div>
         <div class="preco">por <strong>R$197/mês</strong></div>
         <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('profissional')">Assinar</button>
       </div>
-
       <div class="plano-card">
         <div class="nome">Business</div>
         <div class="buscas">1.000<span>buscas/mês</span></div>
         <div class="preco">por <strong>R$397/mês</strong></div>
         <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('business')">Assinar</button>
       </div>
-
     </div>
     <span class="modal-fechar" onclick="fecharModal()">Fechar</span>
   </div>
@@ -1318,4 +1385,3 @@
 
 </body>
 </html>
-                                                                                                                                                                                                                                    

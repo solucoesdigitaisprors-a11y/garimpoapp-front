@@ -297,7 +297,7 @@
   <div class="auth-card">
     <div class="auth-logo">
       <h1><span class="g">GARIMPO</span><span class="a">APP</span></h1>
-      <p>ENCONTRE LEADS EM TODO O BRASIL</p>
+      <p>ENCONTRE CONTATOS EM TODO O BRASIL</p>
     </div>
     <div class="auth-tabs">
       <div class="auth-tab ativo" onclick="mudarAba('login')">Entrar</div>
@@ -344,7 +344,7 @@
 
   <div class="main-tabs">
     <div class="main-tab ativo" onclick="mudarTab('buscar')">🔍 Garimpar</div>
-    <div class="main-tab" onclick="mudarTab('leads')">💾 Meus Leads</div>
+    <div class="main-tab" onclick="mudarTab('leads')">💾 Meus Contatos</div>
     <div class="main-tab" onclick="mudarTab('kanban')">📋 Kanban</div>
     <div class="main-tab" onclick="mudarTab('templates')">💬 Templates</div>
     <div class="main-tab" onclick="mudarTab('dashboard')">📊 Dashboard</div>
@@ -443,7 +443,7 @@
   <div id="tab-leads" class="container" style="display:none">
     <div class="card">
       <div class="acoes-topo">
-        <h2>Leads Salvos</h2>
+        <h2>Contatos Salvos</h2>
         <button class="btn btn-verde btn-sm" onclick="exportarCSV()">⬇ Exportar CSV</button>
       </div>
       <div class="leads-filtros" id="filtros-nicho">
@@ -480,7 +480,7 @@
         <h2>📋 Kanban — Funil de Vendas</h2>
         <button class="btn btn-secondary btn-sm" onclick="carregarKanban()">↺ Atualizar</button>
       </div>
-      <p style="font-size:0.82rem;color:var(--texto-muted)">Organize leads por etapa. Use os botões em cada card para mover entre colunas.</p>
+      <p style="font-size:0.82rem;color:var(--texto-muted)">Organize seus contatos por etapa de venda. Use os botões para mover entre colunas.</p>
     </div>
     <div class="kanban-board" id="kanban-board">
       <div class="loader"><div class="spinner"></div> Carregando…</div>
@@ -494,9 +494,9 @@
       <p style="font-size:0.82rem;color:var(--texto-muted);margin-bottom:14px">
         Crie até 4 mensagens personalizadas. Use variáveis que serão substituídas automaticamente pelo nome, cidade e telefone do lead.
       </p>
-      <label style="font-size:0.78rem;color:var(--texto-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Lead para preview</label>
+      <label style="font-size:0.78rem;color:var(--texto-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Contato para preview</label>
       <select class="preview-lead-sel" id="preview-lead-sel" onchange="atualizarPreviewLead()">
-        <option value="">Selecione um lead para ver o preview…</option>
+        <option value="">Selecione um contato para ver o preview…</option>
       </select>
     </div>
     <div class="template-section" id="templates-section"></div>
@@ -842,11 +842,11 @@
       if (perfilUsuario) { perfilUsuario.buscas_restantes = restantes; verificarAlertaBuscas(); }
 
       if (data.total === 0) {
-        status.innerHTML = '<div class="msg-ok">Nenhum resultado encontrado (ou todos já foram salvos).</div>';
+        status.innerHTML = '<div class="msg-ok">Nenhum resultado encontrado (ou todos já foram salvos como contatos).</div>';
         return;
       }
 
-      status.innerHTML = `<div class="msg-ok">${data.total} resultado${data.total!==1?'s':''} encontrado${data.total!==1?'s':''} (leads já salvos foram removidos)</div>`;
+      status.innerHTML = `<div class="msg-ok">${data.total} resultado${data.total!==1?'s':''} encontrado${data.total!==1?'s':''} (contatos já salvos foram removidos)</div>`;
       poolResultados = data.resultados;
       totalBuscaAtual = data.resultados.length;
       aplicarFiltroRating();
@@ -873,7 +873,7 @@
         </div>
         <div class="lead-acoes">
           ${r.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${r.whatsapp}" target="_blank">WhatsApp</a>` : ''}
-          <button class="btn btn-secondary btn-sm" onclick="salvarLead(${JSON.stringify(r).replace(/"/g, '&quot;')}, this, 'card-${r.place_id}')">Salvar</button>
+          <button class="btn btn-secondary btn-sm" onclick="salvarLead(${JSON.stringify(r).replace(/"/g, '&quot;')}, this, 'card-${r.place_id}')">Salvar Contato</button>
         </div>
       </div>
     `).join('');
@@ -910,7 +910,7 @@
         }
       } else {
         btn.disabled = false;
-        btn.textContent = data.erro === 'Lead já salvo.' ? 'Já salvo' : 'Erro';
+        btn.textContent = data.erro === 'Contato já salvo.' ? 'Já salvo' : 'Erro';
       }
     } catch(e) { btn.disabled = false; btn.textContent = 'Erro'; }
   }
@@ -922,11 +922,11 @@
     try {
       const params = nichoFiltro ? `?nicho=${nichoFiltro}` : '';
       const res = await fetch(`${API_URL}/meus-leads${params}`, { headers: { 'Authorization':`Bearer ${tokenJWT}` } });
-      if (!res.ok) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>'; return; }
+      if (!res.ok) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar contatos.</div>'; return; }
       const data = await res.json();
       leadsCache = data.leads || [];
       if (leadsCache.length === 0) {
-        lista.innerHTML = '<div class="msg-erro" style="text-align:center;padding:32px">Nenhum lead salvo ainda.</div>';
+        lista.innerHTML = '<div class="msg-erro" style="text-align:center;padding:32px">Nenhum contato salvo aqui ainda.</div>';
         return;
       }
       lista.innerHTML = leadsCache.map(l => {
@@ -948,14 +948,14 @@
                 <option value="interessado" ${status==='interessado' ?'selected':''}>⚡ Interessado</option>
                 <option value="fechado"     ${status==='fechado'     ?'selected':''}>✅ Fechado</option>
               </select>
-              <textarea class="lead-nota" placeholder="Anotações sobre este lead…" onblur="salvarNotaLead('${l.id}', this.value)">${escapeHtml(nota)}</textarea>
+              <textarea class="lead-nota" placeholder="Anotações sobre este contato…" onblur="salvarNotaLead('${l.id}', this.value)">${escapeHtml(nota)}</textarea>
             </div>
             <div class="lead-acoes">
               ${l.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${l.whatsapp}" target="_blank">WhatsApp</a>` : ''}
             </div>
           </div>`;
       }).join('');
-    } catch(e) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>'; }
+    } catch(e) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar contatos.</div>'; }
   }
 
   // ── Status e notas (localStorage) ────────────────────────
@@ -981,7 +981,7 @@
 
   // ── Exportar CSV ──────────────────────────────────────────
   function exportarCSV() {
-    if (!leadsCache.length) { alert('Nenhum lead para exportar.'); return; }
+    if (!leadsCache.length) { alert('Nenhum contato para exportar.'); return; }
     const headers = ['Nome','Telefone','WhatsApp','Endereço','Cidade','Estado','Rating','Nicho','Status','Nota'];
     const rows = leadsCache.map(l => [
       l.nome, l.telefone, l.whatsapp, l.endereco, l.cidade, l.estado,
@@ -992,7 +992,7 @@
     const blob = new Blob(['﻿' + csv], { type:'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url; a.download = 'garimpo_leads.csv'; a.click();
+    a.href = url; a.download = 'garimpo_contatos.csv'; a.click();
     URL.revokeObjectURL(url);
   }
 
@@ -1007,7 +1007,7 @@
     board.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando…</div>';
     try {
       const res = await fetch(`${API_URL}/meus-leads`, { headers: { 'Authorization':`Bearer ${tokenJWT}` } });
-      if (!res.ok) { board.innerHTML = '<div class="msg-erro">Erro ao carregar leads.</div>'; return; }
+      if (!res.ok) { board.innerHTML = '<div class="msg-erro">Erro ao carregar contatos.</div>'; return; }
       const data = await res.json();
       const leads = data.leads || [];
       const cols = {};
@@ -1152,11 +1152,11 @@
 
   function abrirWaTemplate(i) {
     const lead = getPreviewLead();
-    if (!lead) { alert('Selecione um lead no topo para usar o template.'); return; }
+    if (!lead) { alert('Selecione um contato no topo para usar o template.'); return; }
     const preview = document.getElementById(`preview-${i}`);
     const text = preview ? preview.textContent : '';
     const num = lead.whatsapp || lead.telefone?.replace(/\D/g,'');
-    if (!num) { alert('Lead sem número de WhatsApp.'); return; }
+    if (!num) { alert('Contato sem número de WhatsApp.'); return; }
     window.open(`https://wa.me/${num}?text=${encodeURIComponent(text)}`, '_blank');
   }
 
@@ -1169,7 +1169,7 @@
     }
     const sel = document.getElementById('preview-lead-sel');
     if (!sel) return;
-    sel.innerHTML = '<option value="">Selecione um lead para ver o preview…</option>' +
+    sel.innerHTML = '<option value="">Selecione um contato para ver o preview…</option>' +
       leadsCache.map(l => `<option value="${l.id}">${escapeHtml(l.nome)} — ${escapeHtml(l.cidade||'')}</option>`).join('');
   }
 
@@ -1215,12 +1215,12 @@
         <div class="dash-grid">
           <div class="dash-stat">
             <div class="val">${leads.length}</div>
-            <div class="lbl">Total de Leads</div>
+            <div class="lbl">Total de Contatos</div>
             <div class="sub">🔥 ${hotLeads} quentes · ⚡ ${warmLeads} mornos</div>
           </div>
           <div class="dash-stat">
             <div class="val">${porStatus.fechado}</div>
-            <div class="lbl">Leads Fechados</div>
+            <div class="lbl">Contatos Fechados</div>
             <div class="sub">${leads.length ? Math.round(porStatus.fechado/leads.length*100) : 0}% taxa conversão</div>
           </div>
           <div class="dash-stat">
@@ -1245,7 +1245,7 @@
         </div>
 
         ${topNichos.length > 0 ? `
-          <div class="dash-section-title">Leads por Nicho</div>
+          <div class="dash-section-title">Contatos por Nicho</div>
           <div class="card">
             ${topNichos.map(([nicho, count]) => `
               <div class="nicho-row">
@@ -1346,7 +1346,7 @@
 <div id="modal-planos" class="modal-overlay" onclick="if(event.target===this)fecharModal()">
   <div class="modal-planos">
     <h2>Escolha seu plano</h2>
-    <p class="sub">Leads verificados do Google em todo o Brasil</p>
+    <p class="sub">Contatos verificados do Google em todo o Brasil</p>
     <div class="planos-grid">
       <div class="plano-card">
         <div class="nome">Free</div>

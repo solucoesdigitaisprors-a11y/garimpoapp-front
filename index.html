@@ -511,6 +511,13 @@
     .plano-card .preco strong { color:var(--texto); font-size:1rem; }
     .modal-fechar { display:block; text-align:center; margin-top:20px; color:var(--texto-muted); cursor:pointer; font-size:0.85rem; }
     .modal-fechar:hover { color:var(--texto); }
+    /* Modal de nichos */
+    .modal-nichos { max-width:600px; }
+    .nichos-grid { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
+    .nicho-chip { padding:8px 14px; border-radius:20px; border:2px solid var(--borda); cursor:pointer; font-size:0.82rem; font-weight:600; transition:all 0.2s; user-select:none; }
+    .nicho-chip.selecionado { border-color:var(--ouro); background:rgba(245,165,35,0.15); color:var(--ouro); }
+    .nicho-chip:hover { border-color:var(--ouro-borda); }
+    .nichos-limite-msg { text-align:center; color:var(--texto-muted); font-size:0.85rem; margin-bottom:4px; }
   </style>
 </head>
 <body>
@@ -585,6 +592,7 @@
       <span class="buscas-badge" id="nav-buscas">— buscas restantes</span>
       <span class="plano-badge" id="nav-plano">free</span>
       <button class="btn btn-primary btn-sm" id="btn-assinar" onclick="abrirModal()" style="display:none">Assinar</button>
+      <button class="btn btn-secondary btn-sm" id="btn-nichos" onclick="abrirModalNichos()" style="display:none">Nichos</button>
       <button class="btn btn-secondary btn-sm" onclick="sair()">Sair</button>
     </div>
   </nav>
@@ -832,6 +840,11 @@
       const isFree = !perfilUsuario.ativo;
       document.getElementById('banner-upgrade').style.display = isFree ? 'block' : 'none';
       document.getElementById('btn-assinar').style.display   = isFree ? 'inline-flex' : 'none';
+      document.getElementById('btn-nichos').style.display    = 'inline-flex';
+      // Abrir seleção de nicho automaticamente se ainda não foi escolhido
+      if (!perfilUsuario.nichos_liberados || perfilUsuario.nichos_liberados.length === 0) {
+        setTimeout(abrirModalNichos, 600);
+      }
       // Verificar retorno de pagamento
       const params = new URLSearchParams(location.search);
       if (params.get('pagamento') === 'sucesso') {
@@ -1079,11 +1092,103 @@
     URL.revokeObjectURL(url);
   }
 
+  // ── Seleção de Nichos ─────────────────────────────────────────
+  const TODOS_NICHOS = {
+    clinicas:           'Clínicas de Estética',
+    clinicas_medicas:   'Clínicas Médicas',
+    odonto:             'Odontológicas',
+    psicologos:         'Psicólogos',
+    farmacias:          'Farmácias',
+    academias:          'Academias',
+    saloes:             'Salões de Beleza',
+    barbearias:         'Barbearias',
+    restaurantes:       'Restaurantes',
+    padarias:           'Padarias/Lanchonetes',
+    petshops:           'Pet Shops',
+    advocacia:          'Advocacia',
+    contabilidade:      'Contabilidade',
+    imobiliarias:       'Imobiliárias',
+    escolas:            'Escolas Particulares',
+    agencias_marketing: 'Agências de Marketing',
+    mecanicas:          'Oficinas Mecânicas',
+    construtoras:       'Construtoras',
+    hoteis:             'Hotéis e Pousadas',
+    eletricistas:       'Eletricistas',
+    fotografos:         'Fotógrafos',
+  };
+  const PLANOS_NICHOS = { free: 1, basico: 1, starter: 2, profissional: 3, business: 5 };
+  let nichosSelecionados = [];
+  let limiteNichos = 1;
+
+  function abrirModalNichos() {
+    const plano = perfilUsuario?.plano || 'free';
+    limiteNichos = PLANOS_NICHOS[plano] || 1;
+    nichosSelecionados = [...(perfilUsuario?.nichos_liberados || [])];
+    document.getElementById('nichos-limite-msg').textContent =
+      `Plano ${plano.toUpperCase()}: selecione ${limiteNichos === 1 ? '1 nicho' : `até ${limiteNichos} nichos`}.`;
+    const grid = document.getElementById('nichos-grid');
+    grid.innerHTML = Object.entries(TODOS_NICHOS).map(([val, label]) => {
+      const sel = nichosSelecionados.includes(val) ? 'selecionado' : '';
+      return `<div class="nicho-chip ${sel}" data-nicho="${val}" onclick="toggleNicho(this)">${label}</div>`;
+    }).join('');
+    document.getElementById('modal-nichos').classList.add('ativo');
+  }
+
+  function fecharModalNichos() {
+    document.getElementById('modal-nichos').classList.remove('ativo');
+  }
+
+  function toggleNicho(el) {
+    const nicho = el.dataset.nicho;
+    if (el.classList.contains('selecionado')) {
+      el.classList.remove('selecionado');
+      nichosSelecionados = nichosSelecionados.filter(n => n !== nicho);
+    } else {
+      if (nichosSelecionados.length >= limiteNichos) {
+        alert(`Seu plano permite no máximo ${limiteNichos} nicho(s).\nFaça upgrade para selecionar mais.`);
+        return;
+      }
+      el.classList.add('selecionado');
+      nichosSelecionados.push(nicho);
+    }
+  }
+
+  async function salvarNichos() {
+    if (nichosSelecionados.length === 0) { alert('Selecione pelo menos 1 nicho.'); return; }
+    try {
+      const res = await fetch(`${API_URL}/selecionar-nicho`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenJWT}` },
+        body: JSON.stringify({ nichos: nichosSelecionados }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        perfilUsuario.nichos_liberados = nichosSelecionados;
+        fecharModalNichos();
+        alert(`Nichos salvos: ${nichosSelecionados.map(n => TODOS_NICHOS[n]).join(', ')}`);
+      } else {
+        alert(data.erro || 'Erro ao salvar nichos.');
+      }
+    } catch (e) { alert('Erro de conexão.'); }
+  }
+
   // ── Init ──────────────────────────────────────────────────────
   if (tokenJWT) {
     iniciarApp();
   }
 </script>
+
+<!-- Modal de seleção de nichos -->
+<div id="modal-nichos" class="modal-overlay" onclick="if(event.target===this)fecharModalNichos()">
+  <div class="modal-planos modal-nichos">
+    <h2>Escolha seu(s) Nicho(s)</h2>
+    <p class="sub">Selecione os segmentos que você quer prospectar</p>
+    <p class="nichos-limite-msg" id="nichos-limite-msg"></p>
+    <div class="nichos-grid" id="nichos-grid"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="salvarNichos()">Salvar Nichos</button>
+    <span class="modal-fechar" onclick="fecharModalNichos()">Fechar</span>
+  </div>
+</div>
 
 <!-- Modal de planos -->
 <div id="modal-planos" class="modal-overlay" onclick="if(event.target===this)fecharModal()">

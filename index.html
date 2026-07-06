@@ -1,1485 +1,479 @@
-<!DOCTYPE html><!-- v2.0 5abas -->
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GarimpoApp — Encontre Clientes</title>
-  <style>
-    :root {
-      --ouro:        #f5a523;
-      --ouro-dark:   #c8870a;
-      --ouro-glow:   rgba(245,165,35,0.35);
-      --ouro-borda:  rgba(245,165,35,0.3);
-      --verde:       #22c55e;
-      --vermelho:    #ef4444;
-      --bg:          #060d1c;
-      --bg-card:     rgba(255,255,255,0.04);
-      --bg-card2:    rgba(255,255,255,0.07);
-      --borda:       rgba(255,255,255,0.1);
-      --texto:       #ffffff;
-      --texto-muted: rgba(255,255,255,0.55);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--texto); min-height: 100vh; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GarimpoApp — Plataforma de Inteligência Comercial</title>
+<meta name="description" content="Encontre e organize contatos qualificados de qualquer cidade do Brasil em segundos. A plataforma de inteligência comercial para expandir seus negócios.">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; background: #060d1c; -webkit-font-smoothing: antialiased; }
+  a { text-decoration: none; color: inherit; }
+  ul { list-style: none; }
 
-    /* AUTH */
-    #tela-auth { min-height:100vh; display:flex; align-items:center; justify-content:center;
-      background: radial-gradient(ellipse at 20% 50%, rgba(245,165,35,0.12) 0%, transparent 60%),
-                  radial-gradient(ellipse at 80% 20%, rgba(245,165,35,0.08) 0%, transparent 50%),
-                  var(--bg); }
-    .auth-card { background:rgba(255,255,255,0.05); border:1px solid var(--ouro-borda); border-radius:20px;
-      padding:40px; width:100%; max-width:420px; backdrop-filter:blur(20px);
-      box-shadow:0 0 60px rgba(245,165,35,0.1), 0 20px 60px rgba(0,0,0,0.5); }
-    .auth-logo { text-align:center; margin-bottom:32px; }
-    .auth-logo h1 { font-size:2.2rem; font-weight:900; letter-spacing:-1px; }
-    .auth-logo h1 span.g { color:var(--texto); }
-    .auth-logo h1 span.a { color:var(--ouro); }
-    .auth-logo p { color:var(--texto-muted); font-size:0.88rem; margin-top:6px; letter-spacing:0.5px; }
-    .auth-tabs { display:flex; border-bottom:1px solid var(--borda); margin-bottom:28px; }
-    .auth-tab { flex:1; padding:10px; text-align:center; cursor:pointer; font-weight:600; font-size:0.9rem;
-      color:var(--texto-muted); border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.2s; }
-    .auth-tab.ativo { color:var(--ouro); border-color:var(--ouro); }
-    .form-group { margin-bottom:16px; }
-    .form-group label { display:block; font-size:0.82rem; font-weight:600; margin-bottom:6px;
-      color:var(--texto-muted); text-transform:uppercase; letter-spacing:0.5px; }
-    .form-group input, .form-group select, select {
-      width:100%; padding:12px 14px; background:rgba(255,255,255,0.07); border:1px solid var(--borda);
-      border-radius:10px; font-size:0.95rem; color:var(--texto); outline:none; transition:border-color 0.2s, box-shadow 0.2s; }
-    .form-group input::placeholder { color:var(--texto-muted); }
-    .form-group input:focus, .form-group select:focus, select:focus {
-      border-color:var(--ouro); box-shadow:0 0 0 3px var(--ouro-glow); }
-    select option { background:#0d1b30; color:#fff; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      padding:12px 20px; border-radius:10px; border:none; font-size:0.95rem; font-weight:700;
-      cursor:pointer; transition:all 0.2s; letter-spacing:0.3px; }
-    .btn-primary { background:linear-gradient(135deg, var(--ouro), var(--ouro-dark)); color:#000;
-      width:100%; box-shadow:0 4px 20px var(--ouro-glow); }
-    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(245,165,35,0.5); }
-    .btn-primary:disabled { opacity:0.6; transform:none; cursor:not-allowed; }
-    .btn-secondary { background:var(--bg-card2); color:var(--texto); border:1px solid var(--borda); }
-    .btn-secondary:hover { background:rgba(255,255,255,0.12); }
-    .btn-verde { background:linear-gradient(135deg, #16a34a, #15803d); color:#fff; box-shadow:0 4px 14px rgba(22,163,74,0.3); }
-    .btn-verde:hover { opacity:0.9; transform:translateY(-1px); }
-    .btn-sm { padding:8px 14px; font-size:0.82rem; }
-    .msg-erro { background:rgba(239,68,68,0.15); color:#fca5a5; border:1px solid rgba(239,68,68,0.3);
-      border-radius:8px; padding:10px 14px; font-size:0.85rem; margin-top:12px; }
-    .msg-ok { background:rgba(34,197,94,0.12); color:#86efac; border:1px solid rgba(34,197,94,0.3);
-      border-radius:8px; padding:10px 14px; font-size:0.85rem; margin-top:12px; }
-    .auth-divider { text-align:center; color:var(--texto-muted); font-size:0.78rem; margin:8px 0; }
+  @keyframes gp-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  @keyframes gp-pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
 
-    /* LOADING */
-    #tela-loading { display:none; min-height:100vh; align-items:center; justify-content:center;
-      flex-direction:column; gap:20px; background:var(--bg); }
-    #tela-loading .logo-loading { font-size:2.2rem; font-weight:900; }
-    #tela-loading .logo-loading span { color:var(--ouro); }
-    #tela-loading p { color:var(--texto-muted); font-size:0.9rem; }
+  /* ── HOVER STYLES ── */
+  .gp-navlink:hover { color: #ffffff !important; }
+  .gp-btn-nav:hover { filter: brightness(1.06); }
+  .gp-seg-card:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(11,22,40,0.12) !important; }
+  .gp-feat-card:hover { background: #12233d !important; }
+  .gp-plan-btn-outline:hover { background: #0b1628; color: #ffffff !important; }
+  .gp-plan-btn-fill:hover { filter: brightness(1.07); }
+  .gp-free-btn:hover { filter: brightness(1.06); }
+  .gp-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 22px 44px rgba(6,13,28,0.4) !important; }
+  .gp-footer-link:hover { color: #ffffff !important; }
 
-    /* APP */
-    #app { display:none; min-height:100vh;
-      background: radial-gradient(ellipse at 0% 0%, rgba(245,165,35,0.06) 0%, transparent 50%), var(--bg); }
-    nav { background:rgba(6,13,28,0.9); border-bottom:1px solid var(--ouro-borda); padding:0 24px;
-      display:flex; align-items:center; justify-content:space-between; height:62px;
-      position:sticky; top:0; z-index:100; backdrop-filter:blur(20px); box-shadow:0 2px 20px rgba(245,165,35,0.08); }
-    .nav-logo { font-size:1.35rem; font-weight:900; text-decoration:none; letter-spacing:-0.5px; }
-    .nav-logo span.g { color:#fff; }
-    .nav-logo span.a { color:var(--ouro); }
-    .nav-info { display:flex; align-items:center; gap:14px; }
-    .plano-badge { background:linear-gradient(135deg, var(--ouro), var(--ouro-dark)); color:#000;
-      font-size:0.72rem; font-weight:800; padding:4px 12px; border-radius:20px;
-      text-transform:uppercase; letter-spacing:0.5px; }
-    .buscas-badge { font-size:0.82rem; color:var(--texto-muted); }
-    .main-tabs { background:rgba(6,13,28,0.7); border-bottom:1px solid var(--borda);
-      padding:0 24px; display:flex; gap:4px; overflow-x:auto; }
-    .main-tab { padding:14px 16px; cursor:pointer; font-weight:600; color:var(--texto-muted);
-      border-bottom:2px solid transparent; font-size:0.88rem; transition:all 0.2s;
-      margin-bottom:-1px; white-space:nowrap; }
-    .main-tab.ativo { color:var(--ouro); border-color:var(--ouro); }
-    .main-tab:hover:not(.ativo) { color:var(--texto); }
-    .container { max-width:960px; margin:32px auto; padding:0 24px; }
-    .card { background:var(--bg-card); border:1px solid var(--borda); border-radius:14px;
-      padding:24px; margin-bottom:20px; backdrop-filter:blur(10px); transition:border-color 0.2s; }
-    .card:hover { border-color:var(--ouro-borda); }
-    .card h2 { font-size:1.05rem; font-weight:700; margin-bottom:18px; color:var(--texto); }
-    .busca-grid { display:grid; grid-template-columns:1.2fr 0.8fr 1fr auto; gap:12px; align-items:end; }
-    #lista-resultados { display:flex; flex-direction:column; gap:12px; margin-top:20px; }
-    .lead-card { background:var(--bg-card); border:1px solid var(--borda); border-radius:12px;
-      padding:16px 20px; display:flex; align-items:flex-start; justify-content:space-between;
-      gap:16px; transition:all 0.2s; }
-    .lead-card:hover { border-color:var(--ouro-borda); box-shadow:0 0 20px rgba(245,165,35,0.08); }
-    .lead-info { flex:1; }
-    .lead-nome { font-size:0.95rem; font-weight:700; margin-bottom:3px; color:var(--texto); }
-    .lead-detalhes { font-size:0.82rem; color:var(--texto-muted); margin-bottom:2px; }
-    .lead-endereco { font-size:0.78rem; color:rgba(255,255,255,0.35); }
-    .lead-acoes { display:flex; gap:8px; flex-shrink:0; flex-direction:column; align-items:flex-end; }
-    .btn-wa { background:linear-gradient(135deg, #25d366, #128c4e); color:#fff; border:none;
-      border-radius:8px; padding:8px 12px; font-size:0.82rem; font-weight:700; cursor:pointer;
-      text-decoration:none; display:inline-flex; align-items:center; gap:5px;
-      box-shadow:0 2px 10px rgba(37,211,102,0.25); }
-    .loader { display:flex; align-items:center; justify-content:center; gap:10px;
-      padding:40px; color:var(--texto-muted); }
-    .spinner { width:22px; height:22px; border:3px solid rgba(245,165,35,0.2);
-      border-top-color:var(--ouro); border-radius:50%; animation:spin 0.8s linear infinite; }
-    @keyframes spin { to { transform:rotate(360deg); } }
-    .empty-state { text-align:center; padding:48px; color:var(--texto-muted); }
-    .empty-state .emoji { font-size:3rem; display:block; margin-bottom:12px; }
-    .leads-filtros { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
-    .filtro-chip { padding:6px 14px; border-radius:20px; border:1px solid var(--borda);
-      font-size:0.8rem; font-weight:600; cursor:pointer; background:transparent;
-      color:var(--texto-muted); transition:all 0.2s; }
-    .filtro-chip:hover { border-color:var(--ouro-borda); color:var(--texto); }
-    .filtro-chip.ativo { background:linear-gradient(135deg, var(--ouro), var(--ouro-dark)); color:#000; border-color:transparent; }
-    .acoes-topo { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  /* ── RESPONSIVE ── */
+  #gp-hamburger { display: none; }
+  #gp-mobile-menu { display: none; }
 
-    /* Modal de planos */
-    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75);
-      z-index:500; align-items:center; justify-content:center; }
-    .modal-overlay.ativo { display:flex; }
-    .modal-planos { background:#0d1b30; border:1px solid rgba(245,165,35,0.3); border-radius:20px;
-      padding:32px; width:100%; max-width:780px; max-height:90vh; overflow-y:auto;
-      box-shadow:0 0 60px rgba(245,165,35,0.15); }
-    .modal-planos h2 { text-align:center; font-size:1.4rem; font-weight:900; margin-bottom:8px; }
-    .modal-planos p.sub { text-align:center; color:var(--texto-muted); font-size:0.88rem; margin-bottom:28px; }
-    .planos-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:14px; }
-    .plano-card { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
-      border-radius:14px; padding:20px 14px; text-align:center; transition:all 0.2s; }
-    .plano-card:hover { border-color:var(--ouro-borda); box-shadow:0 0 20px rgba(245,165,35,0.1); }
-    .plano-card.destaque { border-color:var(--ouro); background:rgba(245,165,35,0.08); }
-    .plano-card .nome { font-weight:800; font-size:0.95rem; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
-    .plano-card .buscas { font-size:1.5rem; font-weight:900; color:var(--ouro); line-height:1.1; }
-    .plano-card .buscas span { font-size:0.7rem; font-weight:600; color:var(--texto-muted); display:block; }
-    .plano-card .preco { font-size:0.88rem; color:var(--texto-muted); margin:8px 0 14px; }
-    .plano-card .preco strong { color:var(--texto); font-size:1rem; }
-    .modal-fechar { display:block; text-align:center; margin-top:20px; color:var(--texto-muted); cursor:pointer; font-size:0.85rem; }
-    .modal-fechar:hover { color:var(--texto); }
-
-    /* Modal de nichos */
-    .modal-nichos { max-width:600px; }
-    .nichos-grid { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
-    .nicho-chip { padding:8px 14px; border-radius:20px; border:2px solid var(--borda); cursor:pointer;
-      font-size:0.82rem; font-weight:600; transition:all 0.2s; user-select:none; }
-    .nicho-chip.selecionado { border-color:var(--ouro); background:rgba(245,165,35,0.15); color:var(--ouro); }
-    .nicho-chip:hover { border-color:var(--ouro-borda); }
-    .nichos-limite-msg { text-align:center; color:var(--texto-muted); font-size:0.85rem; margin-bottom:4px; }
-
-    /* Score badge */
-    .score-badge { display:inline-block; padding:1px 7px; border-radius:20px; font-size:0.68rem;
-      font-weight:700; margin-left:5px; vertical-align:middle; }
-    .score-quente { background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.25); }
-    .score-morno  { background:rgba(245,165,35,0.15); color:var(--ouro); border:1px solid var(--ouro-borda); }
-    .score-frio   { background:rgba(255,255,255,0.05); color:var(--texto-muted); border:1px solid var(--borda); }
-
-    /* Alerta 20% buscas */
-    .alert-buscas { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25);
-      border-radius:10px; padding:10px 16px; font-size:0.84rem; color:#fca5a5;
-      margin-bottom:16px; text-align:center; display:none; }
-
-    /* Rating filter */
-    .rating-filter { display:flex; align-items:center; gap:10px; margin-top:12px;
-      padding-top:12px; border-top:1px solid var(--borda); font-size:0.82rem; color:var(--texto-muted); }
-    .rating-filter input[type=range] { accent-color:var(--ouro); flex:1; cursor:pointer; }
-    .rating-val { color:var(--ouro); font-size:0.85rem; min-width:80px; }
-
-    /* Histórico de buscas */
-    .historico-wrap { margin-top:12px; padding-top:12px; border-top:1px solid var(--borda); }
-    .historico-wrap h4 { font-size:0.72rem; color:var(--texto-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
-    .historico-chips { display:flex; gap:6px; flex-wrap:wrap; }
-    .hist-chip { padding:4px 12px; border-radius:20px; border:1px solid var(--borda); font-size:0.78rem;
-      color:var(--texto-muted); cursor:pointer; background:transparent; transition:all 0.2s; }
-    .hist-chip:hover { border-color:var(--ouro-borda); color:var(--ouro); }
-
-    /* Status do lead */
-    .lead-status-sel { padding:3px 8px; border-radius:20px; border:1px solid var(--borda);
-      background:rgba(255,255,255,0.04); color:var(--texto-muted); font-size:0.72rem;
-      cursor:pointer; margin-top:6px; }
-    .status-novo       { border-color:rgba(148,163,184,0.4); color:#94a3b8; }
-    .status-contatado  { border-color:rgba(96,165,250,0.4); color:#60a5fa; background:rgba(96,165,250,0.07); }
-    .status-interessado{ border-color:var(--ouro-borda); color:var(--ouro); background:rgba(245,165,35,0.07); }
-    .status-fechado    { border-color:rgba(34,197,94,0.4); color:var(--verde); background:rgba(34,197,94,0.07); }
-
-    /* Nota do lead */
-    .lead-nota { width:100%; margin-top:6px; padding:6px 10px; background:rgba(255,255,255,0.03);
-      border:1px solid rgba(255,255,255,0.07); border-radius:8px; color:var(--texto-muted);
-      font-size:0.78rem; resize:none; font-family:inherit; height:28px; transition:all 0.25s; }
-    .lead-nota:focus { outline:none; border-color:var(--ouro-borda); color:var(--texto); height:70px; background:rgba(255,255,255,0.06); }
-    .lead-nota::placeholder { color:rgba(255,255,255,0.2); }
-
-    /* Kanban */
-    .kanban-board { display:flex; gap:14px; overflow-x:auto; padding:4px 0 16px; min-height:400px; }
-    .kanban-col { flex:0 0 230px; background:var(--bg-card); border:1px solid var(--borda);
-      border-radius:14px; padding:14px; display:flex; flex-direction:column; }
-    .kanban-col-header { display:flex; justify-content:space-between; align-items:center;
-      margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--borda); }
-    .kanban-col-header h3 { font-size:0.8rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; }
-    .col-novo       .kanban-col-header h3 { color:var(--texto-muted); }
-    .col-contatado  .kanban-col-header h3 { color:#60a5fa; }
-    .col-interessado .kanban-col-header h3 { color:var(--ouro); }
-    .col-fechado    .kanban-col-header h3 { color:var(--verde); }
-    .col-count { background:rgba(255,255,255,0.08); border-radius:10px; padding:1px 8px;
-      font-size:0.7rem; font-weight:700; color:var(--texto-muted); }
-    .kanban-card { background:var(--bg-card2); border:1px solid var(--borda); border-radius:10px;
-      padding:10px 12px; margin-bottom:8px; transition:all 0.2s; }
-    .kanban-card:hover { border-color:var(--ouro-borda); }
-    .k-nome { font-size:0.82rem; font-weight:700; margin-bottom:3px; }
-    .k-info { font-size:0.72rem; color:var(--texto-muted); }
-    .k-actions { display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
-    .k-btn { padding:3px 8px; font-size:0.68rem; border-radius:5px; border:1px solid var(--borda);
-      background:transparent; color:var(--texto-muted); cursor:pointer; transition:all 0.15s; white-space:nowrap; }
-    .k-btn:hover { border-color:var(--ouro-borda); color:var(--ouro); }
-    .k-btn.wa { background:rgba(37,211,102,0.1); border-color:rgba(37,211,102,0.25); color:#4ade80; text-decoration:none; display:inline-block; }
-    .k-btn.wa:hover { background:rgba(37,211,102,0.2); }
-    .kanban-empty { text-align:center; padding:24px 8px; color:rgba(255,255,255,0.2); font-size:0.78rem; }
-
-    /* Templates */
-    .template-section { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px,1fr)); gap:16px; }
-    .template-card { background:var(--bg-card); border:1px solid var(--borda); border-radius:14px; padding:20px; }
-    .template-card h3 { font-size:0.88rem; font-weight:700; color:var(--ouro); margin-bottom:10px; }
-    .template-textarea { width:100%; min-height:100px; background:rgba(255,255,255,0.04);
-      border:1px solid var(--borda); border-radius:10px; padding:10px 12px; color:var(--texto);
-      font-size:0.84rem; resize:vertical; font-family:inherit; transition:border-color 0.2s; }
-    .template-textarea:focus { outline:none; border-color:var(--ouro-borda); }
-    .template-vars { font-size:0.72rem; color:var(--texto-muted); margin:6px 0 8px; }
-    .var-btn { background:rgba(245,165,35,0.12); color:var(--ouro); border:1px solid var(--ouro-borda);
-      padding:2px 7px; border-radius:4px; font-size:0.7rem; cursor:pointer; margin:0 2px 2px 0; }
-    .var-btn:hover { background:rgba(245,165,35,0.2); }
-    .template-link { width:100%; padding:7px 10px; background:rgba(255,255,255,0.04);
-      border:1px solid var(--borda); border-radius:8px; color:var(--texto-muted); font-size:0.78rem; margin:6px 0; }
-    .template-link:focus { outline:none; border-color:var(--ouro-borda); color:var(--texto); }
-    .template-preview-box { background:rgba(37,211,102,0.06); border:1px solid rgba(37,211,102,0.15);
-      border-radius:8px; padding:10px; font-size:0.8rem; color:var(--texto); margin:8px 0;
-      white-space:pre-wrap; word-break:break-word; min-height:40px; }
-    .template-actions { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
-    .preview-lead-sel { width:100%; padding:8px 10px; background:rgba(255,255,255,0.04);
-      border:1px solid var(--borda); border-radius:8px; color:var(--texto); font-size:0.82rem; margin-bottom:16px; }
-    .preview-lead-sel:focus { outline:none; border-color:var(--ouro-borda); }
-
-    /* Dashboard */
-    .dash-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(155px,1fr)); gap:14px; margin-bottom:24px; }
-    .dash-stat { background:var(--bg-card); border:1px solid var(--borda); border-radius:14px; padding:18px 16px; text-align:center; }
-    .dash-stat .val { font-size:2rem; font-weight:900; color:var(--ouro); line-height:1.1; }
-    .dash-stat .lbl { font-size:0.72rem; color:var(--texto-muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:4px; }
-    .dash-stat .sub { font-size:0.75rem; color:var(--texto-muted); margin-top:6px; }
-    .prog-bar { background:rgba(255,255,255,0.08); border-radius:6px; height:6px; overflow:hidden; margin-top:8px; }
-    .prog-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,var(--ouro),var(--ouro-dark)); transition:width 0.6s; }
-    .prog-fill.red { background:linear-gradient(90deg,#ef4444,#dc2626); }
-    .nicho-row { display:flex; align-items:center; gap:8px; margin-bottom:7px; }
-    .nicho-row-label { font-size:0.78rem; color:var(--texto-muted); width:130px; flex-shrink:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .nicho-row-bar { flex:1; background:rgba(255,255,255,0.07); border-radius:4px; height:5px; }
-    .nicho-row-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--ouro),var(--ouro-dark)); }
-    .nicho-row-count { font-size:0.75rem; color:var(--texto-muted); min-width:20px; text-align:right; }
-    .dash-section-title { font-size:0.78rem; font-weight:700; color:var(--texto-muted);
-      text-transform:uppercase; letter-spacing:0.5px; margin:20px 0 10px; }
-    .kanban-summary { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
-    .ks-item { background:var(--bg-card); border:1px solid var(--borda); border-radius:10px;
-      padding:12px 16px; text-align:center; flex:1; min-width:80px; }
-    .ks-item .ks-val { font-size:1.5rem; font-weight:900; }
-    .ks-item .ks-lbl { font-size:0.68rem; color:var(--texto-muted); text-transform:uppercase; margin-top:3px; }
-    .ks-novo .ks-val { color:#94a3b8; }
-    .ks-contatado .ks-val { color:#60a5fa; }
-    .ks-interessado .ks-val { color:var(--ouro); }
-    .ks-fechado .ks-val { color:var(--verde); }
-
-    /* Responsive */
-    @media (max-width:600px) {
-      .busca-grid { grid-template-columns:1fr; }
-      .nav-info .buscas-badge { display:none; }
-      .lead-card { flex-direction:column; align-items:flex-start; }
-      .auth-card { margin:16px; padding:28px 24px; }
-      .kanban-board { gap:10px; }
-      .kanban-col { flex:0 0 200px; }
-      .template-section { grid-template-columns:1fr; }
-    }
-  </style>
+  @media (max-width: 980px) {
+    #gp-navlinks { display: none !important; }
+    #gp-hamburger { display: flex !important; }
+  }
+  @media (max-width: 900px) {
+    #gp-hero-grid { grid-template-columns: 1fr !important; gap: 44px !important; }
+    #gp-hero-mock { display: none !important; }
+    .gp-seg-grid { grid-template-columns: repeat(2,1fr) !important; }
+    .gp-feat-grid { grid-template-columns: repeat(2,1fr) !important; }
+    .gp-stats-grid { grid-template-columns: repeat(2,1fr) !important; row-gap: 32px !important; }
+    .gp-test-grid { grid-template-columns: 1fr !important; }
+    #gp-plans-grid { grid-template-columns: repeat(2,1fr) !important; }
+  }
+  @media (max-width: 600px) {
+    #gp-plans-grid { grid-template-columns: 1fr !important; }
+    .gp-seg-grid { grid-template-columns: 1fr !important; }
+    .gp-feat-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
 </head>
 <body>
+<div style="background:#060d1c;color:#ffffff;overflow-x:hidden;">
 
-<!-- TELA LOGIN / CADASTRO -->
-<div id="tela-auth">
-  <div class="auth-card">
-    <div class="auth-logo">
-      <h1><span class="g">GARIMPO</span><span class="a">APP</span></h1>
-      <p>ENCONTRE CONTATOS EM TODO O BRASIL</p>
+<!-- ══ NAV ══════════════════════════════════════════════════════════ -->
+<nav style="position:sticky;top:0;z-index:100;background:rgba(6,13,28,0.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(245,165,35,0.14);">
+  <div style="max-width:1200px;margin:0 auto;padding:15px 28px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="#top" style="display:flex;align-items:center;gap:11px;">
+      <img src="logo-mark.png" alt="GarimpoApp" style="height:46px;width:auto;display:block;">
+      <span style="font-size:1.3rem;font-weight:900;letter-spacing:0.01em;">GARIMPO<span style="color:#f5a523;">APP</span></span>
+    </a>
+    <div id="gp-navlinks" style="display:flex;align-items:center;gap:34px;">
+      <a href="#recursos" class="gp-navlink" style="font-size:0.98rem;color:#b0bcd0;font-weight:500;transition:color .18s;">Recursos</a>
+      <a href="#segmentos" class="gp-navlink" style="font-size:0.98rem;color:#b0bcd0;font-weight:500;transition:color .18s;">Segmentos</a>
+      <a href="#planos" class="gp-navlink" style="font-size:0.98rem;color:#b0bcd0;font-weight:500;transition:color .18s;">Planos</a>
+      <a href="#depoimentos" class="gp-navlink" style="font-size:0.98rem;color:#b0bcd0;font-weight:500;transition:color .18s;">Depoimentos</a>
+      <a href="/app.html" class="gp-navlink" style="font-size:0.98rem;color:#b0bcd0;font-weight:500;transition:color .18s;">Login</a>
+      <a href="/app.html" class="gp-btn-nav" style="background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;font-size:0.95rem;padding:11px 22px;border-radius:9px;box-shadow:0 6px 18px rgba(245,165,35,0.28);transition:filter .18s;">Começar Gratuitamente</a>
     </div>
-    <div class="auth-tabs">
-      <div class="auth-tab ativo" onclick="mudarAba('login')">Entrar</div>
-      <div class="auth-tab" onclick="mudarAba('cadastro')">Criar conta</div>
-    </div>
-    <div id="form-login">
-      <div class="form-group"><label>E-mail</label><input type="email" id="login-email" placeholder="seu@email.com" /></div>
-      <div class="form-group"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" /></div>
-      <button class="btn btn-primary" onclick="fazerLogin()">Entrar</button>
-      <div style="text-align:center;margin-top:10px">
-        <a href="#" onclick="abrirRecuperarSenha();return false;" style="color:var(--ouro);font-size:0.85rem;text-decoration:none;opacity:0.8">Esqueci minha senha</a>
-      </div>
-      <div id="login-msg"></div>
-    </div>
-    <div id="form-cadastro" style="display:none">
-      <div class="form-group"><label>Nome</label><input type="text" id="cad-nome" placeholder="Seu nome completo" /></div>
-      <div class="form-group"><label>E-mail</label><input type="email" id="cad-email" placeholder="seu@email.com" /></div>
-      <div class="form-group"><label>Senha (mín. 6 caracteres)</label><input type="password" id="cad-senha" placeholder="••••••••" /></div>
-      <button class="btn btn-primary" onclick="fazerCadastro()">Criar conta grátis</button>
-      <div id="cad-msg"></div>
-    </div>
+    <button id="gp-hamburger" onclick="toggleMenu()" aria-label="Menu" style="width:44px;height:44px;background:rgba(245,165,35,0.12);border:1px solid rgba(245,165,35,0.3);border-radius:9px;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;">
+      <span style="width:20px;height:2px;background:#f5a523;border-radius:2px;display:block;"></span>
+      <span style="width:20px;height:2px;background:#f5a523;border-radius:2px;display:block;"></span>
+      <span style="width:20px;height:2px;background:#f5a523;border-radius:2px;display:block;"></span>
+    </button>
   </div>
-</div>
-
-<div id="tela-loading" style="display:none">
-  <div class="logo-loading">GARIMPO<span>APP</span></div>
-  <div class="spinner" style="width:36px;height:36px;border-width:4px"></div>
-  <p>Entrando na sua conta…</p>
-</div>
-
-<!-- APP PRINCIPAL -->
-<div id="app" style="display:none">
-  <nav>
-    <a class="nav-logo" href="#"><span class="g">GARIMPO</span><span class="a">APP</span></a>
-    <div class="nav-info">
-      <span class="buscas-badge" id="nav-buscas">— buscas restantes</span>
-      <span class="plano-badge" id="nav-plano">free</span>
-      <button class="btn btn-primary btn-sm" id="btn-assinar" onclick="abrirModal()" style="display:none">Assinar</button>
-      <button class="btn btn-secondary btn-sm" id="btn-nichos" onclick="abrirModalNichos()" style="display:none">Nichos</button>
-      <button class="btn btn-secondary btn-sm" onclick="sair()">Sair</button>
-    </div>
-  </nav>
-
-  <div id="banner-upgrade" style="display:none; background:linear-gradient(90deg,#f5a523,#c8870a); color:#060d1c; text-align:center; padding:10px 16px; font-weight:600; font-size:0.9rem;">
-    Você está no plano gratuito — <a href="#" onclick="abrirModal(); return false;" style="color:#060d1c;text-decoration:underline;">Ver planos</a> e desbloqueie mais buscas mensais.
+  <div id="gp-mobile-menu" style="flex-direction:column;gap:2px;padding:6px 28px 22px;border-top:1px solid rgba(245,165,35,0.12);">
+    <a href="#recursos" onclick="closeMenu()" style="padding:12px 4px;color:#b0bcd0;font-weight:500;border-bottom:1px solid rgba(255,255,255,0.05);display:block;">Recursos</a>
+    <a href="#segmentos" onclick="closeMenu()" style="padding:12px 4px;color:#b0bcd0;font-weight:500;border-bottom:1px solid rgba(255,255,255,0.05);display:block;">Segmentos</a>
+    <a href="#planos" onclick="closeMenu()" style="padding:12px 4px;color:#b0bcd0;font-weight:500;border-bottom:1px solid rgba(255,255,255,0.05);display:block;">Planos</a>
+    <a href="#depoimentos" onclick="closeMenu()" style="padding:12px 4px;color:#b0bcd0;font-weight:500;border-bottom:1px solid rgba(255,255,255,0.05);display:block;">Depoimentos</a>
+    <a href="/app.html" onclick="closeMenu()" style="padding:12px 4px;color:#b0bcd0;font-weight:500;display:block;">Login</a>
+    <a href="/app.html" onclick="closeMenu()" style="margin-top:10px;text-align:center;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;padding:13px;border-radius:9px;display:block;">Começar Gratuitamente</a>
   </div>
+</nav>
 
-  <div class="main-tabs">
-    <div class="main-tab ativo" onclick="mudarTab('buscar')">🔍 Garimpar</div>
-    <div class="main-tab" onclick="mudarTab('leads')">💾 Meus Contatos</div>
-    <div class="main-tab" onclick="mudarTab('kanban')">📋 Kanban</div>
-    <div class="main-tab" onclick="mudarTab('templates')">💬 Templates</div>
-    <div class="main-tab" onclick="mudarTab('dashboard')">📊 Dashboard</div>
-  </div>
-
-  <!-- TAB: GARIMPAR -->
-  <div id="tab-buscar" class="container">
-    <div id="alert-buscas" class="alert-buscas"></div>
-    <div class="card">
-      <h2>Buscar negócios</h2>
-      <div class="busca-grid">
-        <div class="form-group" style="margin:0">
-          <label>Nicho</label>
-          <select id="sel-nicho">
-            <optgroup label="— Saúde e Bem-estar —">
-              <option value="clinicas">Clínicas de Estética</option>
-              <option value="clinicas_medicas">Clínicas Médicas</option>
-              <option value="odonto">Odontológicas</option>
-              <option value="psicologos">Psicólogos</option>
-              <option value="farmacias">Farmácias</option>
-              <option value="academias">Academias</option>
-              <option value="hospitais">Hospitais</option>
-              <option value="laboratorios">Laboratórios</option>
-            </optgroup>
-            <optgroup label="— Beleza —">
-              <option value="saloes">Salões de Beleza</option>
-              <option value="barbearias">Barbearias</option>
-            </optgroup>
-            <optgroup label="— Alimentação —">
-              <option value="restaurantes">Restaurantes</option>
-              <option value="padarias">Padarias e Lanchonetes</option>
-            </optgroup>
-            <optgroup label="— Serviços Profissionais —">
-              <option value="advocacia">Advocacia</option>
-              <option value="contabilidade">Contabilidades</option>
-              <option value="imobiliarias">Imobiliárias</option>
-              <option value="escolas">Escolas Particulares</option>
-              <option value="agencias_marketing">Agências de Marketing</option>
-              <option value="arquitetos">Arquitetos</option>
-              <option value="engenheiros">Engenheiros</option>
-            </optgroup>
-            <optgroup label="— Comércio e Serviços —">
-              <option value="petshops">Pet Shops</option>
-              <option value="veterinarios">Veterinários</option>
-              <option value="mecanicas">Oficinas Mecânicas</option>
-              <option value="construtoras">Construtoras</option>
-              <option value="hoteis">Hotéis e Pousadas</option>
-              <option value="eletricistas">Eletricistas</option>
-              <option value="fotografos">Fotógrafos</option>
-            </optgroup>
-          </select>
+<!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+<header id="top" style="position:relative;background:radial-gradient(1100px 620px at 78% 6%,rgba(245,165,35,0.16),transparent 60%),radial-gradient(760px 480px at 6% 92%,rgba(245,165,35,0.06),transparent 55%),#060d1c;">
+  <div id="gp-hero-grid" style="max-width:1200px;margin:0 auto;padding:88px 28px 100px;display:grid;grid-template-columns:1.05fr 0.95fr;gap:58px;align-items:center;">
+    <div>
+      <span style="display:inline-flex;align-items:center;gap:9px;background:rgba(245,165,35,0.1);border:1px solid rgba(245,165,35,0.3);color:#f5a523;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;padding:8px 15px;border-radius:999px;">
+        <span style="width:6px;height:6px;background:#f5a523;border-radius:50%;animation:gp-pulse 2.4s ease-in-out infinite;"></span>Inteligência Comercial para o Brasil
+      </span>
+      <h1 style="margin-top:26px;font-size:clamp(2rem,5vw,3.3rem);font-weight:900;line-height:1.1;letter-spacing:-0.02em;color:#ffffff;">Expanda seus negócios com <span style="color:#f5a523;">Inteligência Comercial</span> em qualquer cidade do Brasil.</h1>
+      <p style="margin-top:22px;font-size:1.12rem;line-height:1.65;color:#b0bcd0;max-width:540px;">Encontre e organize contatos qualificados de qualquer segmento e região. Dados completos, atualizados e prontos para sua equipe comercial.</p>
+      <div style="margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:540px;">
+        <div style="border-left:3px solid #f5a523;background:rgba(255,255,255,0.03);padding:13px 16px;border-radius:0 9px 9px 0;">
+          <div style="font-weight:700;color:#ffffff;font-size:0.98rem;">Contatos segmentados</div>
+          <div style="font-size:0.86rem;color:#b0bcd0;margin-top:3px;">por setor e cidade</div>
         </div>
-        <div class="form-group" style="margin:0">
-          <label>Estado</label>
-          <select id="sel-estado" onchange="preencherEstado()">
-            <option value="">Selecione</option>
-            <option value="AC">AC – Acre</option><option value="AL">AL – Alagoas</option>
-            <option value="AP">AP – Amapá</option><option value="AM">AM – Amazonas</option>
-            <option value="BA">BA – Bahia</option><option value="CE">CE – Ceará</option>
-            <option value="DF">DF – Distrito Federal</option><option value="ES">ES – Espírito Santo</option>
-            <option value="GO">GO – Goiás</option><option value="MA">MA – Maranhão</option>
-            <option value="MT">MT – Mato Grosso</option><option value="MS">MS – Mato Grosso do Sul</option>
-            <option value="MG">MG – Minas Gerais</option><option value="PA">PA – Pará</option>
-            <option value="PB">PB – Paraíba</option><option value="PR">PR – Paraná</option>
-            <option value="PE">PE – Pernambuco</option><option value="PI">PI – Piauí</option>
-            <option value="RJ">RJ – Rio de Janeiro</option><option value="RN">RN – Rio Grande do Norte</option>
-            <option value="RS">RS – Rio Grande do Sul</option><option value="RO">RO – Rondônia</option>
-            <option value="RR">RR – Roraima</option><option value="SC">SC – Santa Catarina</option>
-            <option value="SP">SP – São Paulo</option><option value="SE">SE – Sergipe</option>
-            <option value="TO">TO – Tocantins</option>
-          </select>
+        <div style="border-left:3px solid #f5a523;background:rgba(255,255,255,0.03);padding:13px 16px;border-radius:0 9px 9px 0;">
+          <div style="font-weight:700;color:#ffffff;font-size:0.98rem;">Dados completos</div>
+          <div style="font-size:0.86rem;color:#b0bcd0;margin-top:3px;">nome, tel, e-mail, site</div>
         </div>
-        <div class="form-group" style="margin:0">
-          <label>Cidade</label>
-          <select id="sel-cidade" disabled>
-            <option value="">Selecione o estado primeiro</option>
-          </select>
+        <div style="border-left:3px solid #f5a523;background:rgba(255,255,255,0.03);padding:13px 16px;border-radius:0 9px 9px 0;">
+          <div style="font-weight:700;color:#ffffff;font-size:0.98rem;">Exportação fácil</div>
+          <div style="font-size:0.86rem;color:#b0bcd0;margin-top:3px;">CSV, Excel, copiar lista</div>
         </div>
-        <button class="btn btn-primary" onclick="fazerBusca()" id="btn-buscar">Buscar</button>
+        <div style="border-left:3px solid #f5a523;background:rgba(255,255,255,0.03);padding:13px 16px;border-radius:0 9px 9px 0;">
+          <div style="font-weight:700;color:#ffffff;font-size:0.98rem;">Ganhe tempo</div>
+          <div style="font-size:0.86rem;color:#b0bcd0;margin-top:3px;">prospecção automatizada</div>
+        </div>
       </div>
-      <div class="rating-filter">
-        <span>Nota mínima:</span>
-        <input type="range" id="rating-range" min="0" max="5" step="0.5" value="0" oninput="atualizarRatingFilter(this.value)">
-        <span class="rating-val" id="rating-val">Todas ⭐</span>
+      <div style="margin-top:32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <a href="/app.html" class="gp-btn-nav" style="background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;font-size:1rem;padding:15px 30px;border-radius:11px;box-shadow:0 12px 30px rgba(245,165,35,0.34);transition:filter .18s,transform .18s;">COMEÇAR GRATUITAMENTE →</a>
       </div>
-      <div class="historico-wrap" id="historico-wrap" style="display:none">
-        <h4>Buscas recentes</h4>
-        <div class="historico-chips" id="historico-chips"></div>
-      </div>
+      <p style="margin-top:18px;font-size:0.86rem;color:#8493ab;">Sem cartão de crédito · 7 dias grátis · Cancele quando quiser</p>
     </div>
-    <div id="busca-status"></div>
-    <div id="lista-resultados"></div>
-  </div>
 
-  <!-- TAB: MEUS LEADS -->
-  <div id="tab-leads" class="container" style="display:none">
-    <div class="card">
-      <div class="acoes-topo">
-        <h2>Contatos Salvos</h2>
-        <button class="btn btn-verde btn-sm" onclick="exportarCSV()">⬇ Exportar CSV</button>
+    <!-- Mockup -->
+    <div id="gp-hero-mock" style="position:relative;">
+      <div style="position:absolute;inset:-30px -20px;background:radial-gradient(circle at 60% 40%,rgba(245,165,35,0.18),transparent 65%);filter:blur(10px);"></div>
+      <div style="position:relative;background:#0b1628;border:1px solid rgba(245,165,35,0.22);border-radius:18px;box-shadow:0 34px 80px rgba(0,0,0,0.6);overflow:hidden;animation:gp-float 6s ease-in-out infinite;">
+        <div style="display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.06);">
+          <span style="width:11px;height:11px;border-radius:50%;background:#f5a523;"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,0.15);"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,0.15);"></span>
+          <span style="margin-left:auto;font-size:0.72rem;color:#8493ab;letter-spacing:0.05em;">garimpoapp.com.br</span>
+        </div>
+        <div style="padding:20px;">
+          <div style="display:flex;align-items:center;gap:10px;background:#060d1c;border:1px solid rgba(245,165,35,0.25);border-radius:10px;padding:11px 14px;">
+            <span style="width:15px;height:15px;border:2px solid #f5a523;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:0.9rem;color:#ffffff;font-weight:600;">Clínicas · São Paulo, SP</span>
+            <span style="margin-left:auto;font-size:0.72rem;color:#060d1c;background:#f5a523;padding:4px 10px;border-radius:6px;font-weight:800;white-space:nowrap;">BUSCAR</span>
+          </div>
+          <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:0.74rem;color:#8493ab;text-transform:uppercase;letter-spacing:0.1em;">248 empresas encontradas</span>
+            <span style="font-size:0.74rem;color:#f5a523;font-weight:700;">Exportar CSV</span>
+          </div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px;">
+              <span style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">CE</span>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:0.9rem;font-weight:700;color:#ffffff;">Clínica Estética Vida</div>
+                <div style="font-size:0.76rem;color:#8493ab;">(11) 3xxx-xxxx · contato@vida.com.br</div>
+              </div>
+              <span style="font-size:0.68rem;color:#f5a523;border:1px solid rgba(245,165,35,0.3);padding:3px 8px;border-radius:6px;white-space:nowrap;">Saúde</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px;">
+              <span style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">DE</span>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:0.9rem;font-weight:700;color:#ffffff;">Derma Center Jardins</div>
+                <div style="font-size:0.76rem;color:#8493ab;">(11) 2xxx-xxxx · atende@derma.com.br</div>
+              </div>
+              <span style="font-size:0.68rem;color:#f5a523;border:1px solid rgba(245,165,35,0.3);padding:3px 8px;border-radius:6px;white-space:nowrap;">Saúde</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px;">
+              <span style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">BE</span>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:0.9rem;font-weight:700;color:#ffffff;">Bella Face Clinic</div>
+                <div style="font-size:0.76rem;color:#8493ab;">(11) 4xxx-xxxx · oi@bellaface.com.br</div>
+              </div>
+              <span style="font-size:0.68rem;color:#f5a523;border:1px solid rgba(245,165,35,0.3);padding:3px 8px;border-radius:6px;white-space:nowrap;">Saúde</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="leads-filtros" id="filtros-nicho">
-        <div class="filtro-chip ativo" onclick="filtrarLeads(null, this)">Todos</div>
-        <div class="filtro-chip" onclick="filtrarLeads('clinicas', this)">Estética</div>
-        <div class="filtro-chip" onclick="filtrarLeads('clinicas_medicas', this)">Clín. Médica</div>
-        <div class="filtro-chip" onclick="filtrarLeads('odonto', this)">Odonto</div>
-        <div class="filtro-chip" onclick="filtrarLeads('psicologos', this)">Psicólogo</div>
-        <div class="filtro-chip" onclick="filtrarLeads('farmacias', this)">Farmácia</div>
-        <div class="filtro-chip" onclick="filtrarLeads('saloes', this)">Salão</div>
-        <div class="filtro-chip" onclick="filtrarLeads('barbearias', this)">Barbearia</div>
-        <div class="filtro-chip" onclick="filtrarLeads('academias', this)">Academia</div>
-        <div class="filtro-chip" onclick="filtrarLeads('restaurantes', this)">Restaurante</div>
-        <div class="filtro-chip" onclick="filtrarLeads('padarias', this)">Padaria</div>
-        <div class="filtro-chip" onclick="filtrarLeads('advocacia', this)">Advocacia</div>
-        <div class="filtro-chip" onclick="filtrarLeads('contabilidade', this)">Contabilidade</div>
-        <div class="filtro-chip" onclick="filtrarLeads('imobiliarias', this)">Imob.</div>
-        <div class="filtro-chip" onclick="filtrarLeads('escolas', this)">Escolas</div>
-        <div class="filtro-chip" onclick="filtrarLeads('petshops', this)">Pet</div>
-        <div class="filtro-chip" onclick="filtrarLeads('mecanicas', this)">Mecânica</div>
-        <div class="filtro-chip" onclick="filtrarLeads('hospitais', this)">Hospital</div>
-        <div class="filtro-chip" onclick="filtrarLeads('veterinarios', this)">Veterinário</div>
-        <div class="filtro-chip" onclick="filtrarLeads('arquitetos', this)">Arquiteto</div>
-        <div class="filtro-chip" onclick="filtrarLeads('engenheiros', this)">Engenheiro</div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ STATS ══════════════════════════════════════════════════════════ -->
+<section style="background:#0b1628;border-top:1px solid rgba(245,165,35,0.2);border-bottom:1px solid rgba(245,165,35,0.2);">
+  <div class="gp-stats-grid" style="max-width:1200px;margin:0 auto;padding:42px 28px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;">
+    <div data-fade style="text-align:center;">
+      <div style="font-size:clamp(1.7rem,3vw,2.4rem);font-weight:900;color:#f5a523;">50M+</div>
+      <div style="margin-top:6px;font-size:0.9rem;color:#b0bcd0;">empresas mapeadas</div>
+    </div>
+    <div data-fade style="text-align:center;">
+      <div style="font-size:clamp(1.7rem,3vw,2.4rem);font-weight:900;color:#f5a523;">5.000+</div>
+      <div style="margin-top:6px;font-size:0.9rem;color:#b0bcd0;">usuários ativos</div>
+    </div>
+    <div data-fade style="text-align:center;">
+      <div style="font-size:clamp(1.7rem,3vw,2.4rem);font-weight:900;color:#f5a523;">2.000+</div>
+      <div style="margin-top:6px;font-size:0.9rem;color:#b0bcd0;">cidades</div>
+    </div>
+    <div data-fade style="text-align:center;">
+      <div style="font-size:clamp(1.7rem,3vw,2.4rem);font-weight:900;color:#f5a523;">99%</div>
+      <div style="margin-top:6px;font-size:0.9rem;color:#b0bcd0;">satisfação</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SEGMENTOS ══════════════════════════════════════════════════════ -->
+<section id="segmentos" style="background:#f4f6fa;">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 28px;">
+    <div style="text-align:center;max-width:720px;margin:0 auto;">
+      <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.14em;color:#c8870a;font-weight:700;">Segmentos</div>
+      <h2 style="margin-top:14px;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:#0b1628;line-height:1.15;">Para quem precisa de expansão comercial.</h2>
+      <p style="margin-top:16px;font-size:1.05rem;line-height:1.6;color:#4a5568;">Se você precisa encontrar novos clientes para crescer, o GarimpoApp foi feito para você.</p>
+    </div>
+    <div class="gp-seg-grid" style="margin-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">Agências de Marketing</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Monte listas de prospecção para seus clientes e entregue resultados mais rápido.</p>
+      </div>
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">Gestores de Tráfego</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Encontre empresas do nicho certo para campanhas de outbound e captação.</p>
+      </div>
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">SDRs e Pré-vendas</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Prospects qualificados com telefone válido para abastecer sua cadência diária.</p>
+      </div>
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">Representantes Comerciais</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Mapeie empresas por região e organize sua carteira de novos clientes.</p>
+      </div>
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">Freelancers B2B</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Encontre potenciais clientes para seus serviços sem depender de indicação.</p>
+      </div>
+      <div data-fade class="gp-seg-card" style="background:#ffffff;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:28px;box-shadow:0 10px 28px rgba(11,22,40,0.07);transition:transform .22s,box-shadow .22s;">
+        <div style="font-size:1.12rem;font-weight:800;color:#0b1628;">Equipes de Vendas</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#4a5568;">Abasteça todo o time com contatos segmentados por setor, porte e cidade.</p>
       </div>
     </div>
-    <div id="lista-leads"></div>
   </div>
+</section>
 
-  <!-- TAB: KANBAN -->
-  <div id="tab-kanban" class="container" style="display:none">
-    <div class="card">
-      <div class="acoes-topo">
-        <h2>📋 Kanban — Funil de Vendas</h2>
-        <button class="btn btn-secondary btn-sm" onclick="carregarKanban()">↺ Atualizar</button>
+<!-- ══ RECURSOS ══════════════════════════════════════════════════════ -->
+<section id="recursos" style="background:#0b1628;">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 28px;">
+    <div style="text-align:center;max-width:760px;margin:0 auto;">
+      <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.14em;color:#f5a523;font-weight:700;">Recursos</div>
+      <h2 style="margin-top:14px;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:#ffffff;line-height:1.15;">Tudo que você precisa para prospectar melhor.</h2>
+      <p style="margin-top:16px;font-size:1.05rem;line-height:1.6;color:#b0bcd0;">Uma plataforma completa de expansão comercial, para times que querem resultados reais.</p>
+    </div>
+    <div class="gp-feat-grid" style="margin-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div data-fade class="gp-feat-card" style="background:#0f1e35;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:30px;transition:background .2s;">
+        <div style="font-size:0.9rem;font-weight:900;color:rgba(245,165,35,0.55);letter-spacing:0.1em;">01</div>
+        <div style="margin-top:12px;font-size:1.15rem;font-weight:800;color:#ffffff;">Busca Inteligente</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Encontre empresas por setor, cidade e estado com prospecção inteligente em segundos.</p>
       </div>
-      <p style="font-size:0.82rem;color:var(--texto-muted)">Organize seus contatos por etapa de venda. Use os botões para mover entre colunas.</p>
-    </div>
-    <div class="kanban-board" id="kanban-board">
-      <div class="loader"><div class="spinner"></div> Carregando…</div>
+      <div data-fade class="gp-feat-card" style="background:#0f1e35;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:30px;transition:background .2s;">
+        <div style="font-size:0.9rem;font-weight:900;color:rgba(245,165,35,0.55);letter-spacing:0.1em;">02</div>
+        <div style="margin-top:12px;font-size:1.15rem;font-weight:800;color:#ffffff;">Dados Completos</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Nome, telefone válido, e-mail e site de cada empresa mapeada, prontos para uso.</p>
+      </div>
+      <div data-fade class="gp-feat-card" style="background:#0f1e35;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:30px;transition:background .2s;">
+        <div style="font-size:0.9rem;font-weight:900;color:rgba(245,165,35,0.55);letter-spacing:0.1em;">03</div>
+        <div style="margin-top:12px;font-size:1.15rem;font-weight:800;color:#ffffff;">Exportação Fácil</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Exporte sua lista comercial em CSV ou Excel, ou copie os contatos com um clique.</p>
+      </div>
+      <div data-fade class="gp-feat-card" style="background:#0f1e35;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:30px;transition:background .2s;">
+        <div style="font-size:0.9rem;font-weight:900;color:rgba(245,165,35,0.55);letter-spacing:0.1em;">04</div>
+        <div style="margin-top:12px;font-size:1.15rem;font-weight:800;color:#ffffff;">Filtros Avançados</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Refine por segmento, porte e localização para chegar exatamente no cliente ideal.</p>
+      </div>
+      <div data-fade class="gp-feat-card" style="background:#0f1e35;border-top:3px solid #f5a523;border-radius:4px 4px 14px 14px;padding:30px;transition:background .2s;">
+        <div style="font-size:0.9rem;font-weight:900;color:rgba(245,165,35,0.55);letter-spacing:0.1em;">05</div>
+        <div style="margin-top:12px;font-size:1.15rem;font-weight:800;color:#ffffff;">Dados Atualizados</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Base revisada constantemente para você prospectar com informação confiável.</p>
+      </div>
+      <div data-fade style="background:linear-gradient(135deg,rgba(245,165,35,0.16),rgba(245,165,35,0.04));border:1px solid rgba(245,165,35,0.3);border-radius:14px;padding:30px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:1.15rem;font-weight:800;color:#ffffff;">Acesso a todo o Brasil</div>
+        <p style="margin-top:10px;font-size:0.96rem;line-height:1.6;color:#b0bcd0;">Todos os planos incluem todos os estados e cidades do país, sem custo extra.</p>
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- TAB: TEMPLATES -->
-  <div id="tab-templates" class="container" style="display:none">
-    <div class="card">
-      <h2>💬 Templates de Mensagem WhatsApp</h2>
-      <p style="font-size:0.82rem;color:var(--texto-muted);margin-bottom:14px">
-        Crie até 4 mensagens personalizadas. Use variáveis que serão substituídas automaticamente pelo nome, cidade e telefone do lead.
-      </p>
-      <label style="font-size:0.78rem;color:var(--texto-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Contato para preview</label>
-      <select class="preview-lead-sel" id="preview-lead-sel" onchange="atualizarPreviewLead()">
-        <option value="">Selecione um contato para ver o preview…</option>
-      </select>
+<!-- ══ PLANOS ══════════════════════════════════════════════════════════ -->
+<section id="planos" style="background:#f4f6fa;">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 28px;">
+    <div style="text-align:center;max-width:720px;margin:0 auto;">
+      <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.14em;color:#c8870a;font-weight:700;">Planos</div>
+      <h2 style="margin-top:14px;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:#0b1628;line-height:1.15;">Escolha o plano ideal para o seu negócio.</h2>
+      <p style="margin-top:16px;font-size:1.05rem;line-height:1.6;color:#4a5568;">7 dias grátis para testar. Sem cartão de crédito.</p>
     </div>
-    <div class="template-section" id="templates-section"></div>
-  </div>
+    <div id="gp-plans-grid" style="margin-top:52px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:stretch;">
 
-  <!-- TAB: DASHBOARD -->
-  <div id="tab-dashboard" class="container" style="display:none">
-    <div id="dashboard-content">
-      <div class="loader"><div class="spinner"></div> Carregando…</div>
+      <!-- BÁSICO -->
+      <div data-fade style="background:#ffffff;border:1px solid rgba(11,22,40,0.1);border-radius:16px;padding:30px 26px;display:flex;flex-direction:column;">
+        <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#c8870a;">Básico</div>
+        <div style="margin-top:14px;display:flex;align-items:baseline;gap:4px;"><span style="font-size:2.2rem;font-weight:900;color:#0b1628;">R$49</span><span style="font-size:0.9rem;color:#8493ab;">/mês</span></div>
+        <div style="margin-top:20px;height:1px;background:rgba(11,22,40,0.08);"></div>
+        <ul style="margin-top:20px;display:flex;flex-direction:column;gap:12px;flex:1;">
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>50 buscas por mês</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>1 setor</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Todos os estados e cidades</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Exportação de contatos</li>
+        </ul>
+        <a href="/app.html" class="gp-plan-btn-outline" style="margin-top:24px;text-align:center;border:1.5px solid #0b1628;color:#0b1628;font-weight:800;font-size:0.92rem;padding:13px;border-radius:10px;display:block;transition:background .18s,color .18s;">Assinar Básico</a>
+      </div>
+
+      <!-- STARTER (featured) -->
+      <div data-fade style="position:relative;background:#060d1c;border:2px solid #f5a523;border-radius:16px;padding:32px 26px;display:flex;flex-direction:column;box-shadow:0 24px 54px rgba(245,165,35,0.22);transform:translateY(-8px);">
+        <span style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-size:0.68rem;font-weight:900;letter-spacing:0.1em;padding:6px 16px;border-radius:999px;white-space:nowrap;">MAIS POPULAR</span>
+        <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#f5a523;">Starter</div>
+        <div style="margin-top:14px;display:flex;align-items:baseline;gap:4px;"><span style="font-size:2.4rem;font-weight:900;color:#ffffff;">R$97</span><span style="font-size:0.9rem;color:#b0bcd0;">/mês</span></div>
+        <div style="margin-top:20px;height:1px;background:rgba(255,255,255,0.1);"></div>
+        <ul style="margin-top:20px;display:flex;flex-direction:column;gap:12px;flex:1;">
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#d7deea;"><span style="color:#f5a523;font-weight:900;">✓</span>250 buscas por mês</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#d7deea;"><span style="color:#f5a523;font-weight:900;">✓</span>2 setores</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#d7deea;"><span style="color:#f5a523;font-weight:900;">✓</span>Todos os estados e cidades</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#d7deea;"><span style="color:#f5a523;font-weight:900;">✓</span>Exportação de contatos</li>
+        </ul>
+        <a href="/app.html" class="gp-plan-btn-fill" style="margin-top:24px;text-align:center;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;font-size:0.92rem;padding:14px;border-radius:10px;box-shadow:0 10px 24px rgba(245,165,35,0.35);display:block;transition:filter .18s;">Assinar Starter</a>
+      </div>
+
+      <!-- PROFISSIONAL -->
+      <div data-fade style="background:#ffffff;border:1px solid rgba(11,22,40,0.1);border-radius:16px;padding:30px 26px;display:flex;flex-direction:column;">
+        <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#c8870a;">Profissional</div>
+        <div style="margin-top:14px;display:flex;align-items:baseline;gap:4px;"><span style="font-size:2.2rem;font-weight:900;color:#0b1628;">R$197</span><span style="font-size:0.9rem;color:#8493ab;">/mês</span></div>
+        <div style="margin-top:20px;height:1px;background:rgba(11,22,40,0.08);"></div>
+        <ul style="margin-top:20px;display:flex;flex-direction:column;gap:12px;flex:1;">
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>500 buscas por mês</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>3 setores</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Todos os estados e cidades</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Exportação de contatos</li>
+        </ul>
+        <a href="/app.html" class="gp-plan-btn-outline" style="margin-top:24px;text-align:center;border:1.5px solid #0b1628;color:#0b1628;font-weight:800;font-size:0.92rem;padding:13px;border-radius:10px;display:block;transition:background .18s,color .18s;">Assinar Profissional</a>
+      </div>
+
+      <!-- BUSINESS -->
+      <div data-fade style="background:#ffffff;border:1px solid rgba(11,22,40,0.1);border-radius:16px;padding:30px 26px;display:flex;flex-direction:column;">
+        <div style="font-size:0.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#c8870a;">Business</div>
+        <div style="margin-top:14px;display:flex;align-items:baseline;gap:4px;"><span style="font-size:2.2rem;font-weight:900;color:#0b1628;">R$397</span><span style="font-size:0.9rem;color:#8493ab;">/mês</span></div>
+        <div style="margin-top:20px;height:1px;background:rgba(11,22,40,0.08);"></div>
+        <ul style="margin-top:20px;display:flex;flex-direction:column;gap:12px;flex:1;">
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>1.000 buscas por mês</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>5 setores</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Todos os estados e cidades</li>
+          <li style="display:flex;gap:10px;font-size:0.94rem;color:#4a5568;"><span style="color:#f5a523;font-weight:900;">✓</span>Exportação de contatos</li>
+        </ul>
+        <a href="/app.html" class="gp-plan-btn-outline" style="margin-top:24px;text-align:center;border:1.5px solid #0b1628;color:#0b1628;font-weight:800;font-size:0.92rem;padding:13px;border-radius:10px;display:block;transition:background .18s,color .18s;">Assinar Business</a>
+      </div>
+    </div>
+
+    <!-- Faixa plano gratuito -->
+    <div data-fade style="margin-top:24px;background:#ffffff;border:1px dashed rgba(245,165,35,0.55);border-radius:16px;padding:24px 30px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:1.1rem;font-weight:800;color:#0b1628;">Teste grátis por 7 dias — sem cartão de crédito</div>
+        <div style="margin-top:5px;font-size:0.95rem;color:#4a5568;">Acesse todos os recursos do plano Starter por 7 dias. Depois escolha o plano que melhor se encaixa no seu negócio.</div>
+      </div>
+      <a href="/app.html" class="gp-free-btn" style="background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;font-size:0.92rem;padding:13px 26px;border-radius:10px;white-space:nowrap;transition:filter .18s;">Começar grátis →</a>
     </div>
   </div>
+</section>
+
+<!-- ══ DEPOIMENTOS ══════════════════════════════════════════════════ -->
+<section id="depoimentos" style="background:#0f1e35;">
+  <div style="max-width:1200px;margin:0 auto;padding:96px 28px;">
+    <div style="text-align:center;max-width:720px;margin:0 auto;">
+      <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.14em;color:#f5a523;font-weight:700;">Depoimentos</div>
+      <h2 style="margin-top:14px;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:#ffffff;line-height:1.15;">Quem usa, recomenda.</h2>
+    </div>
+    <div class="gp-test-grid" style="margin-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div data-fade style="background:#0b1628;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:30px;">
+        <div style="color:#f5a523;font-size:1.05rem;letter-spacing:3px;">★★★★★</div>
+        <p style="margin-top:16px;font-size:1rem;line-height:1.65;color:#d7deea;font-style:italic;">"Montei minha lista de contatos qualificados em uma tarde. A qualidade dos telefones fez a diferença nas nossas ligações."</p>
+        <div style="margin-top:22px;display:flex;align-items:center;gap:12px;">
+          <span style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">MR</span>
+          <div><div style="font-weight:700;color:#ffffff;font-size:0.95rem;">Marina Rocha</div><div style="font-size:0.82rem;color:#8493ab;">SDR · Agência Norte</div></div>
+        </div>
+      </div>
+      <div data-fade style="background:#0b1628;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:30px;">
+        <div style="color:#f5a523;font-size:1.05rem;letter-spacing:3px;">★★★★★</div>
+        <p style="margin-top:16px;font-size:1rem;line-height:1.65;color:#d7deea;font-style:italic;">"Uso para prospectar em cidades onde eu não tinha nenhum cliente. Em duas semanas fechei três contratos novos."</p>
+        <div style="margin-top:22px;display:flex;align-items:center;gap:12px;">
+          <span style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">TS</span>
+          <div><div style="font-weight:700;color:#ffffff;font-size:0.95rem;">Thiago Souza</div><div style="font-size:0.82rem;color:#8493ab;">Representante Comercial</div></div>
+        </div>
+      </div>
+      <div data-fade style="background:#0b1628;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:30px;">
+        <div style="color:#f5a523;font-size:1.05rem;letter-spacing:3px;">★★★★★</div>
+        <p style="margin-top:16px;font-size:1rem;line-height:1.65;color:#d7deea;font-style:italic;">"A exportação para CSV encaixa direto no nosso CRM. Ganhamos horas por semana que antes iam para busca manual."</p>
+        <div style="margin-top:22px;display:flex;align-items:center;gap:12px;">
+          <span style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">CL</span>
+          <div><div style="font-weight:700;color:#ffffff;font-size:0.95rem;">Camila Lima</div><div style="font-size:0.82rem;color:#8493ab;">Gestora de Tráfego</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA FINAL ══════════════════════════════════════════════════════ -->
+<section style="background:linear-gradient(135deg,#f5a523,#c8870a);">
+  <div style="max-width:900px;margin:0 auto;padding:92px 28px;text-align:center;">
+    <h2 style="font-size:clamp(1.8rem,4vw,2.7rem);font-weight:900;color:#060d1c;line-height:1.12;letter-spacing:-0.01em;">Pronto para expandir seus negócios em todo o Brasil?</h2>
+    <p style="margin-top:18px;font-size:1.15rem;color:rgba(6,13,28,0.8);line-height:1.55;">Comece agora. Plano gratuito permanente, sem cartão de crédito.</p>
+    <div style="margin-top:32px;display:flex;justify-content:center;">
+      <a href="/app.html" class="gp-cta-btn" style="background:#060d1c;color:#ffffff;font-weight:800;font-size:1.02rem;padding:16px 36px;border-radius:12px;box-shadow:0 16px 36px rgba(6,13,28,0.3);transition:transform .18s,box-shadow .18s;">ACESSAR A PLATAFORMA →</a>
+    </div>
+    <p style="margin-top:20px;font-size:0.9rem;color:rgba(6,13,28,0.72);font-weight:600;">Sem cartão · 7 dias grátis · Cancele quando quiser</p>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════ -->
+<footer style="background:#060d1c;border-top:1px solid rgba(245,165,35,0.14);">
+  <div style="max-width:1200px;margin:0 auto;padding:64px 28px 30px;">
+    <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;flex-wrap:wrap;">
+      <div>
+        <a href="#top" style="display:flex;align-items:center;gap:10px;">
+          <img src="logo-mark.png" alt="GarimpoApp" style="height:40px;width:auto;display:block;">
+          <span style="font-size:1.15rem;font-weight:900;letter-spacing:0.01em;">GARIMPO<span style="color:#f5a523;">APP</span></span>
+        </a>
+        <p style="margin-top:16px;font-size:0.95rem;line-height:1.6;color:#b0bcd0;max-width:300px;">A plataforma de inteligência comercial mais completa do Brasil.</p>
+      </div>
+      <div>
+        <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;color:#f5a523;font-weight:700;">Produto</div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px;">
+          <a href="#recursos" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Recursos</a>
+          <a href="#planos" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Planos</a>
+          <a href="#segmentos" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Segmentos</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;color:#f5a523;font-weight:700;">Empresa</div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px;">
+          <a href="#" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Sobre</a>
+          <a href="#depoimentos" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Depoimentos</a>
+          <a href="mailto:contato@garimpoapp.com.br" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Contato</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;color:#f5a523;font-weight:700;">Legal</div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px;">
+          <a href="#" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Termos de Uso</a>
+          <a href="#" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">Privacidade</a>
+          <a href="#" class="gp-footer-link" style="font-size:0.94rem;color:#b0bcd0;transition:color .18s;">LGPD</a>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.07);text-align:center;font-size:0.86rem;color:#8493ab;">© 2025 GarimpoApp · Plataforma de Inteligência Comercial · Brasil</div>
+  </div>
+</footer>
+
 </div>
 
 <script>
-  // ══════════════════════════════════════════════════════════
-  // CONFIG
-  // ══════════════════════════════════════════════════════════
-  const API_URL      = 'https://garimpoapp-backend-production.up.railway.app';
-  const SUPABASE_URL = 'https://pupnynccxtdvqkoflhzc.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1cG55bmNjeHRkdnFrb2ZsaHpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MTE3MzQsImV4cCI6MjA5Nzk4NzczNH0.UUzv9HZkJQGJBm_nkQjPJgWYd_QOhTqVAc50LfzdqvI';
-
-  let tokenJWT = localStorage.getItem('garimpo_token') || null;
-  let perfilUsuario = null;
-  let leadsCache = [];
-  let nichoFiltro = null;
-  let poolResultados = [];
-  let totalBuscaAtual = 0;
-  let ratingMinimo = 0;
-
-  const TODOS_NICHOS = {
-    clinicas:'Clínicas de Estética', clinicas_medicas:'Clínicas Médicas',
-    odonto:'Odontológicas', psicologos:'Psicólogos', farmacias:'Farmácias',
-    academias:'Academias', saloes:'Salões de Beleza', barbearias:'Barbearias',
-    restaurantes:'Restaurantes', padarias:'Padarias/Lanchonetes',
-    petshops:'Pet Shops', advocacia:'Advocacia', contabilidade:'Contabilidade',
-    imobiliarias:'Imobiliárias', escolas:'Escolas Particulares',
-    agencias_marketing:'Agências de Marketing', mecanicas:'Oficinas Mecânicas',
-    construtoras:'Construtoras', hoteis:'Hotéis e Pousadas',
-    eletricistas:'Eletricistas', fotografos:'Fotógrafos',
-    arquitetos:'Arquitetos', engenheiros:'Engenheiros',
-    hospitais:'Hospitais', laboratorios:'Laboratórios', veterinarios:'Veterinários',
-  };
-  const PLANOS_NICHOS = { free:1, basico:1, starter:2, profissional:3, business:5 };
-  let nichosSelecionados = [];
-  let limiteNichos = 1;
-
-  // ── Token de magic link / reset ──────────────────────────
-  (function processarHashToken() {
-    const hash = window.location.hash.substring(1);
-    if (!hash) return;
-    const params = new URLSearchParams(hash);
-    const accessToken = params.get('access_token');
-    const type = params.get('type');
-    if (!accessToken) return;
-    history.replaceState({}, '', window.location.pathname);
-    if (type === 'recovery') {
-      document.addEventListener('DOMContentLoaded', () => {
-        const nova = prompt('Digite sua nova senha (mínimo 6 caracteres):');
-        if (!nova || nova.length < 6) { alert('Senha muito curta.'); return; }
-        fetch(`${SUPABASE_URL}/auth/v1/user`, {
-          method: 'PUT',
-          headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: nova }),
-        }).then(r => r.json()).then(d => {
-          if (d.id) { tokenJWT = accessToken; localStorage.setItem('garimpo_token', tokenJWT); alert('Senha alterada! Entrando...'); iniciarApp(); }
-          else alert('Erro: ' + (d.message || JSON.stringify(d)));
-        });
-      });
-    } else if (type === 'magiclink' || type === 'signup') {
-      tokenJWT = accessToken; localStorage.setItem('garimpo_token', tokenJWT);
-    }
-  })();
-
-  // ── Auth ─────────────────────────────────────────────────
-  async function supabaseAuth(endpoint, body) {
-    const res = await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json', 'apikey':SUPABASE_ANON_KEY, 'Authorization':`Bearer ${SUPABASE_ANON_KEY}` },
-      body: JSON.stringify(body),
-    });
-    return res.json();
+  var menuOpen = false;
+  function toggleMenu() {
+    menuOpen = !menuOpen;
+    document.getElementById('gp-mobile-menu').style.display = menuOpen ? 'flex' : 'none';
+  }
+  function closeMenu() {
+    menuOpen = false;
+    document.getElementById('gp-mobile-menu').style.display = 'none';
   }
 
-  async function fazerLogin() {
-    const email = document.getElementById('login-email').value.trim();
-    const senha = document.getElementById('login-senha').value;
-    const msgEl = document.getElementById('login-msg');
-    msgEl.innerHTML = '';
-    if (!email || !senha) { msgEl.innerHTML = '<div class="msg-erro">Preencha e-mail e senha.</div>'; return; }
-    msgEl.innerHTML = '<div class="loader"><div class="spinner"></div> Entrando…</div>';
-    const data = await supabaseAuth('token?grant_type=password', { email, password: senha });
-    if (data.access_token) {
-      tokenJWT = data.access_token; localStorage.setItem('garimpo_token', tokenJWT); await iniciarApp();
-    } else {
-      msgEl.innerHTML = `<div class="msg-erro">${data.error_description || 'E-mail ou senha incorretos.'}</div>`;
-    }
-  }
-
-  async function fazerCadastro() {
-    const nome  = document.getElementById('cad-nome').value.trim();
-    const email = document.getElementById('cad-email').value.trim();
-    const senha = document.getElementById('cad-senha').value;
-    const msgEl = document.getElementById('cad-msg');
-    msgEl.innerHTML = '';
-    if (!nome || !email || !senha) { msgEl.innerHTML = '<div class="msg-erro">Preencha todos os campos.</div>'; return; }
-    msgEl.innerHTML = '<div class="loader"><div class="spinner"></div> Criando conta…</div>';
-    const data = await supabaseAuth('signup', { email, password: senha, data: { nome } });
-    if (data.access_token) {
-      tokenJWT = data.access_token; localStorage.setItem('garimpo_token', tokenJWT); await iniciarApp();
-    } else if (data.id) {
-      msgEl.innerHTML = '<div class="msg-ok">Conta criada! Verifique seu e-mail para confirmar.</div>';
-    } else {
-      msgEl.innerHTML = `<div class="msg-erro">${data.error_description || 'Erro ao criar conta.'}</div>`;
-    }
-  }
-
-  function sair() {
-    localStorage.removeItem('garimpo_token'); tokenJWT = null; perfilUsuario = null;
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('tela-auth').style.display = 'flex';
-  }
-
-  function mudarAba(aba) {
-    document.getElementById('form-login').style.display    = aba === 'login'    ? '' : 'none';
-    document.getElementById('form-cadastro').style.display = aba === 'cadastro' ? '' : 'none';
-    document.querySelectorAll('.auth-tab').forEach((t, i) => {
-      t.classList.toggle('ativo', (i===0 && aba==='login') || (i===1 && aba==='cadastro'));
-    });
-  }
-
-  // ── App init ─────────────────────────────────────────────
-  async function iniciarApp() {
-    document.getElementById('tela-auth').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    try {
-      const res = await fetch(`${API_URL}/perfil`, { headers: { 'Authorization': `Bearer ${tokenJWT}` } });
-      if (!res.ok) { sair(); return; }
-      perfilUsuario = await res.json();
-      document.getElementById('nav-plano').textContent = (perfilUsuario.plano || 'free').toUpperCase();
-      document.getElementById('nav-buscas').textContent =
-        `${perfilUsuario.buscas_restantes} busca${perfilUsuario.buscas_restantes !== 1 ? 's' : ''} restante${perfilUsuario.buscas_restantes !== 1 ? 's' : ''}`;
-      const isFree = !perfilUsuario.ativo;
-      document.getElementById('banner-upgrade').style.display = isFree ? 'block' : 'none';
-      document.getElementById('btn-assinar').style.display   = isFree ? 'inline-flex' : 'none';
-      document.getElementById('btn-nichos').style.display    = 'inline-flex';
-      // Popular select de nicho com nichos liberados
-      popularNichoSelect();
-      // Render histórico de buscas
-      renderizarHistorico();
-      // Verificar alerta de buscas
-      verificarAlertaBuscas();
-      // Abrir seleção de nicho se vazio
-      if (!perfilUsuario.nichos_liberados || perfilUsuario.nichos_liberados.length === 0) {
-        setTimeout(abrirModalNichos, 600);
-      }
-      // Verificar retorno de pagamento
-      const params = new URLSearchParams(location.search);
-      if (params.get('pagamento') === 'sucesso') {
-        alert('Assinatura confirmada! Bem-vindo ao novo plano.');
-        history.replaceState({}, '', location.pathname);
-      }
-    } catch(e) { console.error('Erro ao carregar perfil', e); sair(); }
-  }
-
-  // ── Popular select de nicho (apenas nichos do plano) ─────
-  function popularNichoSelect() {
-    const select = document.getElementById('sel-nicho');
-    const nichos = perfilUsuario?.nichos_liberados || [];
-    if (nichos.length === 0) return;
-    select.innerHTML = nichos.map(n => `<option value="${n}">${TODOS_NICHOS[n] || n}</option>`).join('');
-    select.value = nichos[0];
-  }
-
-  // ── Tabs ─────────────────────────────────────────────────
-  const TABS = ['buscar', 'leads', 'kanban', 'templates', 'dashboard'];
-  function mudarTab(tab) {
-    document.querySelectorAll('.main-tab').forEach((t, i) => t.classList.toggle('ativo', TABS[i] === tab));
-    TABS.forEach(t => {
-      const el = document.getElementById(`tab-${t}`);
-      if (el) el.style.display = t === tab ? '' : 'none';
-    });
-    if (tab === 'leads')      carregarLeads();
-    if (tab === 'kanban')     carregarKanban();
-    if (tab === 'templates')  { preencherPreviewLeads(); renderizarTemplates(); }
-    if (tab === 'dashboard')  carregarDashboard();
-  }
-
-  // ── Cidades IBGE ─────────────────────────────────────────
-  const _cidadesCache = {};
-  async function preencherEstado() {
-    const uf = document.getElementById('sel-estado').value;
-    const cidadeSel = document.getElementById('sel-cidade');
-    cidadeSel.innerHTML = '<option value="">Carregando cidades…</option>';
-    cidadeSel.disabled = true;
-    if (!uf) { cidadeSel.innerHTML = '<option value="">Selecione o estado primeiro</option>'; return; }
-    try {
-      if (!_cidadesCache[uf]) {
-        const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`);
-        const data = await res.json();
-        _cidadesCache[uf] = data.map(m => m.nome);
-      }
-      cidadeSel.disabled = false;
-      cidadeSel.innerHTML = '<option value="">Selecione a cidade</option>' +
-        _cidadesCache[uf].map(c => `<option value="${c}, ${uf}">${c}</option>`).join('');
-      cidadeSel.focus();
-    } catch(e) {
-      cidadeSel.innerHTML = '<option value="">Erro ao carregar cidades</option>';
-    }
-  }
-
-  // ── Modal planos ──────────────────────────────────────────
-  function abrirModal()  { document.getElementById('modal-planos').classList.add('ativo'); }
-  function fecharModal() { document.getElementById('modal-planos').classList.remove('ativo'); }
-
-  async function assinarPlano(plano) {
-    fecharModal();
-    const status = document.getElementById('busca-status');
-    status.innerHTML = '<div class="loader"><div class="spinner"></div> Redirecionando para pagamento…</div>';
-    try {
-      const res = await fetch(`${API_URL}/mp-checkout`, {
-        method: 'POST', headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${tokenJWT}` },
-        body: JSON.stringify({ plano }),
-      });
-      const data = await res.json();
-      if (data.url) location.href = data.url;
-      else status.innerHTML = `<div class="msg-erro">${data.erro || 'Erro ao iniciar pagamento.'}</div>`;
-    } catch(e) { status.innerHTML = '<div class="msg-erro">Erro de conexão.</div>'; }
-  }
-
-  // ── Alerta de buscas ──────────────────────────────────────
-  function verificarAlertaBuscas() {
-    const alertEl = document.getElementById('alert-buscas');
-    if (!alertEl || !perfilUsuario) return;
-    const restantes = perfilUsuario.buscas_restantes;
-    const limite    = perfilUsuario.buscas_limite;
-    if (restantes === 0) {
-      alertEl.innerHTML = '🚫 Suas buscas deste mês acabaram. <a href="#" onclick="abrirModal();return false;" style="color:#fca5a5;font-weight:700">Faça upgrade para continuar.</a>';
-      alertEl.style.display = 'block';
-    } else if (restantes <= limite * 0.2) {
-      alertEl.innerHTML = `⚠️ Atenção: apenas <strong>${restantes}</strong> busca${restantes!==1?'s':''} restante${restantes!==1?'s':''} este mês. <a href="#" onclick="abrirModal();return false;" style="color:#fca5a5;font-weight:700">Ver planos</a>`;
-      alertEl.style.display = 'block';
-    } else {
-      alertEl.style.display = 'none';
-    }
-  }
-
-  // ── Score de qualidade ────────────────────────────────────
-  function scoreQualidade(lead) {
-    const temTel = lead.telefone && lead.telefone.trim().length >= 8;
-    const nota   = parseFloat(lead.rating) || 0;
-    if (nota >= 4.0 && temTel) return 'quente';
-    if (nota >= 3.0 || temTel) return 'morno';
-    return 'frio';
-  }
-  function scoreBadgeHtml(lead) {
-    const s = scoreQualidade(lead);
-    const icons = { quente:'🔥', morno:'⚡', frio:'❄️' };
-    return `<span class="score-badge score-${s}">${icons[s]} ${s.charAt(0).toUpperCase()+s.slice(1)}</span>`;
-  }
-
-  // ── Rating filter ─────────────────────────────────────────
-  function atualizarRatingFilter(val) {
-    ratingMinimo = parseFloat(val);
-    const stars = val == 0 ? 'Todas ⭐' : '⭐'.repeat(Math.floor(val)) + (val%1 ? '½' : '') + ` (${val}+)`;
-    document.getElementById('rating-val').textContent = stars;
-    if (poolResultados.length > 0) aplicarFiltroRating();
-  }
-
-  function aplicarFiltroRating() {
-    const filtered = ratingMinimo > 0
-      ? poolResultados.filter(r => r.rating && r.rating >= ratingMinimo)
-      : poolResultados;
-    renderizarResultadosFiltrados(filtered);
-  }
-
-  // ── Histórico de buscas ───────────────────────────────────
-  function salvarHistoricoBusca(nicho, cidade) {
-    let hist = JSON.parse(localStorage.getItem('garimpo_historico') || '[]');
-    hist = hist.filter(h => !(h.nicho === nicho && h.cidade === cidade));
-    hist.unshift({ nicho, cidade, label: TODOS_NICHOS[nicho] || nicho });
-    hist = hist.slice(0, 5);
-    localStorage.setItem('garimpo_historico', JSON.stringify(hist));
-    renderizarHistorico();
-  }
-
-  function renderizarHistorico() {
-    const wrap = document.getElementById('historico-wrap');
-    if (!wrap) return;
-    const hist = JSON.parse(localStorage.getItem('garimpo_historico') || '[]');
-    if (hist.length === 0) { wrap.style.display = 'none'; return; }
-    wrap.style.display = '';
-    document.getElementById('historico-chips').innerHTML = hist.map(h =>
-      `<button class="hist-chip" onclick="repetirBusca('${h.nicho}','${encodeURIComponent(h.cidade)}')">${h.label} em ${h.cidade}</button>`
-    ).join('');
-  }
-
-  async function repetirBusca(nicho, cidadeEnc) {
-    const cidade = decodeURIComponent(cidadeEnc);
-    const parts = cidade.split(', ');
-    const uf = parts[parts.length - 1];
-    // Set nicho if available in select
-    const sel = document.getElementById('sel-nicho');
-    const opt = Array.from(sel.options).find(o => o.value === nicho);
-    if (opt) sel.value = nicho;
-    // Set estado and load cidades
-    document.getElementById('sel-estado').value = uf;
-    await preencherEstado();
-    const selCidade = document.getElementById('sel-cidade');
-    const cidadeOpt = Array.from(selCidade.options).find(o => o.value === cidade);
-    if (cidadeOpt) { selCidade.value = cidade; fazerBusca(); }
-  }
-
-  // ── Buscar ────────────────────────────────────────────────
-  async function fazerBusca() {
-    const nicho  = document.getElementById('sel-nicho').value;
-    const cidade = document.getElementById('sel-cidade').value.trim();
-    const status = document.getElementById('busca-status');
-    const lista  = document.getElementById('lista-resultados');
-
-    if (perfilUsuario?.plano === 'free' && perfilUsuario?.buscas_restantes <= 0) {
-      status.innerHTML = '<div class="msg-erro">Suas buscas gratuitas acabaram. <a href="#" onclick="abrirModal();return false;" style="color:var(--ouro)">Assine agora</a> para continuar.</div>';
-      return;
-    }
-    if (!cidade) { status.innerHTML = '<div class="msg-erro">Selecione o estado e a cidade.</div>'; return; }
-
-    document.getElementById('btn-buscar').disabled = true;
-    status.innerHTML = '<div class="loader"><div class="spinner"></div> Buscando no Google…</div>';
-    lista.innerHTML = '';
-
-    try {
-      const res = await fetch(`${API_URL}/buscar`, {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${tokenJWT}` },
-        body: JSON.stringify({ nicho, cidade }),
-      });
-      const data = await res.json();
-      if (!res.ok) { status.innerHTML = `<div class="msg-erro">${data.erro}</div>`; return; }
-
-      // Atualizar contador na navbar
-      const restantes = data.buscas_restantes;
-      document.getElementById('nav-buscas').textContent =
-        `${restantes} busca${restantes !== 1 ? 's' : ''} restante${restantes !== 1 ? 's' : ''}`;
-      if (perfilUsuario) { perfilUsuario.buscas_restantes = restantes; verificarAlertaBuscas(); }
-
-      if (data.total === 0) {
-        status.innerHTML = '<div class="msg-ok">Nenhum resultado encontrado (ou todos já foram salvos como contatos).</div>';
-        return;
-      }
-
-      status.innerHTML = `<div class="msg-ok">${data.total} resultado${data.total!==1?'s':''} encontrado${data.total!==1?'s':''} (contatos já salvos foram removidos)</div>`;
-      poolResultados = data.resultados;
-      totalBuscaAtual = data.resultados.length;
-      aplicarFiltroRating();
-      salvarHistoricoBusca(nicho, cidade);
-    } catch(e) {
-      status.innerHTML = '<div class="msg-erro">Erro de conexão com o servidor.</div>';
-    } finally {
-      document.getElementById('btn-buscar').disabled = false;
-    }
-  }
-
-  function renderizarResultadosFiltrados(resultados) {
-    const lista = document.getElementById('lista-resultados');
-    lista.innerHTML = resultados.map(r => `
-      <div class="lead-card" id="card-${r.place_id}" style="transition:opacity 0.3s,max-height 0.4s;overflow:hidden">
-        <div class="lead-info">
-          <div class="lead-nome">${escapeHtml(r.nome)} ${scoreBadgeHtml(r)}</div>
-          <div class="lead-detalhes">
-            ${r.telefone ? `Tel: ${r.telefone}` : ''}
-            ${r.cidade ? ` | ${r.cidade}${r.estado ? ', ' + r.estado : ''}` : ''}
-            ${r.rating ? ` | ⭐ ${r.rating}` : ''}
-          </div>
-          <div class="lead-endereco">${escapeHtml(r.endereco || '')}</div>
-        </div>
-        <div class="lead-acoes">
-          ${r.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${r.whatsapp}" target="_blank">WhatsApp</a>` : ''}
-          <button class="btn btn-secondary btn-sm" onclick="salvarLead(${JSON.stringify(r).replace(/"/g, '&quot;')}, this, 'card-${r.place_id}')">Salvar Contato</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function atualizarContadorResultados() {
-    const visiveis = document.querySelectorAll('#lista-resultados .lead-card:not([data-removido])').length;
-    const status = document.getElementById('busca-status');
-    if (visiveis === 0) {
-      status.innerHTML = '<div class="msg-ok">Todos os contatos desta busca foram salvos!</div>';
-    } else {
-      status.innerHTML = `<div class="msg-ok">${visiveis} contato${visiveis!==1?'s':''} restante${visiveis!==1?'s':''} — ${totalBuscaAtual - visiveis} salvo${totalBuscaAtual-visiveis!==1?'s':''}</div>`;
-    }
-  }
-
-  // ── Salvar lead ───────────────────────────────────────────
-  async function salvarLead(lead, btn, cardId) {
-    btn.disabled = true; btn.textContent = '…';
-    try {
-      const res = await fetch(`${API_URL}/salvar-lead`, {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${tokenJWT}` },
-        body: JSON.stringify({ lead }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        const card = document.getElementById(cardId);
-        if (card) {
-          card.dataset.removido = '1';
-          card.style.opacity = '0';
-          card.style.maxHeight = card.offsetHeight + 'px';
-          setTimeout(() => { card.style.maxHeight = '0'; card.style.marginBottom = '0'; card.style.padding = '0'; }, 300);
-          setTimeout(() => { card.remove(); atualizarContadorResultados(); }, 700);
+  // Fade-up on scroll
+  var els = Array.from(document.querySelectorAll('[data-fade]'));
+  els.forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(22px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
+  });
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.style.opacity='1'; el.style.transform='none'; });
+  } else {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'none';
+          io.unobserve(e.target);
         }
-      } else {
-        btn.disabled = false;
-        btn.textContent = data.erro === 'Contato já salvo.' ? 'Já salvo' : 'Erro';
-      }
-    } catch(e) { btn.disabled = false; btn.textContent = 'Erro'; }
-  }
-
-  // ── Carregar leads ────────────────────────────────────────
-  async function carregarLeads() {
-    const lista = document.getElementById('lista-leads');
-    lista.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando…</div>';
-    try {
-      const params = nichoFiltro ? `?nicho=${nichoFiltro}` : '';
-      const res = await fetch(`${API_URL}/meus-leads${params}`, { headers: { 'Authorization':`Bearer ${tokenJWT}` } });
-      if (!res.ok) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar contatos.</div>'; return; }
-      const data = await res.json();
-      leadsCache = data.leads || [];
-      if (leadsCache.length === 0) {
-        lista.innerHTML = '<div class="msg-erro" style="text-align:center;padding:32px">Nenhum contato salvo aqui ainda.</div>';
-        return;
-      }
-      lista.innerHTML = leadsCache.map(l => {
-        const status = getLeadStatus(l.id);
-        const nota   = getLeadNota(l.id);
-        return `
-          <div class="lead-card">
-            <div class="lead-info">
-              <div class="lead-nome">${escapeHtml(l.nome)} ${scoreBadgeHtml(l)}</div>
-              <div class="lead-detalhes">
-                ${l.telefone ? `Tel: ${l.telefone}` : ''}
-                ${l.cidade ? ` | ${l.cidade}${l.estado ? ', ' + l.estado : ''}` : ''}
-                ${l.rating ? ` | ⭐ ${l.rating}` : ''}
-              </div>
-              <div class="lead-endereco">${escapeHtml(l.endereco || '')}</div>
-              <select class="lead-status-sel status-${status}" onchange="salvarStatusLead('${l.id}', this)">
-                <option value="novo"        ${status==='novo'        ?'selected':''}>📋 Novo</option>
-                <option value="contatado"   ${status==='contatado'   ?'selected':''}>📞 Contatado</option>
-                <option value="interessado" ${status==='interessado' ?'selected':''}>⚡ Interessado</option>
-                <option value="fechado"     ${status==='fechado'     ?'selected':''}>✅ Fechado</option>
-              </select>
-              <textarea class="lead-nota" placeholder="Anotações sobre este contato…" onblur="salvarNotaLead('${l.id}', this.value)">${escapeHtml(nota)}</textarea>
-            </div>
-            <div class="lead-acoes">
-              ${l.whatsapp ? `<a class="btn btn-verde btn-sm" href="https://wa.me/${l.whatsapp}" target="_blank">WhatsApp</a>` : ''}
-            </div>
-          </div>`;
-      }).join('');
-    } catch(e) { lista.innerHTML = '<div class="msg-erro">Erro ao carregar contatos.</div>'; }
-  }
-
-  // ── Status e notas (localStorage) ────────────────────────
-  function getLeadStatus(id) { return localStorage.getItem(`ks_${id}`) || 'novo'; }
-  function setLeadStatus(id, s) { localStorage.setItem(`ks_${id}`, s); }
-  function getLeadNota(id)   { return localStorage.getItem(`kn_${id}`) || ''; }
-  function setLeadNota(id, n) { localStorage.setItem(`kn_${id}`, n); }
-
-  function salvarStatusLead(leadId, selectEl) {
-    const s = selectEl.value;
-    selectEl.className = `lead-status-sel status-${s}`;
-    setLeadStatus(leadId, s);
-  }
-  function salvarNotaLead(leadId, nota) { setLeadNota(leadId, nota); }
-
-  // ── Filtrar leads ─────────────────────────────────────────
-  function filtrarLeads(nicho, el) {
-    nichoFiltro = nicho;
-    document.querySelectorAll('.filtro-chip').forEach(c => c.classList.remove('ativo'));
-    if (el) el.classList.add('ativo');
-    carregarLeads();
-  }
-
-  // ── Exportar CSV ──────────────────────────────────────────
-  function exportarCSV() {
-    if (!leadsCache.length) { alert('Nenhum contato para exportar.'); return; }
-    const headers = ['Nome','Telefone','WhatsApp','Endereço','Cidade','Estado','Rating','Nicho','Status','Nota'];
-    const rows = leadsCache.map(l => [
-      l.nome, l.telefone, l.whatsapp, l.endereco, l.cidade, l.estado,
-      l.rating ?? '', l.nicho ?? '',
-      getLeadStatus(l.id), getLeadNota(l.id),
-    ].map(v => `"${String(v ?? '').replace(/"/g,'""')}"`).join(','));
-    const csv = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob(['﻿' + csv], { type:'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'garimpo_contatos.csv'; a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  // ══════════════════════════════════════════════════════════
-  // KANBAN
-  // ══════════════════════════════════════════════════════════
-  const KANBAN_STATUS = ['novo', 'contatado', 'interessado', 'fechado'];
-  const KANBAN_LABELS = { novo:'Novo', contatado:'Contatado', interessado:'Interessado', fechado:'Fechado' };
-
-  async function carregarKanban() {
-    const board = document.getElementById('kanban-board');
-    board.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando…</div>';
-    try {
-      const res = await fetch(`${API_URL}/meus-leads`, { headers: { 'Authorization':`Bearer ${tokenJWT}` } });
-      if (!res.ok) { board.innerHTML = '<div class="msg-erro">Erro ao carregar contatos.</div>'; return; }
-      const data = await res.json();
-      const leads = data.leads || [];
-      const cols = {};
-      KANBAN_STATUS.forEach(s => cols[s] = []);
-      leads.forEach(l => { const s = getLeadStatus(l.id); cols[s].push(l); });
-      board.innerHTML = KANBAN_STATUS.map(status => `
-        <div class="kanban-col col-${status}">
-          <div class="kanban-col-header">
-            <h3>${KANBAN_LABELS[status]}</h3>
-            <span class="col-count">${cols[status].length}</span>
-          </div>
-          <div id="kcol-${status}">
-            ${cols[status].length === 0
-              ? '<div class="kanban-empty">Vazio</div>'
-              : cols[status].map(l => renderKanbanCard(l, status)).join('')}
-          </div>
-        </div>
-      `).join('');
-    } catch(e) { board.innerHTML = '<div class="msg-erro">Erro ao carregar.</div>'; }
-  }
-
-  function renderKanbanCard(lead, currentStatus) {
-    const sc = scoreQualidade(lead);
-    const icons = { quente:'🔥', morno:'⚡', frio:'❄️' };
-    const idx = KANBAN_STATUS.indexOf(currentStatus);
-    const prev = idx > 0 ? KANBAN_STATUS[idx - 1] : null;
-    const next = idx < KANBAN_STATUS.length-1 ? KANBAN_STATUS[idx + 1] : null;
-    return `
-      <div class="kanban-card">
-        <div class="k-nome">${escapeHtml(lead.nome)} <span style="font-size:0.7rem">${icons[sc]}</span></div>
-        <div class="k-info">${lead.telefone || ''} ${lead.cidade ? '· ' + lead.cidade : ''}</div>
-        <div class="k-actions">
-          ${lead.whatsapp ? `<a class="k-btn wa" href="https://wa.me/${lead.whatsapp}" target="_blank">WhatsApp</a>` : ''}
-          ${prev ? `<button class="k-btn" onclick="moverKanban('${lead.id}','${prev}')">← ${KANBAN_LABELS[prev]}</button>` : ''}
-          ${next ? `<button class="k-btn" onclick="moverKanban('${lead.id}','${next}')">${KANBAN_LABELS[next]} →</button>` : ''}
-        </div>
-      </div>`;
-  }
-
-  function moverKanban(leadId, novoStatus) {
-    setLeadStatus(leadId, novoStatus);
-    carregarKanban();
-  }
-
-  // ══════════════════════════════════════════════════════════
-  // TEMPLATES
-  // ══════════════════════════════════════════════════════════
-  const TEMPLATES_DEFAULT = [
-    'Olá {nome}! Vi que sua empresa em {cidade} pode se beneficiar do que oferecemos. Podemos conversar? 😊',
-    'Boa tarde, {nome}! Estou entrando em contato para apresentar uma proposta especial para o seu negócio em {cidade}. Tem um minutinho?',
-    'Oi {nome}! Encontrei o contato {telefone} e gostaria de apresentar uma solução que pode ajudar muito o seu negócio em {cidade}. Aceita uma consultoria gratuita?',
-    'Olá! Estou prospectando empresas em {cidade} e acredito que {nome} seria um ótimo parceiro. Posso enviar mais detalhes?',
-  ];
-
-  function carregarTemplatesStorage() {
-    return JSON.parse(localStorage.getItem('garimpo_templates') || 'null') || [...TEMPLATES_DEFAULT];
-  }
-  function salvarTemplatesStorage(t) { localStorage.setItem('garimpo_templates', JSON.stringify(t)); }
-
-  function renderizarTemplates() {
-    const templates = carregarTemplatesStorage();
-    const links = JSON.parse(localStorage.getItem('garimpo_template_links') || '[]');
-    const section = document.getElementById('templates-section');
-    if (!section) return;
-    section.innerHTML = templates.map((t, i) => `
-      <div class="template-card">
-        <h3>📝 Template ${i + 1}</h3>
-        <textarea class="template-textarea" id="template-${i}"
-          placeholder="Digite sua mensagem…"
-          oninput="salvarTemplate(${i});atualizarPreview(${i})">${escapeHtml(t)}</textarea>
-        <div class="template-vars">
-          Inserir variável:
-          <button class="var-btn" onclick="inserirVar(${i},'{nome}')">{nome}</button>
-          <button class="var-btn" onclick="inserirVar(${i},'{cidade}')">{cidade}</button>
-          <button class="var-btn" onclick="inserirVar(${i},'{telefone}')">{telefone}</button>
-        </div>
-        <input class="template-link" id="link-${i}" type="url"
-          placeholder="🔗 Link de imagem ou arquivo para enviar junto (opcional)"
-          value="${escapeHtml(links[i] || '')}"
-          oninput="salvarLink(${i});atualizarPreview(${i})" />
-        <div class="template-preview-box" id="preview-${i}">—</div>
-        <div class="template-actions">
-          <button class="btn btn-secondary btn-sm" id="btn-copiar-${i}" onclick="copiarTemplate(${i})">📋 Copiar</button>
-          <button class="btn btn-verde btn-sm" onclick="abrirWaTemplate(${i})">📲 Abrir no WhatsApp</button>
-        </div>
-      </div>
-    `).join('');
-    for (let i = 0; i < 4; i++) atualizarPreview(i);
-  }
-
-  function salvarTemplate(i) {
-    const templates = carregarTemplatesStorage();
-    templates[i] = document.getElementById(`template-${i}`).value;
-    salvarTemplatesStorage(templates);
-  }
-
-  function salvarLink(i) {
-    const links = JSON.parse(localStorage.getItem('garimpo_template_links') || '[]');
-    links[i] = document.getElementById(`link-${i}`).value;
-    localStorage.setItem('garimpo_template_links', JSON.stringify(links));
-  }
-
-  function inserirVar(i, varName) {
-    const ta = document.getElementById(`template-${i}`);
-    const pos = ta.selectionStart;
-    ta.value = ta.value.substring(0, pos) + varName + ta.value.substring(ta.selectionEnd);
-    ta.focus(); ta.selectionStart = ta.selectionEnd = pos + varName.length;
-    salvarTemplate(i); atualizarPreview(i);
-  }
-
-  function getPreviewLead() {
-    const sel = document.getElementById('preview-lead-sel');
-    if (!sel || !sel.value) return null;
-    return leadsCache.find(l => l.id === sel.value) || null;
-  }
-
-  function atualizarPreviewLead() {
-    for (let i = 0; i < 4; i++) atualizarPreview(i);
-  }
-
-  function atualizarPreview(i) {
-    const ta = document.getElementById(`template-${i}`);
-    const preview = document.getElementById(`preview-${i}`);
-    if (!ta || !preview) return;
-    let text = ta.value;
-    const lead = getPreviewLead();
-    if (lead) {
-      text = text.replace(/{nome}/g, lead.nome || '').replace(/{cidade}/g, lead.cidade || '').replace(/{telefone}/g, lead.telefone || '');
-    }
-    const linkEl = document.getElementById(`link-${i}`);
-    if (linkEl && linkEl.value.trim()) text += '\n\n🔗 ' + linkEl.value.trim();
-    preview.textContent = text || '—';
-  }
-
-  function copiarTemplate(i) {
-    const preview = document.getElementById(`preview-${i}`);
-    navigator.clipboard.writeText(preview ? preview.textContent : '').then(() => {
-      const btn = document.getElementById(`btn-copiar-${i}`);
-      if (btn) { btn.textContent = '✅ Copiado!'; setTimeout(() => btn.textContent = '📋 Copiar', 2000); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function(el, i) {
+      el.style.transitionDelay = (Math.min(i % 4, 3) * 0.06) + 's';
+      io.observe(el);
     });
   }
-
-  function abrirWaTemplate(i) {
-    const lead = getPreviewLead();
-    if (!lead) { alert('Selecione um contato no topo para usar o template.'); return; }
-    const preview = document.getElementById(`preview-${i}`);
-    const text = preview ? preview.textContent : '';
-    const num = lead.whatsapp || lead.telefone?.replace(/\D/g,'');
-    if (!num) { alert('Contato sem número de WhatsApp.'); return; }
-    window.open(`https://wa.me/${num}?text=${encodeURIComponent(text)}`, '_blank');
-  }
-
-  async function preencherPreviewLeads() {
-    if (leadsCache.length === 0) {
-      try {
-        const res = await fetch(`${API_URL}/meus-leads`, { headers: { 'Authorization':`Bearer ${tokenJWT}` } });
-        if (res.ok) { const d = await res.json(); leadsCache = d.leads || []; }
-      } catch(e) {}
-    }
-    const sel = document.getElementById('preview-lead-sel');
-    if (!sel) return;
-    sel.innerHTML = '<option value="">Selecione um contato para ver o preview…</option>' +
-      leadsCache.map(l => `<option value="${l.id}">${escapeHtml(l.nome)} — ${escapeHtml(l.cidade||'')}</option>`).join('');
-  }
-
-  // ══════════════════════════════════════════════════════════
-  // DASHBOARD
-  // ══════════════════════════════════════════════════════════
-  async function carregarDashboard() {
-    const dash = document.getElementById('dashboard-content');
-    dash.innerHTML = '<div class="loader"><div class="spinner"></div> Carregando…</div>';
-    try {
-      const res = await fetch(`${API_URL}/meus-leads`, { headers: { 'Authorization':`Bearer ${tokenJWT}` } });
-      if (!res.ok) { dash.innerHTML = '<div class="msg-erro">Erro ao carregar dados.</div>'; return; }
-      const data = await res.json();
-      const leads = data.leads || [];
-
-      // Por nicho
-      const porNicho = {};
-      leads.forEach(l => { if (l.nicho) porNicho[l.nicho] = (porNicho[l.nicho]||0) + 1; });
-
-      // Por status kanban
-      const porStatus = { novo:0, contatado:0, interessado:0, fechado:0 };
-      leads.forEach(l => { const s = getLeadStatus(l.id); porStatus[s] = (porStatus[s]||0) + 1; });
-
-      // Scores
-      const hotLeads  = leads.filter(l => scoreQualidade(l) === 'quente').length;
-      const warmLeads = leads.filter(l => scoreQualidade(l) === 'morno').length;
-
-      // Buscas
-      const perfil = perfilUsuario || {};
-      const buscasUsadas = perfil.buscas_mes || 0;
-      const buscasLimite = perfil.buscas_limite || 10;
-      const buscasPct   = Math.min(100, Math.round(buscasUsadas / buscasLimite * 100));
-      const buscasRest  = Math.max(0, buscasLimite - buscasUsadas);
-
-      // Top nichos
-      const topNichos = Object.entries(porNicho).sort((a,b) => b[1]-a[1]).slice(0,6);
-      const maxN = topNichos[0]?.[1] || 1;
-
-      // Histórico
-      const hist = JSON.parse(localStorage.getItem('garimpo_historico') || '[]');
-
-      dash.innerHTML = `
-        <div class="dash-grid">
-          <div class="dash-stat">
-            <div class="val">${leads.length}</div>
-            <div class="lbl">Total de Contatos</div>
-            <div class="sub">🔥 ${hotLeads} quentes · ⚡ ${warmLeads} mornos</div>
-          </div>
-          <div class="dash-stat">
-            <div class="val">${porStatus.fechado}</div>
-            <div class="lbl">Contatos Fechados</div>
-            <div class="sub">${leads.length ? Math.round(porStatus.fechado/leads.length*100) : 0}% taxa conversão</div>
-          </div>
-          <div class="dash-stat">
-            <div class="val">${buscasUsadas}</div>
-            <div class="lbl">Buscas usadas</div>
-            <div class="sub">de ${buscasLimite} este mês</div>
-            <div class="prog-bar"><div class="prog-fill ${buscasPct > 80 ? 'red':''}" style="width:${buscasPct}%"></div></div>
-          </div>
-          <div class="dash-stat">
-            <div class="val">${buscasRest}</div>
-            <div class="lbl">Buscas restantes</div>
-            <div class="sub">Plano ${(perfil.plano||'free').toUpperCase()}</div>
-          </div>
-        </div>
-
-        <div class="dash-section-title">Funil de Vendas (Kanban)</div>
-        <div class="kanban-summary">
-          <div class="ks-item ks-novo"><div class="ks-val">${porStatus.novo}</div><div class="ks-lbl">Novos</div></div>
-          <div class="ks-item ks-contatado"><div class="ks-val">${porStatus.contatado}</div><div class="ks-lbl">Contatados</div></div>
-          <div class="ks-item ks-interessado"><div class="ks-val">${porStatus.interessado}</div><div class="ks-lbl">Interessados</div></div>
-          <div class="ks-item ks-fechado"><div class="ks-val">${porStatus.fechado}</div><div class="ks-lbl">Fechados</div></div>
-        </div>
-
-        ${topNichos.length > 0 ? `
-          <div class="dash-section-title">Contatos por Nicho</div>
-          <div class="card">
-            ${topNichos.map(([nicho, count]) => `
-              <div class="nicho-row">
-                <div class="nicho-row-label">${TODOS_NICHOS[nicho] || nicho}</div>
-                <div class="nicho-row-bar"><div class="nicho-row-fill" style="width:${Math.round(count/maxN*100)}%"></div></div>
-                <div class="nicho-row-count">${count}</div>
-              </div>
-            `).join('')}
-          </div>
-        ` : ''}
-
-        ${hist.length > 0 ? `
-          <div class="dash-section-title">Últimas Buscas</div>
-          <div class="card" style="display:flex;flex-wrap:wrap;gap:8px;padding:16px">
-            ${hist.map(h => `<button class="filtro-chip" onclick="mudarTab('buscar');setTimeout(()=>repetirBusca('${h.nicho}','${encodeURIComponent(h.cidade)}'),100)">${h.label} em ${h.cidade}</button>`).join('')}
-          </div>
-        ` : ''}
-      `;
-    } catch(e) { dash.innerHTML = '<div class="msg-erro">Erro ao carregar dashboard.</div>'; }
-  }
-
-  // ══════════════════════════════════════════════════════════
-  // NICHOS MODAL
-  // ══════════════════════════════════════════════════════════
-  function abrirModalNichos() {
-    const plano = perfilUsuario?.plano || 'free';
-    limiteNichos = PLANOS_NICHOS[plano] || 1;
-    nichosSelecionados = [...(perfilUsuario?.nichos_liberados || [])];
-    document.getElementById('nichos-limite-msg').textContent =
-      `Plano ${plano.toUpperCase()}: selecione ${limiteNichos === 1 ? '1 nicho' : `até ${limiteNichos} nichos`}.`;
-    const grid = document.getElementById('nichos-grid');
-    grid.innerHTML = Object.entries(TODOS_NICHOS).map(([val, label]) => {
-      const sel = nichosSelecionados.includes(val) ? 'selecionado' : '';
-      return `<div class="nicho-chip ${sel}" data-nicho="${val}" onclick="toggleNicho(this)">${label}</div>`;
-    }).join('');
-    document.getElementById('modal-nichos').classList.add('ativo');
-  }
-
-  function fecharModalNichos() { document.getElementById('modal-nichos').classList.remove('ativo'); }
-
-  function toggleNicho(el) {
-    const nicho = el.dataset.nicho;
-    if (el.classList.contains('selecionado')) {
-      el.classList.remove('selecionado');
-      nichosSelecionados = nichosSelecionados.filter(n => n !== nicho);
-    } else {
-      if (nichosSelecionados.length >= limiteNichos) {
-        alert(`Seu plano permite no máximo ${limiteNichos} nicho(s).\nFaça upgrade para selecionar mais.`);
-        return;
-      }
-      el.classList.add('selecionado');
-      nichosSelecionados.push(nicho);
-    }
-  }
-
-  async function salvarNichos() {
-    if (nichosSelecionados.length === 0) { alert('Selecione pelo menos 1 nicho.'); return; }
-    try {
-      const res = await fetch(`${API_URL}/selecionar-nicho`, {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${tokenJWT}` },
-        body: JSON.stringify({ nichos: nichosSelecionados }),
-      });
-      const data = await res.json();
-      if (data.ok) {
-        perfilUsuario.nichos_liberados = nichosSelecionados;
-        popularNichoSelect();
-        fecharModalNichos();
-        alert(`Nichos salvos: ${nichosSelecionados.map(n => TODOS_NICHOS[n]).join(', ')}`);
-      } else {
-        alert(data.erro || 'Erro ao salvar nichos.');
-      }
-    } catch(e) { alert('Erro de conexão.'); }
-  }
-
-  // ── Utilitários ───────────────────────────────────────────
-  function escapeHtml(text) {
-    return String(text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  // ── Init ──────────────────────────────────────────────────
-  if (tokenJWT) iniciarApp();
-
-  // ── RECUPERAÇÃO DE SENHA ──────────────────────────────────────
-  function abrirRecuperarSenha() {
-    document.getElementById('rec-email').value = document.getElementById('login-email').value || '';
-    document.getElementById('rec-msg').innerHTML = '';
-    document.getElementById('modal-recuperar').style.display = 'flex';
-  }
-  function fecharRecuperar() {
-    document.getElementById('modal-recuperar').style.display = 'none';
-  }
-  async function enviarRecuperacao() {
-    const email = document.getElementById('rec-email').value.trim();
-    const msgEl = document.getElementById('rec-msg');
-    if (!email) { msgEl.innerHTML = '<span style="color:#f87171">Informe o e-mail.</span>'; return; }
-    msgEl.innerHTML = '<span style="color:var(--texto-muted)">Enviando...</span>';
-    try {
-      const res = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
-        body: JSON.stringify({ email, redirect_to: 'https://garimpoapp.com.br' })
-      });
-      if (res.ok || res.status === 200) {
-        msgEl.innerHTML = '<span style="color:var(--verde)">✓ Link enviado! Verifique seu e-mail.</span>';
-      } else {
-        const d = await res.json().catch(()=>({}));
-        msgEl.innerHTML = `<span style="color:#f87171">${d.msg || 'Erro ao enviar. Tente novamente.'}</span>`;
-      }
-    } catch(e) {
-      msgEl.innerHTML = '<span style="color:#f87171">Erro de conexão.</span>';
-    }
-  }
-  async function definirNovaSenha() {
-    const nova = document.getElementById('nova-senha').value;
-    const conf = document.getElementById('nova-senha-conf').value;
-    const msgEl = document.getElementById('nova-senha-msg');
-    if (nova.length < 6) { msgEl.innerHTML = '<span style="color:#f87171">Senha deve ter no mínimo 6 caracteres.</span>'; return; }
-    if (nova !== conf) { msgEl.innerHTML = '<span style="color:#f87171">As senhas não coincidem.</span>'; return; }
-    const token = window._recoveryToken;
-    if (!token) { msgEl.innerHTML = '<span style="color:#f87171">Sessão inválida. Solicite um novo link.</span>'; return; }
-    msgEl.innerHTML = '<span style="color:var(--texto-muted)">Salvando...</span>';
-    try {
-      const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ password: nova })
-      });
-      if (res.ok) {
-        msgEl.innerHTML = '<span style="color:var(--verde)">✓ Senha alterada! Você já pode entrar.</span>';
-        setTimeout(() => {
-          document.getElementById('modal-nova-senha').style.display = 'none';
-          window.location.hash = '';
-        }, 2000);
-      } else {
-        const d = await res.json().catch(()=>({}));
-        msgEl.innerHTML = `<span style="color:#f87171">${d.msg || 'Erro ao salvar. Tente novamente.'}</span>`;
-      }
-    } catch(e) {
-      msgEl.innerHTML = '<span style="color:#f87171">Erro de conexão.</span>';
-    }
-  }
-  // Detecta type=recovery no hash da URL (vindo do email de recuperação)
-  (function verificarHashRecovery() {
-    const hash = window.location.hash.substring(1);
-    if (!hash) return;
-    const params = Object.fromEntries(hash.split('&').map(p => p.split('=')));
-    if (params.type === 'recovery' && params.access_token) {
-      window._recoveryToken = decodeURIComponent(params.access_token);
-      document.getElementById('modal-nova-senha').style.display = 'flex';
-    }
-  })();
-
 </script>
-
-<!-- Modal de nichos -->
-<div id="modal-nichos" class="modal-overlay" onclick="if(event.target===this)fecharModalNichos()">
-  <div class="modal-planos modal-nichos">
-    <h2>Escolha seu(s) Nicho(s)</h2>
-    <p class="sub">Selecione os segmentos que você quer prospectar</p>
-    <p class="nichos-limite-msg" id="nichos-limite-msg"></p>
-    <div class="nichos-grid" id="nichos-grid"></div>
-    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="salvarNichos()">Salvar Nichos</button>
-    <span class="modal-fechar" onclick="fecharModalNichos()">Fechar</span>
-  </div>
-</div>
-
-<!-- Modal de planos -->
-<div id="modal-planos" class="modal-overlay" onclick="if(event.target===this)fecharModal()">
-  <div class="modal-planos">
-    <h2>Escolha seu plano</h2>
-    <p class="sub">Contatos verificados do Google em todo o Brasil</p>
-    <div class="planos-grid">
-      <div class="plano-card">
-        <div class="nome">Free</div>
-        <div class="buscas">5<span>buscas/mês</span></div>
-        <div class="preco"><strong>Grátis</strong></div>
-        <button class="btn btn-secondary btn-sm" style="width:100%" disabled>Plano atual</button>
-      </div>
-      <div class="plano-card">
-        <div class="nome">Básico</div>
-        <div class="buscas">50<span>buscas/mês</span></div>
-        <div class="preco">por <strong>R$49/mês</strong></div>
-        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('basico')">Assinar</button>
-      </div>
-      <div class="plano-card destaque">
-        <div class="nome">Starter</div>
-        <div class="buscas">250<span>buscas/mês</span></div>
-        <div class="preco">por <strong>R$97/mês</strong></div>
-        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('starter')">Assinar</button>
-      </div>
-      <div class="plano-card">
-        <div class="nome">Profissional</div>
-        <div class="buscas">500<span>buscas/mês</span></div>
-        <div class="preco">por <strong>R$197/mês</strong></div>
-        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('profissional')">Assinar</button>
-      </div>
-      <div class="plano-card">
-        <div class="nome">Business</div>
-        <div class="buscas">1.000<span>buscas/mês</span></div>
-        <div class="preco">por <strong>R$397/mês</strong></div>
-        <button class="btn btn-primary btn-sm" style="width:100%" onclick="assinarPlano('business')">Assinar</button>
-      </div>
-    </div>
-    <span class="modal-fechar" onclick="fecharModal()">Fechar</span>
-  </div>
-</div>
-
-
-<!-- MODAL RECUPERAR SENHA -->
-<div id="modal-recuperar" class="modal-overlay" onclick="if(event.target===this)fecharRecuperar()" style="display:none;opacity:1;pointer-events:auto">
-  <div class="modal-planos" style="max-width:420px">
-    <h2 style="text-align:center;margin-bottom:8px">Recuperar senha</h2>
-    <p style="text-align:center;color:var(--texto-muted);font-size:0.88rem;margin-bottom:20px">Informe seu e-mail e enviaremos um link para redefinir sua senha.</p>
-    <div class="form-group"><label>E-mail</label><input type="email" id="rec-email" placeholder="seu@email.com" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--borda);background:var(--bg-card2);color:var(--texto)" /></div>
-    <button class="btn btn-primary" style="width:100%" onclick="enviarRecuperacao()">Enviar link</button>
-    <div id="rec-msg" style="margin-top:10px;text-align:center;font-size:0.88rem"></div>
-    <span class="modal-fechar" onclick="fecharRecuperar()">Fechar</span>
-  </div>
-</div>
-
-<!-- MODAL NOVA SENHA -->
-<div id="modal-nova-senha" class="modal-overlay" style="display:none;opacity:1;pointer-events:auto">
-  <div class="modal-planos" style="max-width:420px">
-    <h2 style="text-align:center;margin-bottom:8px">Definir nova senha</h2>
-    <p style="text-align:center;color:var(--texto-muted);font-size:0.88rem;margin-bottom:20px">Escolha uma nova senha para sua conta.</p>
-    <div class="form-group"><label>Nova senha (mín. 6 caracteres)</label><input type="password" id="nova-senha" placeholder="••••••••" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--borda);background:var(--bg-card2);color:var(--texto)" /></div>
-    <div class="form-group"><label>Confirmar senha</label><input type="password" id="nova-senha-conf" placeholder="••••••••" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--borda);background:var(--bg-card2);color:var(--texto)" /></div>
-    <button class="btn btn-primary" style="width:100%" onclick="definirNovaSenha()">Salvar nova senha</button>
-    <div id="nova-senha-msg" style="margin-top:10px;text-align:center;font-size:0.88rem"></div>
-  </div>
-</div>
 </body>
 </html>

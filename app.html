@@ -651,8 +651,11 @@
       renderizarHistorico();
       // Verificar alerta de buscas
       verificarAlertaBuscas();
-      // Abrir seleção de nicho se vazio
-      if (!perfilUsuario.nichos_liberados || perfilUsuario.nichos_liberados.length === 0) {
+      // Abrir modal de perfil free se ainda não completou
+      if ((perfilUsuario.plano === 'free' || !perfilUsuario.plano) && !perfilUsuario.perfil_completo) {
+        setTimeout(abrirModalPerfilFree, 400);
+      } else if (!perfilUsuario.nichos_liberados || perfilUsuario.nichos_liberados.length === 0) {
+        // Abrir seleção de nicho se vazio (só se perfil completo)
         setTimeout(abrirModalNichos, 600);
       }
       // Verificar retorno de pagamento
@@ -1481,5 +1484,76 @@
     <div id="nova-senha-msg" style="margin-top:10px;text-align:center;font-size:0.88rem"></div>
   </div>
 </div>
+<!-- ── MODAL PERFIL FREE ── -->
+<div id="modal-perfil-free" class="modal-overlay" style="display:none;opacity:1;pointer-events:auto;z-index:9999">
+  <div class="modal-planos" style="max-width:460px">
+    <div style="text-align:center;margin-bottom:6px;font-size:2rem">🎯</div>
+    <h2 style="text-align:center;margin-bottom:6px">Libere suas buscas grátis!</h2>
+    <p style="text-align:center;color:var(--texto-muted);font-size:0.88rem;margin-bottom:24px">Preencha seus dados para ativar as <strong style="color:var(--dourado)">5 buscas gratuitas</strong>. Leva menos de 1 minuto.</p>
+
+    <div class="form-group" style="margin-bottom:14px">
+      <label style="font-size:0.82rem;color:var(--texto-muted);text-transform:uppercase;letter-spacing:.05em">WhatsApp *</label>
+      <input type="tel" id="perfil-free-whatsapp" placeholder="(11) 99999-9999" style="width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--borda);background:var(--bg-card2);color:var(--texto);font-size:1rem;margin-top:6px" />
+    </div>
+
+    <div class="form-group" style="margin-bottom:14px">
+      <label style="font-size:0.82rem;color:var(--texto-muted);text-transform:uppercase;letter-spacing:.05em">Segmento do seu negócio *</label>
+      <input type="text" id="perfil-free-segmento" placeholder="Ex: Clínica odontológica, Barbearia, Academia..." style="width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--borda);background:var(--bg-card2);color:var(--texto);font-size:1rem;margin-top:6px" />
+    </div>
+
+    <div class="form-group" style="margin-bottom:20px">
+      <label style="font-size:0.82rem;color:var(--texto-muted);text-transform:uppercase;letter-spacing:.05em">Cidade onde atua *</label>
+      <input type="text" id="perfil-free-cidade" placeholder="Ex: São Paulo - SP" style="width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--borda);background:var(--bg-card2);color:var(--texto);font-size:1rem;margin-top:6px" />
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;padding:13px;font-size:1rem" onclick="salvarPerfilFree()">Ativar minhas buscas grátis →</button>
+    <div id="perfil-free-msg" style="margin-top:10px;text-align:center;font-size:0.88rem;color:#f87171"></div>
+
+    <p style="text-align:center;color:var(--texto-muted);font-size:0.78rem;margin-top:16px">🔒 Seus dados são usados apenas para personalizar sua experiência.</p>
+  </div>
+</div>
+
+<script>
+function abrirModalPerfilFree() {
+  document.getElementById('modal-perfil-free').style.display = 'flex';
+}
+
+async function salvarPerfilFree() {
+  const whatsapp = document.getElementById('perfil-free-whatsapp').value.trim();
+  const segmento = document.getElementById('perfil-free-segmento').value.trim();
+  const cidade   = document.getElementById('perfil-free-cidade').value.trim();
+  const msg      = document.getElementById('perfil-free-msg');
+
+  if (!whatsapp || !segmento || !cidade) {
+    msg.textContent = 'Preencha todos os campos.'; return;
+  }
+
+  msg.textContent = '';
+  const btn = document.querySelector('#modal-perfil-free .btn-primary');
+  btn.disabled = true; btn.textContent = 'Salvando...';
+
+  try {
+    const r = await fetch(`${API_URL}/completar-perfil`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${tokenJWT}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ whatsapp, segmento, cidade })
+    });
+    const data = await r.json();
+    if (!r.ok) { msg.textContent = data.erro || 'Erro ao salvar.'; btn.disabled = false; btn.textContent = 'Ativar minhas buscas grátis →'; return; }
+
+    // Atualiza perfil local
+    if (perfilUsuario) perfilUsuario.perfil_completo = true;
+    document.getElementById('modal-perfil-free').style.display = 'none';
+
+    // Abre seleção de nicho se ainda não escolheu
+    if (!perfilUsuario?.nichos_liberados || perfilUsuario.nichos_liberados.length === 0) {
+      setTimeout(abrirModalNichos, 400);
+    }
+  } catch(e) {
+    msg.textContent = 'Erro de conexão. Tente novamente.';
+    btn.disabled = false; btn.textContent = 'Ativar minhas buscas grátis →';
+  }
+}
+</script>
 </body>
 </html>

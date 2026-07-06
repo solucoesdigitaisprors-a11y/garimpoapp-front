@@ -307,6 +307,9 @@
       <div class="form-group"><label>E-mail</label><input type="email" id="login-email" placeholder="seu@email.com" /></div>
       <div class="form-group"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" /></div>
       <button class="btn btn-primary" onclick="fazerLogin()">Entrar</button>
+      <div style="text-align:center;margin-top:10px">
+        <a href="#" onclick="abrirRecuperarSenha();return false;" style="color:var(--ouro);font-size:0.85rem;text-decoration:none;opacity:0.8">Esqueci minha senha</a>
+      </div>
       <div id="login-msg"></div>
     </div>
     <div id="form-cadastro" style="display:none">
@@ -1328,6 +1331,77 @@
 
   // ── Init ──────────────────────────────────────────────────
   if (tokenJWT) iniciarApp();
+
+  // ── RECUPERAÇÃO DE SENHA ──────────────────────────────────────
+  function abrirRecuperarSenha() {
+    document.getElementById('rec-email').value = document.getElementById('login-email').value || '';
+    document.getElementById('rec-msg').innerHTML = '';
+    document.getElementById('modal-recuperar').style.display = 'flex';
+  }
+  function fecharRecuperar() {
+    document.getElementById('modal-recuperar').style.display = 'none';
+  }
+  async function enviarRecuperacao() {
+    const email = document.getElementById('rec-email').value.trim();
+    const msgEl = document.getElementById('rec-msg');
+    if (!email) { msgEl.innerHTML = '<span style="color:#f87171">Informe o e-mail.</span>'; return; }
+    msgEl.innerHTML = '<span style="color:var(--texto-muted)">Enviando...</span>';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+        body: JSON.stringify({ email, redirect_to: 'https://garimpoapp.com.br' })
+      });
+      if (res.ok || res.status === 200) {
+        msgEl.innerHTML = '<span style="color:var(--verde)">✓ Link enviado! Verifique seu e-mail.</span>';
+      } else {
+        const d = await res.json().catch(()=>({}));
+        msgEl.innerHTML = `<span style="color:#f87171">${d.msg || 'Erro ao enviar. Tente novamente.'}</span>`;
+      }
+    } catch(e) {
+      msgEl.innerHTML = '<span style="color:#f87171">Erro de conexão.</span>';
+    }
+  }
+  async function definirNovaSenha() {
+    const nova = document.getElementById('nova-senha').value;
+    const conf = document.getElementById('nova-senha-conf').value;
+    const msgEl = document.getElementById('nova-senha-msg');
+    if (nova.length < 6) { msgEl.innerHTML = '<span style="color:#f87171">Senha deve ter no mínimo 6 caracteres.</span>'; return; }
+    if (nova !== conf) { msgEl.innerHTML = '<span style="color:#f87171">As senhas não coincidem.</span>'; return; }
+    const token = window._recoveryToken;
+    if (!token) { msgEl.innerHTML = '<span style="color:#f87171">Sessão inválida. Solicite um novo link.</span>'; return; }
+    msgEl.innerHTML = '<span style="color:var(--texto-muted)">Salvando...</span>';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ password: nova })
+      });
+      if (res.ok) {
+        msgEl.innerHTML = '<span style="color:var(--verde)">✓ Senha alterada! Você já pode entrar.</span>';
+        setTimeout(() => {
+          document.getElementById('modal-nova-senha').style.display = 'none';
+          window.location.hash = '';
+        }, 2000);
+      } else {
+        const d = await res.json().catch(()=>({}));
+        msgEl.innerHTML = `<span style="color:#f87171">${d.msg || 'Erro ao salvar. Tente novamente.'}</span>`;
+      }
+    } catch(e) {
+      msgEl.innerHTML = '<span style="color:#f87171">Erro de conexão.</span>';
+    }
+  }
+  // Detecta type=recovery no hash da URL (vindo do email de recuperação)
+  (function verificarHashRecovery() {
+    const hash = window.location.hash.substring(1);
+    if (!hash) return;
+    const params = Object.fromEntries(hash.split('&').map(p => p.split('=')));
+    if (params.type === 'recovery' && params.access_token) {
+      window._recoveryToken = decodeURIComponent(params.access_token);
+      document.getElementById('modal-nova-senha').style.display = 'flex';
+    }
+  })();
+
 </script>
 
 <!-- Modal de nichos -->
@@ -1383,5 +1457,29 @@
   </div>
 </div>
 
+
+<!-- MODAL RECUPERAR SENHA -->
+<div id="modal-recuperar" class="modal-overlay" onclick="if(event.target===this)fecharRecuperar()" style="display:none;opacity:1;pointer-events:auto">
+  <div class="modal-planos" style="max-width:420px">
+    <h2 style="text-align:center;margin-bottom:8px">Recuperar senha</h2>
+    <p style="text-align:center;color:var(--texto-muted);font-size:0.88rem;margin-bottom:20px">Informe seu e-mail e enviaremos um link para redefinir sua senha.</p>
+    <div class="form-group"><label>E-mail</label><input type="email" id="rec-email" placeholder="seu@email.com" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--borda);background:var(--bg-card2);color:var(--texto)" /></div>
+    <button class="btn btn-primary" style="width:100%" onclick="enviarRecuperacao()">Enviar link</button>
+    <div id="rec-msg" style="margin-top:10px;text-align:center;font-size:0.88rem"></div>
+    <span class="modal-fechar" onclick="fecharRecuperar()">Fechar</span>
+  </div>
+</div>
+
+<!-- MODAL NOVA SENHA -->
+<div id="modal-nova-senha" class="modal-overlay" style="display:none;opacity:1;pointer-events:auto">
+  <div class="modal-planos" style="max-width:420px">
+    <h2 style="text-align:center;margin-bottom:8px">Definir nova senha</h2>
+    <p style="text-align:center;color:var(--texto-muted);font-size:0.88rem;margin-bottom:20px">Escolha uma nova senha para sua conta.</p>
+    <div class="form-group"><label>Nova senha (mín. 6 caracteres)</label><input type="password" id="nova-senha" placeholder="••••••••" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--borda);background:var(--bg-card2);color:var(--texto)" /></div>
+    <div class="form-group"><label>Confirmar senha</label><input type="password" id="nova-senha-conf" placeholder="••••••••" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--borda);background:var(--bg-card2);color:var(--texto)" /></div>
+    <button class="btn btn-primary" style="width:100%" onclick="definirNovaSenha()">Salvar nova senha</button>
+    <div id="nova-senha-msg" style="margin-top:10px;text-align:center;font-size:0.88rem"></div>
+  </div>
+</div>
 </body>
 </html>

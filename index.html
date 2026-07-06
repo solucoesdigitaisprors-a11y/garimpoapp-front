@@ -4,6 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GarimpoApp — Plataforma de Inteligência Comercial</title>
+<script>
+  // Redireciona tokens do Supabase (recovery, confirmation) para app.html
+  (function() {
+    var hash = window.location.hash;
+    if (hash && (hash.indexOf('type=recovery') !== -1 || hash.indexOf('type=signup') !== -1 || hash.indexOf('access_token') !== -1)) {
+      window.location.replace('/app.html' + hash);
+    }
+  })();
+</script>
 <meta name="description" content="Encontre e organize contatos qualificados de qualquer cidade do Brasil em segundos. A plataforma de inteligência comercial para expandir seus negócios.">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }

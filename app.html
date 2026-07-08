@@ -658,6 +658,10 @@
         // Abrir seleção de nicho se vazio (só se perfil completo)
         setTimeout(abrirModalNichos, 600);
       }
+      // Modal de boas-vindas (apenas 1ª vez, após perfil completo)
+      if (perfilUsuario.perfil_completo) {
+        setTimeout(mostrarBoasVindas, 500);
+      }
       // Verificar retorno de pagamento
       const params = new URLSearchParams(location.search);
       if (params.get('pagamento') === 'sucesso') {
@@ -716,6 +720,114 @@
   // ── Modal planos ──────────────────────────────────────────
   function abrirModal()  { document.getElementById('modal-planos').classList.add('ativo'); }
   function fecharModal() { document.getElementById('modal-planos').classList.remove('ativo'); }
+
+  // ── Boas-vindas (1ª vez) ─────────────────────────────────
+  function mostrarBoasVindas() {
+    const userId = perfilUsuario?.id;
+    if (!userId) return;
+    if (localStorage.getItem('garimpo_welcomed_' + userId)) return;
+    // Não mostrar se algum outro modal está aberto
+    if (document.querySelector('.modal-overlay.ativo')) return;
+    const primeiroNome = (perfilUsuario.nome || '').split(' ')[0];
+    document.getElementById('welcome-nome').textContent = primeiroNome ? 'Olá, ' + primeiroNome + '!' : '';
+    document.getElementById('welcome-buscas').textContent = perfilUsuario.buscas_restantes || 0;
+    document.getElementById('modal-boasvindas').style.display = 'flex';
+  }
+  function fecharBoasVindas() {
+    const userId = perfilUsuario?.id;
+    if (userId) localStorage.setItem('garimpo_welcomed_' + userId, '1');
+    document.getElementById('modal-boasvindas').style.display = 'none';
+    // Iniciar tour após fechar boas-vindas
+    setTimeout(iniciarTour, 400);
+  }
+
+  // ── Tour de onboarding ────────────────────────────────────
+  const _tourPassos = [
+    {
+      alvo: '#sel-nicho',
+      titulo: 'Escolha o segmento',
+      desc: 'Selecione o tipo de negócio que você quer prospectar. Ex: Clínicas de Estética, Advocacia, Pet Shops...',
+    },
+    {
+      alvo: '#sel-estado',
+      titulo: 'Selecione o estado',
+      desc: 'Filtre por estado para encontrar leads na região que você atende.',
+    },
+    {
+      alvo: '#sel-cidade',
+      titulo: 'E a cidade',
+      desc: 'Depois escolha a cidade. Você pode buscar em qualquer município do Brasil.',
+    },
+    {
+      alvo: '#btn-buscar',
+      titulo: 'Clique em Buscar!',
+      desc: 'Pronto! O GarimpoApp vai encontrar os melhores contatos para você em segundos.',
+      ultimo: true,
+    },
+  ];
+  var _tourPasso = 0;
+
+  function iniciarTour() {
+    const userId = perfilUsuario?.id;
+    if (!userId) return;
+    if (localStorage.getItem('garimpo_tour_' + userId)) return;
+    _tourPasso = 0;
+    mostrarPasso();
+  }
+
+  function mostrarPasso() {
+    const passo = _tourPassos[_tourPasso];
+    if (!passo) { pularTour(); return; }
+
+    const alvo = document.querySelector(passo.alvo);
+    if (!alvo) { _tourPasso++; mostrarPasso(); return; }
+
+    const rect = alvo.getBoundingClientRect();
+    const pad = 8;
+
+    // Spotlight
+    const spot = document.getElementById('tour-spotlight');
+    spot.style.display = 'block';
+    spot.style.left   = (rect.left - pad) + 'px';
+    spot.style.top    = (rect.top - pad) + 'px';
+    spot.style.width  = (rect.width + pad * 2) + 'px';
+    spot.style.height = (rect.height + pad * 2) + 'px';
+
+    // Tooltip — posicionar abaixo ou acima do alvo
+    const tip = document.getElementById('tour-tooltip');
+    tip.style.display = 'block';
+    const tipH = 180;
+    const posAbaixo = rect.bottom + 16;
+    const posAcima  = rect.top - tipH - 16;
+    tip.style.top  = (posAbaixo + tipH < window.innerHeight ? posAbaixo : Math.max(8, posAcima)) + 'px';
+    tip.style.left = Math.min(Math.max(rect.left, 8), window.innerWidth - 320) + 'px';
+
+    document.getElementById('tour-step-label').textContent = 'Passo ' + (_tourPasso + 1) + ' de ' + _tourPassos.length;
+    document.getElementById('tour-title').textContent = passo.titulo;
+    document.getElementById('tour-desc').textContent = passo.desc;
+
+    const btnNext = document.getElementById('tour-btn-next');
+    btnNext.textContent = passo.ultimo ? 'Concluir ✓' : 'Próximo →';
+
+    // Dots
+    const dots = document.getElementById('tour-dots');
+    dots.innerHTML = _tourPassos.map((_, i) =>
+      `<div style="width:6px;height:6px;border-radius:50%;background:${i === _tourPasso ? '#f5a523' : 'rgba(255,255,255,0.2)'};"></div>`
+    ).join('');
+  }
+
+  function proximoPasso() {
+    _tourPasso++;
+    if (_tourPasso >= _tourPassos.length) { pularTour(); return; }
+    mostrarPasso();
+  }
+
+  function pularTour() {
+    const userId = perfilUsuario?.id;
+    if (userId) localStorage.setItem('garimpo_tour_' + userId, '1');
+    document.getElementById('tour-spotlight').style.display = 'none';
+    document.getElementById('tour-tooltip').style.display   = 'none';
+  }
 
   async function assinarPlano(plano) {
     fecharModal();
@@ -1487,6 +1599,58 @@
     <div id="nova-senha-msg" style="margin-top:10px;text-align:center;font-size:0.88rem"></div>
   </div>
 </div>
+<!-- ── ONBOARDING TOUR ── -->
+<div id="tour-overlay" style="display:none;position:fixed;inset:0;z-index:8500;pointer-events:none;"></div>
+<div id="tour-spotlight" style="display:none;position:fixed;z-index:8600;border-radius:10px;box-shadow:0 0 0 9999px rgba(6,13,28,0.82);pointer-events:none;transition:all .3s ease;"></div>
+<div id="tour-tooltip" style="display:none;position:fixed;z-index:8700;background:#0b1628;border:1px solid rgba(245,165,35,0.4);border-radius:14px;padding:20px 22px;max-width:300px;box-shadow:0 16px 48px rgba(0,0,0,0.5);">
+  <div style="font-size:0.72rem;color:#f5a523;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;" id="tour-step-label"></div>
+  <div style="margin-top:6px;font-size:1rem;font-weight:800;color:#ffffff;" id="tour-title"></div>
+  <div style="margin-top:6px;font-size:0.88rem;color:#b0bcd0;line-height:1.5;" id="tour-desc"></div>
+  <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;">
+    <button onclick="pularTour()" style="font-size:0.82rem;color:#8493ab;background:none;border:none;cursor:pointer;padding:0;">Pular tour</button>
+    <button onclick="proximoPasso()" id="tour-btn-next" style="background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;font-size:0.88rem;padding:9px 20px;border:none;border-radius:8px;cursor:pointer;">Próximo →</button>
+  </div>
+  <!-- indicadores de passo -->
+  <div style="display:flex;gap:5px;justify-content:center;margin-top:12px;" id="tour-dots"></div>
+</div>
+
+<!-- ── MODAL BOAS-VINDAS ── -->
+<div id="modal-boasvindas" style="display:none;position:fixed;inset:0;z-index:9100;background:rgba(6,13,28,0.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#0b1628;border:1px solid rgba(245,165,35,0.3);border-radius:20px;max-width:540px;width:100%;padding:44px 36px;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.6);">
+    <div style="font-size:2.8rem;">🎉</div>
+    <h2 style="margin-top:14px;font-size:1.65rem;font-weight:900;color:#ffffff;">Bem-vindo ao GarimpoApp!</h2>
+    <p id="welcome-nome" style="margin-top:6px;font-size:1.05rem;color:#f5a523;font-weight:600;"></p>
+    <p style="margin-top:14px;font-size:0.97rem;color:#b0bcd0;line-height:1.6;">Você está a 3 passos de encontrar seus primeiros clientes.</p>
+
+    <div style="margin-top:26px;display:flex;flex-direction:column;gap:12px;text-align:left;">
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(245,165,35,0.07);border:1px solid rgba(245,165,35,0.15);border-radius:12px;padding:15px 16px;">
+        <div style="width:34px;height:34px;background:linear-gradient(135deg,#f5a523,#c8870a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#060d1c;flex-shrink:0;font-size:0.95rem;">1</div>
+        <div>
+          <div style="font-weight:700;color:#ffffff;font-size:0.94rem;">Escolha um segmento e cidade</div>
+          <div style="font-size:0.82rem;color:#8493ab;margin-top:2px;">Ex: "Clínicas odontológicas em São Paulo"</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(245,165,35,0.07);border:1px solid rgba(245,165,35,0.15);border-radius:12px;padding:15px 16px;">
+        <div style="width:34px;height:34px;background:linear-gradient(135deg,#f5a523,#c8870a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#060d1c;flex-shrink:0;font-size:0.95rem;">2</div>
+        <div>
+          <div style="font-weight:700;color:#ffffff;font-size:0.94rem;">Salve os leads mais promissores</div>
+          <div style="font-size:0.82rem;color:#8493ab;margin-top:2px;">Clique em "Salvar" em qualquer resultado da busca</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(245,165,35,0.07);border:1px solid rgba(245,165,35,0.15);border-radius:12px;padding:15px 16px;">
+        <div style="width:34px;height:34px;background:linear-gradient(135deg,#f5a523,#c8870a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#060d1c;flex-shrink:0;font-size:0.95rem;">3</div>
+        <div>
+          <div style="font-weight:700;color:#ffffff;font-size:0.94rem;">Aborde pelo WhatsApp com 1 clique</div>
+          <div style="font-size:0.82rem;color:#8493ab;margin-top:2px;">Use os modelos prontos de mensagem de prospecção</div>
+        </div>
+      </div>
+    </div>
+
+    <button onclick="fecharBoasVindas()" style="margin-top:28px;width:100%;background:linear-gradient(135deg,#f5a523,#c8870a);color:#060d1c;font-weight:800;font-size:1rem;padding:15px;border:none;border-radius:12px;cursor:pointer;box-shadow:0 8px 24px rgba(245,165,35,0.28);">COMEÇAR MINHA PRIMEIRA BUSCA →</button>
+    <p style="margin-top:12px;font-size:0.82rem;color:#8493ab;">Você tem <span id="welcome-buscas" style="color:#f5a523;font-weight:700;"></span> buscas disponíveis neste período</p>
+  </div>
+</div>
+
 <!-- ── MODAL PERFIL FREE ── -->
 <div id="modal-perfil-free" class="modal-overlay" style="display:none;opacity:1;pointer-events:auto;z-index:9999">
   <div class="modal-planos" style="max-width:460px">

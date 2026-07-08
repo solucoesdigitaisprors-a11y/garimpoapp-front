@@ -361,7 +361,7 @@
       <div class="busca-grid">
         <div class="form-group" style="margin:0">
           <label>Nicho</label>
-          <select id="sel-nicho">
+          <select id="sel-nicho" onchange="document.getElementById('input-nicho-custom').style.display=this.value==='outro'?'block':'none'">
             <optgroup label="— Saúde e Bem-estar —">
               <option value="clinicas">Clínicas de Estética</option>
               <option value="clinicas_medicas">Clínicas Médicas</option>
@@ -398,7 +398,13 @@
               <option value="eletricistas">Eletricistas</option>
               <option value="fotografos">Fotógrafos</option>
             </optgroup>
+            <optgroup label="— Outro —">
+              <option value="outro">🔍 Buscar outro segmento...</option>
+            </optgroup>
           </select>
+          <input type="text" id="input-nicho-custom" placeholder="Ex: escola de inglês, distribuidora de tintas..."
+            style="display:none;margin-top:8px;width:100%;padding:10px 14px;border-radius:8px;border:1px solid rgba(245,165,35,0.3);background:rgba(255,255,255,0.05);color:#fff;font-size:0.9rem;box-sizing:border-box;"
+            oninput="this.value=this.value.slice(0,80)">
         </div>
         <div class="form-group" style="margin:0">
           <label>Estado</label>
@@ -676,7 +682,12 @@
     const select = document.getElementById('sel-nicho');
     const nichos = perfilUsuario?.nichos_liberados || [];
     if (nichos.length === 0) return;
-    select.innerHTML = nichos.map(n => `<option value="${n}">${TODOS_NICHOS[n] || n}</option>`).join('');
+    select.innerHTML = nichos.map(n => `<option value="${n}">${TODOS_NICHOS[n] || n}</option>`).join('')
+      + '<option value="outro">🔍 Buscar outro segmento...</option>';
+    select.addEventListener('change', () => {
+      const custom = document.getElementById('input-nicho-custom');
+      if (custom) custom.style.display = select.value === 'outro' ? 'block' : 'none';
+    });
     select.value = nichos[0];
   }
 
@@ -933,7 +944,14 @@
     const cidade = document.getElementById('sel-cidade').value.trim();
     const status = document.getElementById('busca-status');
     const lista  = document.getElementById('lista-resultados');
+    const queryCustom = nicho === 'outro'
+      ? (document.getElementById('input-nicho-custom')?.value || '').trim()
+      : '';
 
+    if (nicho === 'outro' && !queryCustom) {
+      status.innerHTML = '<div class="msg-erro">Descreva o segmento que deseja buscar.</div>';
+      return;
+    }
     if (perfilUsuario?.plano === 'free' && perfilUsuario?.buscas_restantes <= 0) {
       status.innerHTML = '<div class="msg-erro">Suas buscas gratuitas acabaram. <a href="#" onclick="abrirModal();return false;" style="color:var(--ouro)">Assine agora</a> para continuar.</div>';
       return;
@@ -941,14 +959,17 @@
     if (!cidade) { status.innerHTML = '<div class="msg-erro">Selecione o estado e a cidade.</div>'; return; }
 
     document.getElementById('btn-buscar').disabled = true;
-    status.innerHTML = '<div class="loader"><div class="spinner"></div> Buscando no Google…</div>';
+    const labelBusca = nicho === 'outro' ? queryCustom : nicho;
+    status.innerHTML = `<div class="loader"><div class="spinner"></div> Buscando "${nicho === 'outro' ? queryCustom : ''}" no Google…</div>`;
     lista.innerHTML = '';
 
     try {
+      const body = { nicho, cidade };
+      if (nicho === 'outro') body.query_custom = queryCustom;
       const res = await fetch(`${API_URL}/buscar`, {
         method: 'POST',
         headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${tokenJWT}` },
-        body: JSON.stringify({ nicho, cidade }),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
       if (!res.ok) { status.innerHTML = `<div class="msg-erro">${data.erro}</div>`; return; }
